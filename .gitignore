@@ -2,3 +2,4 @@ objs
 bound_rsat/crsat
 rsat/rsat
 *.sif
+*.out

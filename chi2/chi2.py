@@ -3,6 +3,7 @@
 import sys
 from subprocess import getoutput
 import os
+import uuid
 import math
 import random
 import argparse
@@ -16,13 +17,14 @@ from scipy.stats import chisquare
 
 import argparse
 
-# implementation of:
-# https://www.pcg-random.org/posts/birthday-test.html
+def make_temp_name(dir = tempfile.gettempdir()):
+    return os.path.join(dir, str(uuid.uuid1()))
 
 def getSolutionFromUniGen3(inputFile, numSolutions, newSeed):
     # must construct: ./approxmc3 -s 1 -v2 --sampleout /dev/null --samples 500
     inputFileSuffix = inputFile.split('/')[-1][:-4]
-    tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
+    # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
+    tempOutputFile = make_temp_name()
 
     cmd = '/unigen/build/unigen -s ' + str(int(newSeed)) + ' -v 0 --samples ' + str(numSolutions)
     cmd += ' --sampleout ' + str(tempOutputFile)
@@ -51,7 +53,8 @@ def getSolutionFromUniGen3(inputFile, numSolutions, newSeed):
 
 def getSolutionFromSpur(inputFile, numSolutions, newSeed):
     inputFileSuffix = inputFile.split('/')[-1][:-4]
-    tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".out"
+    # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".out"
+    tempOutputFile = make_temp_name()
     cmd = '/spur -seed %d -q -s %d -out %s -cnf %s' % (
         newSeed, numSolutions, tempOutputFile, inputFile)
     # if args.verbose:
@@ -74,15 +77,19 @@ def getSolutionFromSpur(inputFile, numSolutions, newSeed):
             continue
         fields = line.strip().split(',')
         solCount = int(fields[0])
-        sol = ' '
-        i = 1
-        for x in list(fields[1]):
-            if (x == '0'):
-                sol += ' -' + str(i)
-            else:
-                sol += ' ' + str(i)
-            i += 1
-        for i in range(solCount):
+        for _ in range(solCount):
+            sol = ' '
+            i = 1
+            for x in list(fields[1]):
+                if (x == '0'):
+                    sol += ' -' + str(i)
+                elif (x == '1'):
+                    sol += ' ' + str(i)
+                elif (x == '*'):
+                    sol += ' ' + str(i * (random.randint(0, 1) * 2 - 1))
+                else:
+                    print("ERROR WHILE PARSING SPUR SAMPLES")
+                i += 1
             solList.append(sol)
 
     os.unlink(tempOutputFile)
@@ -92,7 +99,8 @@ def getSolutionFromSTS(inputFile, numSolutions, newSeed):
     kValue = numSolutions
     samplingRounds = 1
     inputFileSuffix = inputFile.split('/')[-1][:-4]
-    outputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".out"
+    # outputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".out"
+    outputFile = make_temp_name()
     cmd = '/STS -k=' + str(kValue) + ' -rnd-seed=' + str(newSeed) + ' -nsamples=' + str(samplingRounds) + ' ' + str(inputFile)
     cmd += ' |grep -E "^s " | sed "s/^s //g" > ' + str(outputFile)
     # if args.verbose:
@@ -124,7 +132,8 @@ def getSolutionFromLookahead(inputFile, numSolutions, newSeed):
     kValue = 50
     # samplingRounds = numSolutions / kValue + 1
     inputFileSuffix = inputFile.split('/')[-1][:-4]
-    outputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".out"
+    # outputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".out"
+    outputFile = make_temp_name()
     cmd = '/usr/bin/python3 /lookahead.py -k ' + str(kValue) + ' -nb ' + str(numSolutions) + ' -c ' + str(inputFile)
     cmd += ' > ' + str(outputFile)
     # if args.verbose:
@@ -156,6 +165,7 @@ def getSolutionFromSMARCH(inputFile, numSolutions, newSeed):
     # multi process
     # cmd = "/usr/bin/python3 /samplers/smarch_mp.py -p " + str(P_THREADS) + " -o " + os.path.dirname(inputFile) + " " + inputFile + " " + str(numSolutions) + " > /dev/null 2>&1"
     # single process
+
     cmd = "/usr/bin/python3 /smarch/smarch.py -o " + os.path.dirname(inputFile) + " " + inputFile + " " + str(numSolutions) + " 2>&1"
     # cmd = "/usr/bin/python3 /samplers/smarch.py -o " + os.path.dirname(inputFile) + " " + inputFile + " " + str(numSolutions) + " > /dev/null 2>&1"
     # cmd = "/usr/bin/python3 /home/gilles/ICST2019-EMSE-Ext/Kclause_Smarch-local/Smarch/smarch.py " + " -o " + os.path.dirname(inputFile) + " " + inputFile + " " + str(numSolutions)
@@ -180,6 +190,7 @@ def getSolutionFromSMARCH(inputFile, numSolutions, newSeed):
         for i in lst:
             if not math.isnan(i):
                 sol += ' ' + str(int(i))
+        solList.append(sol)
         # tmpList = [str(int(i)) for i in lst if not math.isnan(i)]
     # if args.verbose:
     #    print(sol)
@@ -187,7 +198,6 @@ def getSolutionFromSMARCH(inputFile, numSolutions, newSeed):
     # solList.append(tmpList)
     # solList = [x for x in df.values]
     os.unlink(tempFile)
-    solList.append(sol)
 
     return solList
 
@@ -279,11 +289,15 @@ for _ in range(0, args.n):
         # samples = getSolutionFromSTS(cnf_file, batch_size, random.randint(0, 2**32 - 1))
         # samples.extend(getSolutionFromSpur(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
         samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
+        print("##############################")
+        print(len(samples))
+        print("##############################")
 
     observed = make_bins(samples, sample_size)
 
     while len(observed) < rng_range:
         observed.append(0)
+    print(observed)
 
     X2, pv = chisquare(observed, expected)
     crit = chi2.ppf(1 - significance_level, df = rng_range - 1)
