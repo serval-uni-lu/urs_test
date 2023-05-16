@@ -1,0 +1,270 @@
+#/usr/bin/env python3
+
+import sys
+from subprocess import getoutput
+import os
+import math
+import random
+import argparse
+import copy
+import tempfile
+import pandas as pd
+import re
+
+from scipy.stats import chi2
+from scipy.stats import chisquare
+
+import argparse
+
+# implementation of:
+# https://www.pcg-random.org/posts/birthday-test.html
+
+def getSolutionFromUniGen3(inputFile, numSolutions, newSeed):
+    # must construct: ./approxmc3 -s 1 -v2 --sampleout /dev/null --samples 500
+    inputFileSuffix = inputFile.split('/')[-1][:-4]
+    tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
+
+    cmd = '/unigen/build/unigen -s ' + str(int(newSeed)) + ' -v 0 --samples ' + str(numSolutions)
+    cmd += ' --sampleout ' + str(tempOutputFile)
+    cmd += ' ' + inputFile # + ' > /dev/null 2>&1'
+    # cmd += ' ' + inputFile
+    #if args.verbose:
+    print("cmd: ", cmd)
+    os.system(cmd)
+    # os.system(f"ls \"{tempfile.gettempdir()}\"")
+
+    with open(tempOutputFile, 'r') as f:
+        lines = f.readlines()
+
+    solList = []
+    for line in lines:
+        line = line.strip()
+        solList.append(line)
+
+    print(f"UNIGEN: {numSolutions} generated: {len(solList)}, seed: {newSeed}")
+    solreturnList = solList
+    if len(solList) > numSolutions:
+        solreturnList = random.sample(solList, numSolutions)
+
+    os.unlink(str(tempOutputFile))
+    return solreturnList
+
+def getSolutionFromSpur(inputFile, numSolutions, newSeed):
+    inputFileSuffix = inputFile.split('/')[-1][:-4]
+    tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".out"
+    cmd = '/spur -seed %d -q -s %d -out %s -cnf %s' % (
+        newSeed, numSolutions, tempOutputFile, inputFile)
+    # if args.verbose:
+    print("cmd: ", cmd)
+    os.system(cmd)
+
+    with open(tempOutputFile, 'r') as f:
+        lines = f.readlines()
+
+    solList = []
+    startParse = False
+    for line in lines:
+        if (line.startswith('#START_SAMPLES')):
+            startParse = True
+            continue
+        if (not (startParse)):
+            continue
+        if (line.startswith('#END_SAMPLES')):
+            startParse = False
+            continue
+        fields = line.strip().split(',')
+        solCount = int(fields[0])
+        sol = ' '
+        i = 1
+        for x in list(fields[1]):
+            if (x == '0'):
+                sol += ' -' + str(i)
+            else:
+                sol += ' ' + str(i)
+            i += 1
+        for i in range(solCount):
+            solList.append(sol)
+
+    os.unlink(tempOutputFile)
+    return solList
+
+def getSolutionFromSTS(inputFile, numSolutions, newSeed):
+    kValue = 50
+    samplingRounds = numSolutions / kValue + 1
+    inputFileSuffix = inputFile.split('/')[-1][:-4]
+    outputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".out"
+    cmd = '/STS -k=' + str(kValue) + ' -rnd-seed=' + str(newSeed) + ' -nsamples=' + str(samplingRounds) + ' ' + str(inputFile)
+    cmd += ' |grep -E "^s " | sed "s/^s //g" > ' + str(outputFile)
+    # if args.verbose:
+    print("cmd: ", cmd)
+    os.system(cmd)
+
+    with open(outputFile, 'r') as f:
+        lines = f.readlines()
+
+    solList = []
+    # baseList = {}
+    for j in range(len(lines)):
+        solList.append(lines[j])
+
+    if len(solList) < numSolutions:
+        print(len(solList))
+        print("STS Did not find required number of solutions")
+        sys.exit(1)
+
+    if len(solList) > numSolutions:
+        solreturnList = random.sample(solList, numSolutions)
+
+
+
+    os.unlink(outputFile)
+    return solList
+
+def getSolutionFromLookahead(inputFile, numSolutions, newSeed):
+    kValue = 50
+    # samplingRounds = numSolutions / kValue + 1
+    inputFileSuffix = inputFile.split('/')[-1][:-4]
+    outputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".out"
+    cmd = '/usr/bin/python3 /lookahead.py -k ' + str(kValue) + ' -nb ' + str(numSolutions) + ' -c ' + str(inputFile)
+    cmd += ' > ' + str(outputFile)
+    # if args.verbose:
+    print("cmd: ", cmd)
+    os.system(cmd)
+
+    with open(outputFile, 'r') as f:
+        lines = f.readlines()
+
+    solList = []
+    for j in range(len(lines)):
+        sol = lines[j].strip()
+        solList.append(sol)
+
+    if len(solList) < numSolutions:
+        print(len(solList))
+        print("Lookahead Did not find required number of solutions")
+        sys.exit(1)
+
+    if len(solList) > numSolutions:
+        solreturnList = random.sample(solList, numSolutions)
+
+
+
+    os.unlink(outputFile)
+    return solList
+
+def getSolutionFromSMARCH(inputFile, numSolutions, newSeed):
+    # multi process
+    # cmd = "/usr/bin/python3 /samplers/smarch_mp.py -p " + str(P_THREADS) + " -o " + os.path.dirname(inputFile) + " " + inputFile + " " + str(numSolutions) + " > /dev/null 2>&1"
+    # single process
+    cmd = "/usr/bin/python3 /smarch/smarch.py -o " + os.path.dirname(inputFile) + " " + inputFile + " " + str(numSolutions) + " 2>&1"
+    # cmd = "/usr/bin/python3 /samplers/smarch.py -o " + os.path.dirname(inputFile) + " " + inputFile + " " + str(numSolutions) + " > /dev/null 2>&1"
+    # cmd = "/usr/bin/python3 /home/gilles/ICST2019-EMSE-Ext/Kclause_Smarch-local/Smarch/smarch.py " + " -o " + os.path.dirname(inputFile) + " " + inputFile + " " + str(numSolutions)
+    # if args.verbose:
+    print("cmd: ", cmd)
+    os.system(cmd)
+    # if (numSolutions > 1):
+    #   i = 0
+    solList = []
+    tempFile = inputFile.replace('.cnf', '_' + str(numSolutions)) + '.samples'
+    # if args.verbose:
+    print(tempFile)
+
+    df = pd.read_csv(tempFile, header=None)
+
+    # with open(inputFile+'.samples', 'r') as f:
+    #   lines = f.readlines()
+    for x in df.values:
+        # tmpLst = []
+        lst = x.tolist()
+        sol = ''
+        for i in lst:
+            if not math.isnan(i):
+                sol += ' ' + str(int(i))
+        # tmpList = [str(int(i)) for i in lst if not math.isnan(i)]
+    # if args.verbose:
+    #    print(sol)
+
+    # solList.append(tmpList)
+    # solList = [x for x in df.values]
+    os.unlink(tempFile)
+    solList.append(sol)
+
+    return solList
+
+
+def get_mc(cnf):
+    D4_cmd = '/d4 -mc \"{}\" 2>&1 | grep -E \'^s [0-9]+$\' | sed \'s/^s //g\''
+    r = getoutput(D4_cmd.format(cnf))
+    return int(r)
+
+
+
+def count_repeats(samples, sample_size):
+    d = set()
+
+    nb = 0
+    i = 0
+    for line in samples:
+        i += 1
+        if line in d:
+            nb += 1
+        d.add(line)
+        if i >= sample_size:
+            break
+    return nb
+
+def make_bins(samples, sample_size):
+    d = dict()
+
+    i = 0
+    for s in samples:
+        i += 1
+        if s in d:
+            d[s] += 1
+        else:
+            d[s] = 1
+        if i >= sample_size:
+            break
+
+    res = []
+    for s in d:
+        res.append(d[s])
+    return res
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-c", "--cnf", type=str)
+# parser.add_argument("-k", type=int, default=50)
+parser.add_argument("-a", type=float, default=0.05)
+parser.add_argument("-n", type=int, default=1)
+
+args = parser.parse_args()
+
+
+significance_level = args.a
+cnf_file = args.cnf
+rng_range = get_mc(cnf_file)
+
+expected = [5] * rng_range
+sample_size = 5 * rng_range
+
+print(f"sample size: {sample_size}")
+
+for _ in range(0, args.n):
+    # samples = getSolutionFromUniGen3(cnf_file, sample_size, random.randint(0, 2**32 - 1))
+    # samples = getSolutionFromSTS(cnf_file, sample_size, random.randint(0, 2**32 - 1))
+    samples = getSolutionFromSpur(cnf_file, sample_size, random.randint(0, 2**31 - 1))
+
+    observed = make_bins(samples, sample_size)
+
+    while len(observed) < rng_range:
+        observed.append(0)
+
+    X2, pv = chisquare(observed, expected)
+    crit = chi2.ppf(1 - significance_level, df = rng_range - 1)
+    print(f"X2 {X2}")
+    print(f"crit {crit}")
+    print(f"pv {pv}")
+    print(f"u {X2 <= crit}")
+    # print(f"X2: {X2} ({pv})\ncrit: {crit}")
+    # print(X2 <= crit)

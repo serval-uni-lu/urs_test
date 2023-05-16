@@ -1,0 +1,10 @@
+BootStrap: localimage
+From: base.sif
+
+%files
+    ./lookahead.py /lookahead.py
+    ./spur /spur
+    ./bday.py /bday.py
+
+%runscript
+    /usr/bin/python3 /bday.py "$@"
