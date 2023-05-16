@@ -89,8 +89,8 @@ def getSolutionFromSpur(inputFile, numSolutions, newSeed):
     return solList
 
 def getSolutionFromSTS(inputFile, numSolutions, newSeed):
-    kValue = 50
-    samplingRounds = numSolutions / kValue + 1
+    kValue = numSolutions
+    samplingRounds = 1
     inputFileSuffix = inputFile.split('/')[-1][:-4]
     outputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".out"
     cmd = '/STS -k=' + str(kValue) + ' -rnd-seed=' + str(newSeed) + ' -nsamples=' + str(samplingRounds) + ' ' + str(inputFile)
@@ -237,13 +237,35 @@ parser.add_argument("-c", "--cnf", type=str)
 # parser.add_argument("-k", type=int, default=50)
 parser.add_argument("-a", type=float, default=0.05)
 parser.add_argument("-n", type=int, default=1)
+parser.add_argument("-b", "--batch_size", type=int, default=20)
+parser.add_argument("-s", "--sampler", type=int, default=0)
+
+UNIGEN3 = 0
+SPUR = 1
+STS = 2
+SMARCH = 3
+LOOKAHEAD = 4
 
 args = parser.parse_args()
 
 
 significance_level = args.a
 cnf_file = args.cnf
+batch_size = args.batch_size
 rng_range = get_mc(cnf_file)
+
+sampler_fn = getSolutionFromUniGen3
+
+if args.sampler == UNIGEN3:
+    sampler_fn = getSolutionFromUniGen3
+elif args.sampler == SPUR:
+    sampler_fn = getSolutionFromSpur
+elif args.sampler == STS:
+    sampler_fn = getSolutionFromSTS
+elif args.sampler == SMARCH:
+    sampler_fn = getSolutionFromSMARCH
+elif args.sampler == LOOKAHEAD:
+    sampler_fn = getSolutionFromLookahead
 
 expected = [5] * rng_range
 sample_size = 5 * rng_range
@@ -251,9 +273,12 @@ sample_size = 5 * rng_range
 print(f"sample size: {sample_size}")
 
 for _ in range(0, args.n):
-    # samples = getSolutionFromUniGen3(cnf_file, sample_size, random.randint(0, 2**32 - 1))
-    # samples = getSolutionFromSTS(cnf_file, sample_size, random.randint(0, 2**32 - 1))
-    samples = getSolutionFromSpur(cnf_file, sample_size, random.randint(0, 2**31 - 1))
+    samples = []
+    while len(samples) < sample_size:
+        # samples = getSolutionFromUniGen3(cnf_file, batch_size, random.randint(0, 2**32 - 1))
+        # samples = getSolutionFromSTS(cnf_file, batch_size, random.randint(0, 2**32 - 1))
+        # samples.extend(getSolutionFromSpur(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
+        samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
 
     observed = make_bins(samples, sample_size)
 
