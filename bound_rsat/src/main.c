@@ -54,7 +54,7 @@ void print_help_screen() {
     "--prefix str\n"
         "\tset a prefix to the formula file names\n"
     "--sat\n"
-        "\tonly generate sat formulas (default: false)\n"
+        "\tonly generate sat formulas (default: false, -> only generate unsat formulas)\n"
     "--help\n"
     "-h\n"
         "\tdisplay this help screen\n"
@@ -237,7 +237,7 @@ void genFormula(pcg32_random_t* rng, uint64_t const id, uint64_t const nv, uint6
 
         char* path = writeFormula(id, nv, c, k, path_prefix, cls);
 
-        bool unsat = check_sat && !is_sat(path);
+        bool unsat = !is_sat(path);
         free(path);
         if(unsat) {
             nch = c;
@@ -248,20 +248,24 @@ void genFormula(pcg32_random_t* rng, uint64_t const id, uint64_t const nv, uint6
         c = (ncl + nch) / 2;
     }
 
-    char* path = writeFormula(id, nv, nch, k, path_prefix, cls);
-    bool unsat = check_sat && !is_sat(path);
-    free(path);
+    if(check_sat) {
+        char* path = writeFormula(id, nv, ncl, k, path_prefix, cls);
+        bool unsat = !is_sat(path);
+        free(path);
+        if(unsat) {
+            printf("ncl is unsat\n");
+        }
+    }
+    else {
+        char* path = writeFormula(id, nv, nch, k, path_prefix, cls);
+        bool unsat = !is_sat(path);
+        free(path);
 
-    if(!unsat) {
-        printf("nch is sat\n");
+        if(!unsat) {
+            printf("nch is sat\n");
+        }
     }
 
-    path = writeFormula(id, nv, ncl, k, path_prefix, cls);
-    unsat = check_sat && !is_sat(path);
-    free(path);
-    if(unsat) {
-        printf("ncl is unsat\n");
-    }
 
     //printf("steps: %" PRIi64 "\n", steps);
 
