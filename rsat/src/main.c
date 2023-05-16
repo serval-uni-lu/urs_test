@@ -214,6 +214,8 @@ bool is_sat(char const* path) {
 /**
  * to see usage help:
  * rsat -h
+ * or
+ * rsat --help
  */
 int main(int argc, char** argv) {
     Options options = options_parse(argc, argv);
