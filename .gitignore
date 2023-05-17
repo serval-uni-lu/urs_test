@@ -1,5 +1,6 @@
 objs
 bound_rsat/crsat
 rsat/rsat
+blast/blast
 *.sif
 *.out

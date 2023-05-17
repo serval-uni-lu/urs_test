@@ -10,6 +10,7 @@ import argparse
 import copy
 import tempfile
 import pandas as pd
+import numpy as np
 import re
 
 from scipy.stats import chi2
@@ -52,6 +53,8 @@ def getSolutionFromUniGen3(inputFile, numSolutions, newSeed):
     return solreturnList
 
 def getSolutionFromSpur(inputFile, numSolutions, newSeed):
+    rng = np.random.default_rng()
+
     inputFileSuffix = inputFile.split('/')[-1][:-4]
     # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".out"
     tempOutputFile = make_temp_name()
@@ -86,7 +89,7 @@ def getSolutionFromSpur(inputFile, numSolutions, newSeed):
                 elif (x == '1'):
                     sol += ' ' + str(i)
                 elif (x == '*'):
-                    sol += ' ' + str(i * (random.randint(0, 1) * 2 - 1))
+                    sol += ' ' + str(i * (rng.choice([-1, 1])))
                 else:
                     print("ERROR WHILE PARSING SPUR SAMPLES")
                 i += 1

@@ -8,8 +8,8 @@ function run {
 }
 export -f run
 
-id="4"
-n="lookahead"
+id="1"
+n="sp"
 
 echo "file, isUniform, pvalue" > "$1_$n.csv"
 find "$1" -name "*.cnf" | parallel -n 1 -P 3 run "$id" >> "$1_$n.csv"
