@@ -108,7 +108,7 @@ struct Clause {
         return c.size();
     }
 
-    inline auto operator[](std::size_t const& i) {
+    inline auto & operator[](std::size_t const& i) {
         return c[i];
     }
 };

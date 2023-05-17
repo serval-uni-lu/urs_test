@@ -191,6 +191,7 @@ void CNF::insert_model(std::set<Literal> const& m) {
 
             if(!found) {
                 uint64_t j = next_boundedrand(c.size());
+                std::cout << "c flip\n";
                 c[j] = ~c[j];
             }
         }
@@ -203,6 +204,8 @@ void CNF::single_blast() {
     for(auto const& v : vars) {
         assignment.insert(Literal(v, (next() & 1) * 2 - 1));
     }
+
+    insert_model(assignment);
 
     for(auto const& l : assignment) {
         std::set<Literal> tmp = assignment;
