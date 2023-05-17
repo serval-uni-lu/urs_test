@@ -304,6 +304,7 @@ for _ in range(0, args.n):
     print(f"X2 {X2}")
     print(f"crit {crit}")
     print(f"pv {pv}")
-    print(f"u {X2 <= crit}")
+    # print(f"u {X2 <= crit}")
+    print(f"u {pv >= significance_level}")
     # print(f"X2: {X2} ({pv})\ncrit: {crit}")
     # print(X2 <= crit)
