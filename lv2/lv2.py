@@ -1,5 +1,7 @@
 from scipy.stats import chi2
 from scipy.stats import chisquare
+from scipy.stats import kstest
+from scipy.stats import uniform
 import pandas as pd
 import numpy as np
 import math
@@ -48,3 +50,11 @@ while k <= len(pvalues) and pvalues[k - 1] <= (significance_level / (nb + 1 - k)
     k += 1
 
 print(f"nb rejects: {k - 1}")
+
+print("--------------------------------------------------")
+
+print("Kolmogorov-Smirnov test for goodness of fit on p-values")
+
+pvalues = data.pvalue.to_numpy()
+
+print(kstest(pvalues, uniform.cdf))
