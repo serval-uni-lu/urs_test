@@ -8,4 +8,7 @@ args = parser.parse_args()
 
 dDNNF_file = args.file
 
-dDNNF.from_file(dDNNF_file)
+res = dDNNF.from_file(dDNNF_file)
+res.annotate_mc()
+print(res.get_node(1).mc)
+# res.print_dot()
