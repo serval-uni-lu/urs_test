@@ -4,3 +4,4 @@ rsat/rsat
 blast/blast
 *.sif
 *.out
+__pycache__
