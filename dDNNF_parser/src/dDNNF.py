@@ -8,6 +8,7 @@ class Node:
     def __init__(self, num):
         self.num = num
         self.mc = -1
+        self.mc_by_var = {}
 
     def add_child(self, target, consts, free):
         pass
@@ -37,6 +38,7 @@ class AndNode(Node):
 
     def annotate_mc(self):
         self.mc = 1
+        self.mc_by_var = {0: 1}
 
         if len(self.children) == 0:
             self.mc = 0
@@ -44,8 +46,18 @@ class AndNode(Node):
         for i in self.children:
             self.mc *= i.target.mc
 
+        for i in self.children:
+            if i.target.mc != 0:
+                for j in i.target.mc_by_var:
+                    # if not (j in self.mc_by_var):
+                    self.mc_by_var[j] = self.mc * i.target.mc_by_var[j] / i.target.mc
+
         if len(self.children) == 0:
             self.mc = 0
+            self.mc_by_var = {0: 0}
+        else:
+            self.mc_by_var[0] = self.mc
+
 
     def get_childrend_ids(self):
         return [c.target.num for c in self.children]
@@ -76,8 +88,33 @@ class OrNode(Node):
         for i in self.children:
             self.mc += i.target.mc * (2**len(i.free))
 
+        buf = []
+        for i in self.children:
+            if i.target.mc != 0:
+                tmp = {}
+                for j in i.target.mc_by_var:
+                    tmp[j] = i.target.mc_by_var[j] * (2**len(i.free))
+
+                for j in i.free:
+                    tmp[j] = i.target.mc * (2**(len(i.free) - 1))
+
+                for j in i.consts:
+                    if j > 0:
+                        tmp[abs(j)] = i.target.mc * (2**len(i.free))
+                    else:
+                        tmp[abs(j)] = 0
+                buf.append(tmp)
+
+        for i in range(1, len(buf)):
+            for j in buf[i]:
+                buf[0][j] += buf[i][j]
+
         if len(self.children) == 0:
             self.mc = 1
+            self.mc_by_var = {0: 1}
+        else:
+            self.mc_by_var = buf[0]
+
 
     def get_childrend_ids(self):
         return [c.target.num for c in self.children]
@@ -104,6 +141,19 @@ class UnaryNode(Node):
     def annotate_mc(self):
         self.mc = self.child.target.mc * (2**len(self.child.free))
 
+        c_mc = self.child.target.mc_by_var
+        for i in c_mc:
+            self.mc_by_var[i] = c_mc[i] * (2**len(self.child.free))
+
+        for i in self.child.free:
+            self.mc_by_var[i] = self.mc / 2
+
+        for i in self.child.consts:
+            if i > 0:
+                self.mc_by_var[abs(i)] = self.mc
+            else:
+                self.mc_by_var[abs(i)] = 0
+
     def get_childrend_ids(self):
         return [self.child.target.num]
 
@@ -125,6 +175,7 @@ class TrueNode(Node):
 
     def annotate_mc(self):
         self.mc = 1
+        self.mc_by_var = {0: 1}
 
     def get_childrend_ids(self):
         return []
@@ -146,6 +197,7 @@ class FalseNode(Node):
 
     def annotate_mc(self):
         self.mc = 0
+        self.mc_by_var = {0: 0}
 
     def get_childrend_ids(self):
         return []
