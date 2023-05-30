@@ -22,7 +22,10 @@ res = dDNNF.from_file(dDNNF_file)
 res.annotate_mc()
 
 if orig_mc != res.get_node(1).mc:
-    print(f"error in {args.file} , true mc: {omc}, got {res.get_node(1).mc}")
+    print(f"error in {args.file} , true mc: {orig_mc}, got {res.get_node(1).mc}")
+
+if orig_mc != res.get_node(1).mc_by_var[0]:
+    print(f"error in {args.file} , true mc: {orig_mc}, got (by_var[0]) {res.get_node(1).mc_by_var[0]}")
 
 # print(f"{args.file}, {res.get_node(1).mc}, {orig_mc}")
 os.unlink(dDNNF_file)

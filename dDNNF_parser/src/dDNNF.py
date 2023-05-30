@@ -1,3 +1,19 @@
+import copy
+
+def grow(l, n):
+    while len(l) < n:
+        l.append(0)
+
+def copy(l):
+    return copy.deepcopy(l)
+
+def add(l1, l2):
+    grow(l1, len(l2))
+
+    for i in range(0, len(l2)):
+        l1[i] += l2[i]
+
+
 class Edge:
     def __init__(self, target, consts, free):
         self.target = target
