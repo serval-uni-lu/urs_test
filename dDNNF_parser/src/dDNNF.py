@@ -19,6 +19,36 @@ def add(l1, l2):
     for i in range(0, len(l2)):
         l1[i] += l2[i]
 
+def mult(l, scal):
+    for i in range(0, len(l)):
+        l[i] *= scal
+
+def prod(l1, l2):
+    res = []
+
+    for i in range(0, len(l2)):
+        if l2[i] != 0:
+            tmp = deep_cp(l1)
+            right_shift(tmp, i)
+            mult(tmp, l2[i])
+            add(res, tmp)
+    return res
+
+# def prod(l):
+#     res = l[0]
+# 
+#     for l2 in l[1:]:
+#         l1 = res
+#         res = []
+#         for i in range(0, len(l2)):
+#             if l2[i] != 0:
+#                 tmp = deep_cp(l1)
+#                 right_shift(tmp, i)
+#                 mult(tmp, l2[i])
+#                 add(res, tmp)
+#     return res
+
+
 
 class Edge:
     def __init__(self, target, consts, free):
@@ -71,18 +101,22 @@ class AndNode(Node):
             self.mc *= i.target.mc
 
         for i in self.children:
-            if i.target.mc != 0:
-                for j in i.target.mc_by_var:
-                    # if not (j in self.mc_by_var):
-                    self.mc_by_var[j] = self.mc * i.target.mc_by_var[j] // i.target.mc
+            # if i.target.mc != 0:
+            for j in i.target.mc_by_var:
+                # if not (j in self.mc_by_var):
+                self.mc_by_var[j] = self.mc * i.target.mc_by_var[j] // i.target.mc
+
+        ## var by nb features
+        for i in self.children:
+            self.mc_by_nb_features = prod(self.mc_by_nb_features, i.target.mc_by_nb_features)
 
         if len(self.children) == 0:
             self.mc = 0
             self.mc_by_var = {0: 0}
+            self.mc_by_nb_features = [0]
         else:
             self.mc_by_var[0] = self.mc
 
-        ## var by nb features
 
 
     def get_childrend_ids(self):
