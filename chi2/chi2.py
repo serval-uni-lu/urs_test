@@ -171,6 +171,41 @@ def getSolutionFromQuickSampler(inputFile, numSolutions, newSeed):
 
     return solList
 
+def getSolutionFromCMSsampler(inputFile, numSolutions, newSeed):
+    # inputFileSuffix = inputFile.split('/')[-1][:-4]
+    # outputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".out"
+    outputFile = make_temp_name()
+    cmd = "/samplers/cryptominisat5 --restart luby --maple 0 --verb 10 --nobansol"
+    cmd += " --scc 1 -n1 --presimp 0 --polar rnd --freq 0.9999"
+    cmd += " --random " + str(int(newSeed)) + " --maxsol " + str(numSolutions)
+    cmd += " " + inputFile
+    cmd += " --dumpresult " + outputFile + " > /dev/null 2>&1"
+
+    # if args.verbose:
+    print("cmd: ", cmd)
+    os.system(cmd)
+
+    with open(outputFile, 'r') as f:
+        lines = f.readlines()
+
+    solList = []
+    for line in lines:
+        if line.strip() == 'SAT':
+            continue
+
+        sol = line.strip()[:-2]
+        # print(sol)
+        solList.append(sol)
+
+    solreturnList = solList
+    if len(solList) > numSolutions:
+        solreturnList = random.sample(solList, numSolutions)
+    if len(solList) < numSolutions:
+        print("cryptominisat5 Did not find required number of solutions")
+        sys.exit(1)
+    os.unlink(outputFile)
+    return solreturnList
+
 def getSolutionFromLookahead(inputFile, numSolutions, newSeed):
     kValue = 50
     # samplingRounds = numSolutions / kValue + 1
@@ -306,7 +341,7 @@ STS = 2
 SMARCH = 3
 LOOKAHEAD = 4
 QUICKSAMPLER = 5
-# CMSGEN = 6
+CMSGEN = 6
 
 args = parser.parse_args()
 
@@ -329,6 +364,8 @@ elif args.sampler == LOOKAHEAD:
     sampler_fn = getSolutionFromLookahead
 elif args.sampler == QUICKSAMPLER:
     sampler_fn = getSolutionFromQuickSampler
+elif args.sampler == CMSGEN:
+    sampler_fn = getSolutionFromCMSsampler
 
 dDNNF_path = compute_dDNNF(cnf_file)
 
