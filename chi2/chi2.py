@@ -58,7 +58,7 @@ def getSolutionFromSpur(inputFile, numSolutions, newSeed):
     inputFileSuffix = inputFile.split('/')[-1][:-4]
     # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".out"
     tempOutputFile = make_temp_name()
-    cmd = '/spur -seed %d -q -s %d -out %s -cnf %s' % (
+    cmd = '/samplers/spur -seed %d -q -s %d -out %s -cnf %s' % (
         newSeed, numSolutions, tempOutputFile, inputFile)
     # if args.verbose:
     print("cmd: ", cmd)
@@ -169,7 +169,7 @@ def getSolutionFromSMARCH(inputFile, numSolutions, newSeed):
     # cmd = "/usr/bin/python3 /samplers/smarch_mp.py -p " + str(P_THREADS) + " -o " + os.path.dirname(inputFile) + " " + inputFile + " " + str(numSolutions) + " > /dev/null 2>&1"
     # single process
 
-    cmd = "/usr/bin/python3 /smarch/smarch.py -o " + os.path.dirname(inputFile) + " " + inputFile + " " + str(numSolutions) + " 2>&1"
+    cmd = "/usr/bin/python3 /samplers/smarch.py -o " + os.path.dirname(inputFile) + " " + inputFile + " " + str(numSolutions) + " 2>&1"
     # cmd = "/usr/bin/python3 /samplers/smarch.py -o " + os.path.dirname(inputFile) + " " + inputFile + " " + str(numSolutions) + " > /dev/null 2>&1"
     # cmd = "/usr/bin/python3 /home/gilles/ICST2019-EMSE-Ext/Kclause_Smarch-local/Smarch/smarch.py " + " -o " + os.path.dirname(inputFile) + " " + inputFile + " " + str(numSolutions)
     # if args.verbose:

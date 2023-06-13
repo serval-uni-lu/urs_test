@@ -4,7 +4,7 @@ From: ubuntu:22.04
 %files
     /home/oz/Documents/projects/cpp/d4/d4 /d4
     ./STS/core/STS /STS
-    ./smarch /smarch
+    ./samplers /samplers
 
 %post
     echo "setup start"

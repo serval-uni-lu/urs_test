@@ -3,7 +3,6 @@ From: base.sif
 
 %files
     ./lookahead.py /lookahead.py
-    ./spur /spur
     ./chi2.py /chi2.py
 
 %runscript
