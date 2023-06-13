@@ -18,6 +18,8 @@ from scipy.stats import chisquare
 
 import argparse
 
+import dDNNF
+
 def make_temp_name(dir = tempfile.gettempdir()):
     return os.path.join(dir, str(uuid.uuid1()))
 
@@ -131,6 +133,44 @@ def getSolutionFromSTS(inputFile, numSolutions, newSeed):
     os.unlink(outputFile)
     return solList
 
+def getSolutionFromQuickSampler(inputFile, numSolutions, newSeed):
+    cmd = "/samplers/quicksampler -n " + str(numSolutions * 5) + ' ' + str(inputFile) + ' > /dev/null 2>&1'
+    # if args.verbose:
+    print("cmd: ", cmd)
+    os.system(cmd)
+    cmd = "/samplers/z3-quicksampler/z3 sat.quicksampler_check=true sat.quicksampler_check.timeout=3600.0 " + str(
+        inputFile) + ' > /dev/null 2>&1'
+    # os.system(cmd)
+
+    # cmd = "/samplers/z3 "+str(inputFile)#+' > /dev/null 2>&1'
+    # if args.verbose:
+    print("cmd: ", cmd)
+    os.system(cmd)
+    if (numSolutions > 1):
+        i = 0
+
+    with open(inputFile + '.samples.valid', 'r') as f:
+        validLines = f.readlines()
+
+    solList = []
+    for line in validLines:
+        fields = line.strip().split(':')
+        sol = fields[0][:-2]
+        # print(sol)
+        solList.append(sol)
+
+    os.unlink(inputFile + '.samples')
+    os.unlink(inputFile + '.samples.valid')
+
+    if len(solList) > numSolutions:
+        solList = random.sample(solList, numSolutions)
+
+    if len(solList) != numSolutions:
+        print("Did not find required number of solutions")
+        sys.exit(1)
+
+    return solList
+
 def getSolutionFromLookahead(inputFile, numSolutions, newSeed):
     kValue = 50
     # samplingRounds = numSolutions / kValue + 1
@@ -205,10 +245,17 @@ def getSolutionFromSMARCH(inputFile, numSolutions, newSeed):
     return solList
 
 
+
 def get_mc(cnf):
     D4_cmd = '/d4 -mc \"{}\" 2>&1 | grep -E \'^s [0-9]+$\' | sed \'s/^s //g\''
     r = getoutput(D4_cmd.format(cnf))
     return int(r)
+
+def compute_dDNNF(cnf):
+    tmp = make_temp_name()
+    D4_cmd = '/d4 \"{}\" -dDNNF -out=\"{}\" 2>&1 | grep -E \'^s [0-9]+$\' | sed \'s/^s //g\''
+    r = getoutput(D4_cmd.format(cnf, tmp))
+    return tmp
 
 
 
@@ -258,6 +305,8 @@ SPUR = 1
 STS = 2
 SMARCH = 3
 LOOKAHEAD = 4
+QUICKSAMPLER = 5
+# CMSGEN = 6
 
 args = parser.parse_args()
 
@@ -265,7 +314,6 @@ args = parser.parse_args()
 significance_level = args.a
 cnf_file = args.cnf
 batch_size = args.batch_size
-rng_range = get_mc(cnf_file)
 
 sampler_fn = getSolutionFromUniGen3
 
@@ -279,35 +327,90 @@ elif args.sampler == SMARCH:
     sampler_fn = getSolutionFromSMARCH
 elif args.sampler == LOOKAHEAD:
     sampler_fn = getSolutionFromLookahead
+elif args.sampler == QUICKSAMPLER:
+    sampler_fn = getSolutionFromQuickSampler
 
-expected = [5] * rng_range
-sample_size = 5 * rng_range
+dDNNF_path = compute_dDNNF(cnf_file)
 
-print(f"sample size: {sample_size}")
+nnf = dDNNF.from_file(dDNNF_path)
+nnf.annotate_mc()
+
+total_mc = nnf.get_node(1).mc
+
+even = 0
+for i in range(0, len(nnf.get_node(1).mc_by_nb_features)):
+    if i % 2 == 0:
+        even += nnf.get_node(1).mc_by_nb_features[i]
+
+uneven = total_mc - even
+
+sample_size = max(batch_size, math.ceil(total_mc * 100 / min(uneven, even)))
 
 for _ in range(0, args.n):
     samples = []
     while len(samples) < sample_size:
-        # samples = getSolutionFromUniGen3(cnf_file, batch_size, random.randint(0, 2**32 - 1))
-        # samples = getSolutionFromSTS(cnf_file, batch_size, random.randint(0, 2**32 - 1))
-        # samples.extend(getSolutionFromSpur(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
-        samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
-        print("##############################")
-        print(len(samples))
-        print("##############################")
+         samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
+         print("##############################")
+         print(len(samples))
+         print("##############################")
 
-    observed = make_bins(samples, sample_size)
+    # building the ovserved = [even, uneven] array
+    # if nb features is even then modulo 2 becomes 0 thus the index in the array
+    # similarily for an uneven nb features
 
-    while len(observed) < rng_range:
-        observed.append(0)
-    print(observed)
+    observed = [0, 0]
+    for s in samples:
+        n = 0
+        for f in s.strip().split(" "):
+            if int(f) > 0:
+                n += 1
+
+        observed[n % 2] += 1
+
+    expected = [even * len(samples) / total_mc, uneven * len(samples) / total_mc]
 
     X2, pv = chisquare(observed, expected)
-    crit = chi2.ppf(1 - significance_level, df = rng_range - 1)
+    crit = chi2.ppf(1 - significance_level, df = len(observed) - 1)
     print(f"X2 {X2}")
     print(f"crit {crit}")
     print(f"pv {pv}")
     # print(f"u {X2 <= crit}")
-    print(f"u {pv >= significance_level}")
+    print(f"is uniform {pv >= significance_level}")
     # print(f"X2: {X2} ({pv})\ncrit: {crit}")
     # print(X2 <= crit)
+
+os.unlink(dDNNF_path)
+
+## Chi2 test
+# rng_range = get_mc(cnf_file)
+# expected = [5] * rng_range
+# sample_size = 5 * rng_range
+# 
+# print(f"sample size: {sample_size}")
+# 
+# for _ in range(0, args.n):
+#     samples = []
+#     while len(samples) < sample_size:
+#         # samples = getSolutionFromUniGen3(cnf_file, batch_size, random.randint(0, 2**32 - 1))
+#         # samples = getSolutionFromSTS(cnf_file, batch_size, random.randint(0, 2**32 - 1))
+#         # samples.extend(getSolutionFromSpur(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
+#         samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
+#         print("##############################")
+#         print(len(samples))
+#         print("##############################")
+# 
+#     observed = make_bins(samples, sample_size)
+# 
+#     while len(observed) < rng_range:
+#         observed.append(0)
+#     print(observed)
+# 
+#     X2, pv = chisquare(observed, expected)
+#     crit = chi2.ppf(1 - significance_level, df = rng_range - 1)
+#     print(f"X2 {X2}")
+#     print(f"crit {crit}")
+#     print(f"pv {pv}")
+#     # print(f"u {X2 <= crit}")
+#     print(f"u {pv >= significance_level}")
+#     # print(f"X2: {X2} ({pv})\ncrit: {crit}")
+#     # print(X2 <= crit)

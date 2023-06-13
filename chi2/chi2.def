@@ -4,6 +4,8 @@ From: base.sif
 %files
     ./lookahead.py /lookahead.py
     ./chi2.py /chi2.py
+    ./samplers /samplers
+    ../dDNNF_parser/src/dDNNF.py /dDNNF.py
 
 %runscript
     /usr/bin/python3 /chi2.py "$@"
