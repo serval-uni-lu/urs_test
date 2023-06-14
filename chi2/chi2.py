@@ -360,23 +360,71 @@ def make_bins(samples, sample_size):
         res.append(d[s])
     return res
 
+def monobit():
+    total_mc = nnf.get_node(1).mc
+
+    even = 0
+    for i in range(0, len(nnf.get_node(1).mc_by_nb_features)):
+        if i % 2 == 0:
+            even += nnf.get_node(1).mc_by_nb_features[i]
+
+    uneven = total_mc - even
+
+    sample_size = max(batch_size, math.ceil(total_mc * 100 / min(uneven, even)))
+
+    for _ in range(0, args.n):
+        samples = []
+        while len(samples) < sample_size:
+             samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
+             print("##############################")
+             print(len(samples))
+             print("##############################")
+
+        # building the ovserved = [even, uneven] array
+        # if nb features is even then modulo 2 becomes 0 thus the index in the array
+        # similarily for an uneven nb features
+
+        observed = [0, 0]
+        for s in samples:
+            n = 0
+            for f in s.strip().split(" "):
+                if int(f) > 0:
+                    n += 1
+
+            observed[n % 2] += 1
+
+        expected = [even * len(samples) / total_mc, uneven * len(samples) / total_mc]
+
+        X2, pv = chisquare(observed, expected)
+        crit = chi2.ppf(1 - significance_level, df = len(observed) - 1)
+        print(f"X2 {X2}")
+        print(f"crit {crit}")
+        print(f"pv {pv}")
+        # print(f"u {X2 <= crit}")
+        print(f"is uniform {pv >= significance_level}")
+        # print(f"X2: {X2} ({pv})\ncrit: {crit}")
+        # print(X2 <= crit)
+
+
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-c", "--cnf", type=str)
+parser.add_argument("-c", "--cnf", type=str, help="path to the cnf formula")
 # parser.add_argument("-k", type=int, default=50)
-parser.add_argument("-a", type=float, default=0.05)
-parser.add_argument("-n", type=int, default=1)
-parser.add_argument("-b", "--batch_size", type=int, default=20)
-parser.add_argument("-s", "--sampler", type=int, default=0)
+parser.add_argument("-a", type=float, default=0.05, help="set the significance level")
+parser.add_argument("-n", type=int, default=1, help="number of times to repeat the test")
+parser.add_argument("-b", "--batch_size", type=int, default=20, help="set the batch size, i.e. the number of solutions asked to the sampler")
+parser.add_argument("-s", "--sampler", type=str, default="unigen3", help="set the sampler to test")
 
-UNIGEN3 = 0
-SPUR = 1
-STS = 2
-SMARCH = 3
-LOOKAHEAD = 4
-QUICKSAMPLER = 5
-CMSGEN = 6
-KUS = 7
+parser.add_argument("--monobit", type=bool, const=True, nargs='?', default=False, help="if set then the monobit test will be executed")
+
+UNIGEN3 = "unigen3"
+SPUR = "spur"
+STS = "sts"
+SMARCH = "smarch"
+LOOKAHEAD = "lookahead"
+QUICKSAMPLER = "quicksampler"
+CMSGEN = "cmsgen"
+KUS = "kus"
 
 args = parser.parse_args()
 
@@ -386,6 +434,8 @@ cnf_file = args.cnf
 batch_size = args.batch_size
 
 sampler_fn = getSolutionFromUniGen3
+
+args.sampler = args.sampler.lower()
 
 if args.sampler == UNIGEN3:
     sampler_fn = getSolutionFromUniGen3
@@ -409,49 +459,8 @@ dDNNF_path = compute_dDNNF(cnf_file)
 nnf = dDNNF.from_file(dDNNF_path)
 nnf.annotate_mc()
 
-total_mc = nnf.get_node(1).mc
-
-even = 0
-for i in range(0, len(nnf.get_node(1).mc_by_nb_features)):
-    if i % 2 == 0:
-        even += nnf.get_node(1).mc_by_nb_features[i]
-
-uneven = total_mc - even
-
-sample_size = max(batch_size, math.ceil(total_mc * 100 / min(uneven, even)))
-
-for _ in range(0, args.n):
-    samples = []
-    while len(samples) < sample_size:
-         samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
-         print("##############################")
-         print(len(samples))
-         print("##############################")
-
-    # building the ovserved = [even, uneven] array
-    # if nb features is even then modulo 2 becomes 0 thus the index in the array
-    # similarily for an uneven nb features
-
-    observed = [0, 0]
-    for s in samples:
-        n = 0
-        for f in s.strip().split(" "):
-            if int(f) > 0:
-                n += 1
-
-        observed[n % 2] += 1
-
-    expected = [even * len(samples) / total_mc, uneven * len(samples) / total_mc]
-
-    X2, pv = chisquare(observed, expected)
-    crit = chi2.ppf(1 - significance_level, df = len(observed) - 1)
-    print(f"X2 {X2}")
-    print(f"crit {crit}")
-    print(f"pv {pv}")
-    # print(f"u {X2 <= crit}")
-    print(f"is uniform {pv >= significance_level}")
-    # print(f"X2: {X2} ({pv})\ncrit: {crit}")
-    # print(X2 <= crit)
+if args.monobit:
+    monobit()
 
 os.unlink(dDNNF_path)
 
