@@ -370,7 +370,7 @@ def monobit():
 
     uneven = total_mc - even
 
-    sample_size = max(batch_size, math.ceil(total_mc * 100 / min(uneven, even)))
+    sample_size = max(batch_size, math.ceil(total_mc * min_elem_per_cell / min(uneven, even)))
 
     for _ in range(0, args.n):
         samples = []
@@ -415,6 +415,8 @@ parser.add_argument("-n", type=int, default=1, help="number of times to repeat t
 parser.add_argument("-b", "--batch_size", type=int, default=20, help="set the batch size, i.e. the number of solutions asked to the sampler")
 parser.add_argument("-s", "--sampler", type=str, default="unigen3", help="set the sampler to test")
 
+parser.add_argument("--min_elem_per_cell", type=int, default=5, help="set the minimum expected elements per cell for chi-squared tests")
+
 parser.add_argument("--monobit", type=bool, const=True, nargs='?', default=False, help="if set then the monobit test will be executed")
 
 UNIGEN3 = "unigen3"
@@ -432,6 +434,7 @@ args = parser.parse_args()
 significance_level = args.a
 cnf_file = args.cnf
 batch_size = args.batch_size
+min_elem_per_cell = args.min_elem_per_cell
 
 sampler_fn = getSolutionFromUniGen3
 
