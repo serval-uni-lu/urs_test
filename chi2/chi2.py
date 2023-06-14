@@ -285,6 +285,34 @@ def getSolutionFromSMARCH(inputFile, numSolutions, newSeed):
 
     return solList
 
+def getSolutionFromKUS(inputFile, numSolutions, newSeed):
+
+    inputFileSuffix = inputFile.split('/')[-1][:-4]
+    # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
+    tempOutputFile = make_temp_name()
+    cwd = os.getcwd()
+    cmd = '/usr/bin/python3  /samplers/KUS.py --samples=' + str(numSolutions) + ' ' + '--outputfile ' + tempOutputFile
+    cmd += ' ' + str(os.path.abspath(inputFile)) + ' > /dev/null 2>&1'
+    # if args.verbose:
+    print("cmd: ", cmd)
+    # os.chdir(str(os.getcwd()) + '/samplers')
+    os.system(cmd)
+    # os.chdir(str(cwd))
+
+    with open(tempOutputFile, 'r') as f:
+        lines = f.readlines()
+
+    solList = []
+
+    for line in lines:
+        sol = re.sub('[0-9]*,', '', line)
+        sol = sol.strip()
+        solList.append(sol)
+
+    os.unlink(str(tempOutputFile))
+
+    return solList
+
 
 
 def get_mc(cnf):
@@ -348,6 +376,7 @@ SMARCH = 3
 LOOKAHEAD = 4
 QUICKSAMPLER = 5
 CMSGEN = 6
+KUS = 7
 
 args = parser.parse_args()
 
@@ -372,6 +401,8 @@ elif args.sampler == QUICKSAMPLER:
     sampler_fn = getSolutionFromQuickSampler
 elif args.sampler == CMSGEN:
     sampler_fn = getSolutionFromCMSsampler
+elif args.sampler == KUS:
+    sampler_fn = getSolutionFromKUS
 
 dDNNF_path = compute_dDNNF(cnf_file)
 
