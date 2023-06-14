@@ -18,8 +18,8 @@ from anytree.exporter import JsonExporter
 from anytree.importer import JsonImporter
 
 srcdir = os.path.dirname(os.path.abspath(__file__))
-SHARPSAT = '/smarch/sharpSAT'
-MARCH = '/smarch/march_cu'
+SHARPSAT = '/samplers/sharpsat-smarch/sharpSAT'
+MARCH = '/samplers/march_cu'
 
 
 
