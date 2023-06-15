@@ -24,6 +24,41 @@ import dDNNF
 def make_temp_name(dir = tempfile.gettempdir()):
     return os.path.join(dir, str(uuid.uuid1()))
 
+
+# We need a dictionary for Distribution-aware distance sampling
+# which records names and not feature ids in outputted samples
+features_dict = {}
+
+def create_features_dict(inputFile):
+    nb_vars = 0
+    with open(inputFile, 'r') as f:
+        lines = f.readlines()
+    for line in lines:
+        if line.startswith("c") and not line.startswith("c ind"):
+            line = line[0:len(line) - 1]
+            _feature = line.split(" ", 4)
+            del _feature[0]
+            # handling non-numeric feature IDs, necessary to parse os-like models with $ in feature names...
+            if len(_feature) <= 2 and len(_feature) > 0:  # needs to deal with literate comments, e.g., in V15 models
+                if (_feature[0].isdigit()):
+                    _feature[0] = int(_feature[0])
+                else:
+                    # num_filter = filter(_feature[0].isdigit(), _feature[0])
+                    num_feature = "".join(c for c in _feature[0] if c.isdigit())
+                    _feature[0] = int(num_feature)
+                    # print('key ' +  str(_feature[1]) +  ' value ' + str(_feature[0])) -- debug
+                    global features_dict
+                features_dict.update({str(_feature[1]): str(_feature[0])})
+        elif line.startswith('p cnf'):
+            _line = line.split(" ", 4)
+            nb_vars = int(_line[2])
+            print("there are : " + str(nb_vars) + " integer variables")
+    if (len(features_dict.keys()) == 0):
+        print("could not create dict from comments, faking it with integer variables in the 'p cnf' header")
+        for i in range(1, nb_vars + 1):
+            # global features_dict
+            features_dict.update({str(i): str(i)})
+
 def getSolutionFromUniGen3(inputFile, numSolutions, newSeed):
     # must construct: ./approxmc3 -s 1 -v2 --sampleout /dev/null --samples 500
     inputFileSuffix = inputFile.split('/')[-1][:-4]
@@ -313,6 +348,68 @@ def getSolutionFromKUS(inputFile, numSolutions, newSeed):
 
     return solList
 
+def getSolutionFromDistAware(inputFile, numSolutions, newSeed):
+
+    inputFileSuffix = inputFile.split('/')[-1][:-4]
+    # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
+    tempOutputFile = make_temp_name() + ".txt"
+
+    # creating the file to configure the sampler
+    # dbsConfigFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".a"
+    dbsConfigFile = make_temp_name() + ".a"
+
+    logFile = make_temp_name() + ".txt"
+    # logFile = str(tempfile.gettempdir()) + '/' + "output.txt"
+
+    with open(dbsConfigFile, 'w+') as f:
+        f.write("log " + logFile + "\n")
+        f.write("dimacs " + str(os.path.abspath(inputFile)) + "\n")
+        params = " solver z3" + "\n"
+        params += "hybrid distribution-aware distance-metric:manhattan distribution:uniform onlyBinary:true onlyNumeric:false"
+        params += " selection:SolverSelection number-weight-optimization:1"
+        params += " numConfigs:" + str(numSolutions)
+        f.write(params + "\n")
+        f.write("printconfigs " + tempOutputFile)
+
+    cmd = "mono /samplers/distribution-aware/CommandLine.exe "
+    cmd += dbsConfigFile
+
+    # if args.verbose:
+    print("cmd: ", cmd)
+    os.system(cmd)
+
+    with open(tempOutputFile, 'r') as f:
+        lines = f.readlines()
+
+    solList = []
+
+    for line in lines:
+        features = re.findall("%\w+%", line)
+        sol = []
+
+        for feature in features:
+            feat = feature[1:-1]
+            sol.append(feat)
+
+        solution = ''
+
+        for k, v in features_dict.items():
+            if k in sol:
+                solution += ' ' + str(v)
+            else:
+                solution += ' -' + str(v)
+        solution = solution.strip()
+        solList.append(solution)
+
+    # cleaning temporary files
+    os.unlink(str(tempOutputFile))
+    os.unlink(dbsConfigFile)
+    os.unlink(logFile)
+    # os.unlink(str(tempfile.gettempdir()) + '/' + "output.txt_error")
+    os.unlink(logFile + "_error")
+
+    return solList
+
 
 
 def get_mc(cnf):
@@ -427,6 +524,7 @@ LOOKAHEAD = "lookahead"
 QUICKSAMPLER = "quicksampler"
 CMSGEN = "cmsgen"
 KUS = "kus"
+DISTAWARE = "distaware"
 
 args = parser.parse_args()
 
@@ -456,6 +554,9 @@ elif args.sampler == CMSGEN:
     sampler_fn = getSolutionFromCMSsampler
 elif args.sampler == KUS:
     sampler_fn = getSolutionFromKUS
+elif args.sampler == DISTAWARE:
+    sampler_fn = getSolutionFromDistAware
+    create_features_dict(cnf_file)
 
 dDNNF_path = compute_dDNNF(cnf_file)
 
