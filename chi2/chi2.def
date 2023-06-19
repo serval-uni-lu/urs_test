@@ -6,6 +6,7 @@ From: base.sif
     ./chi2.py /chi2.py
     ./samplers /samplers
     ../dDNNF_parser/src/dDNNF.py /dDNNF.py
+    ../dDNNF_parser/src/DIMACS.py /DIMACS.py
 
 %runscript
     /usr/bin/python3 /chi2.py "$@"

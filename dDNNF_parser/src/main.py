@@ -35,7 +35,7 @@ print(math.ceil(tmc * 5 / m), end = ", ")
 # print("by nb features frequencies")
 
 m = res.get_node(1).mc
-for i in res.get_node(1).mc_by_nb_features:
+for i in res.get_node(1).mc_by_nb_vars:
     if i != 0:
         m = min(m, i)
 
@@ -45,9 +45,9 @@ print(math.ceil(tmc * 5 / m), end = ", ")
 # print("monobit (even/uneven features)")
 
 even = 0
-for i in range(0, len(res.get_node(1).mc_by_nb_features)):
+for i in range(0, len(res.get_node(1).mc_by_nb_vars)):
     if i % 2 == 0:
-        even += res.get_node(1).mc_by_nb_features[i]
+        even += res.get_node(1).mc_by_nb_vars[i]
 
 uneven = tmc - even
 m = min(even, uneven)

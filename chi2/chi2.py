@@ -20,6 +20,7 @@ from scipy.stats import chisquare
 import argparse
 
 import dDNNF
+import DIMACS
 
 def make_temp_name(dir = tempfile.gettempdir()):
     return os.path.join(dir, str(uuid.uuid1()))
@@ -461,9 +462,9 @@ def monobit():
     total_mc = nnf.get_node(1).mc
 
     even = 0
-    for i in range(0, len(nnf.get_node(1).mc_by_nb_features)):
+    for i in range(0, len(nnf.get_node(1).mc_by_nb_vars)):
         if i % 2 == 0:
-            even += nnf.get_node(1).mc_by_nb_features[i]
+            even += nnf.get_node(1).mc_by_nb_vars[i]
 
     uneven = total_mc - even
 
@@ -492,7 +493,7 @@ def monobit():
 
         expected = [even * len(samples) / total_mc, uneven * len(samples) / total_mc]
 
-        X2, pv = chisquare(observed, expected)
+        X2, pv = chisquare(observed, expected, ddof = 0)
         crit = chi2.ppf(1 - significance_level, df = len(observed) - 1)
         print(f"X2 {X2}")
         print(f"crit {crit}")
@@ -502,6 +503,101 @@ def monobit():
         # print(f"X2: {X2} ({pv})\ncrit: {crit}")
         # print(X2 <= crit)
 
+# WRONG
+def frequency_variables():
+    total_mc = nnf.get_node(1).mc
+    expected = nnf.get_node(1).mc_by_var
+
+    m = nnf.get_node(1).mc
+    for i in expected:
+        if expected[i] != 0:
+            m = min(m, nnf.get_node(1).mc_by_var[i])
+
+    sample_size = max(batch_size, math.ceil(total_mc * min_elem_per_cell / m))
+
+    for _ in range(0, args.n):
+        samples = []
+        while len(samples) < sample_size:
+             samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
+             print("##############################")
+             print(len(samples))
+             print("##############################")
+
+        observed = {}
+        r_expected = {}
+        for i in expected:
+            if expected[i] != 0:
+                observed[i] = 0
+                r_expected[i] = expected[i] * len(samples) / total_mc
+
+        for s in samples:
+            for f in s.strip().split(" "):
+                l = int(f)
+                if l > 0 and expected[abs(l)] != 0:
+                    observed[abs(l)] += 1
+
+        r_observed = []
+        r_expected = []
+        for i in expected:
+            if expected[i] != 0:
+                r_observed.append(observed[i])
+                r_expected.append(expected[i] * len(samples) / total_mc)
+
+        X2, pv = chisquare(r_observed, r_expected, ddof = 0)
+        crit = chi2.ppf(1 - significance_level, df = len(r_observed) - 1)
+        print(f"X2 {X2}")
+        print(f"crit {crit}")
+        print(f"pv {pv}")
+        # print(f"u {X2 <= crit}")
+        print(f"is uniform {pv >= significance_level}")
+        # print(f"X2: {X2} ({pv})\ncrit: {crit}")
+        # print(X2 <= crit)
+
+
+def frequency_nb_variables():
+    total_mc = nnf.get_node(1).mc
+    expected = nnf.get_node(1).mc_by_nb_vars
+
+    m = nnf.get_node(1).mc
+    for i in expected:
+        if i != 0:
+            m = min(m, i)
+
+    sample_size = max(batch_size, math.ceil(total_mc * min_elem_per_cell / m))
+
+    for _ in range(0, args.n):
+        samples = []
+        while len(samples) < sample_size:
+             samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
+             print("##############################")
+             print(len(samples))
+             print("##############################")
+
+        observed = [0] * len(expected)
+
+        for s in samples:
+            n = 0
+            for f in s.strip().split(" "):
+                if int(f) > 0:
+                    n += 1
+            observed[n] += 1
+
+        r_observed = []
+        r_expected = []
+        for i in range(0, len(expected)):
+            if expected[i] != 0:
+                r_observed.append(observed[i])
+                r_expected.append(expected[i] * len(samples) / total_mc)
+
+        X2, pv = chisquare(r_observed, r_expected, ddof = 0)
+        crit = chi2.ppf(1 - significance_level, df = len(r_observed) - 1)
+        print(f"X2 {X2}")
+        print(f"crit {crit}")
+        print(f"pv {pv}")
+        # print(f"u {X2 <= crit}")
+        print(f"is uniform {pv >= significance_level}")
+        # print(f"X2: {X2} ({pv})\ncrit: {crit}")
+        # print(X2 <= crit)
 
 
 parser = argparse.ArgumentParser()
@@ -515,6 +611,8 @@ parser.add_argument("-s", "--sampler", type=str, default="unigen3", help="set th
 parser.add_argument("--min_elem_per_cell", type=int, default=5, help="set the minimum expected elements per cell for chi-squared tests")
 
 parser.add_argument("--monobit", type=bool, const=True, nargs='?', default=False, help="if set then the monobit test will be executed")
+parser.add_argument("--freq_var", type=bool, const=True, nargs='?', default=False, help="if set then the var frequency test will be executed")
+parser.add_argument("--freq_nb_var", type=bool, const=True, nargs='?', default=False, help="if set then the number of selected var frequency test will be executed")
 
 UNIGEN3 = "unigen3"
 SPUR = "spur"
@@ -558,6 +656,7 @@ elif args.sampler == DISTAWARE:
     sampler_fn = getSolutionFromDistAware
     create_features_dict(cnf_file)
 
+dimacs = DIMACS.from_file(cnf_file)
 dDNNF_path = compute_dDNNF(cnf_file)
 
 nnf = dDNNF.from_file(dDNNF_path)
@@ -565,6 +664,10 @@ nnf.annotate_mc()
 
 if args.monobit:
     monobit()
+elif args.freq_var:
+    frequency_variables()
+elif args.freq_nb_var:
+    frequency_nb_variables()
 
 os.unlink(dDNNF_path)
 

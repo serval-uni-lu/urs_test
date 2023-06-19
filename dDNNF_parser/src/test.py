@@ -28,7 +28,7 @@ if orig_mc != res.get_node(1).mc_by_var[0]:
     print(f"error in {args.file} , true mc: {orig_mc}, got (by_var[0]) {res.get_node(1).mc_by_var[0]}")
 
 
-tmp = sum(res.get_node(1).mc_by_nb_features)
+tmp = sum(res.get_node(1).mc_by_nb_vars)
 if orig_mc != tmp:
     print(f"error in {args.file} , true mc: {orig_mc}, got (by_nb_features sum[0]) {tmp}")
 
