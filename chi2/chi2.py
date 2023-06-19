@@ -458,6 +458,20 @@ def make_bins(samples, sample_size):
         res.append(d[s])
     return res
 
+def count_repeats(samples, sample_size):
+    d = set()
+
+    nb = 0
+    i = 0
+    for line in samples:
+        i += 1
+        if line in d:
+            nb += 1
+        d.add(line)
+        if i >= sample_size:
+            break
+    return nb
+
 def monobit():
     total_mc = nnf.get_node(1).mc
 
@@ -599,6 +613,55 @@ def frequency_nb_variables():
         # print(f"X2: {X2} ({pv})\ncrit: {crit}")
         # print(X2 <= crit)
 
+def birthday_test():
+    # implementation of:
+    # https://www.pcg-random.org/posts/birthday-test.html
+
+    desired = args.bday_prob
+    factor = 0
+    if desired < 1.0:
+        factor = math.sqrt(-2.01 * math.log(desired))
+    else:
+        factor = math.sqrt(2.01 * desired)
+
+    rng_range = nnf.get_node(1).mc
+    sample_size = math.ceil(factor * math.sqrt(rng_range))
+    expected = sample_size - rng_range * -1 * math.expm1(sample_size * math.log1p(-1 / rng_range))
+    p_zero = math.exp(-1 * expected)
+
+    print(f"sample size: {sample_size} ({factor})")
+    print(f"expected: {expected}")
+    print(f"prob of zero duplicates: {p_zero}")
+
+    for _ in range(0, args.n):
+        samples = []
+        while len(samples) < sample_size:
+             samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
+             print("##############################")
+             print(len(samples))
+             print("##############################")
+
+        repeats = count_repeats(samples, sample_size)
+
+        print(f"expected repeats: {expected}")
+        print(f"observed repeats: {repeats}")
+
+        p_value = 0
+        for k in range(0, repeats + 1):
+            pdf_value = math.exp(math.log(expected) * k - expected - math.lgamma(1.01 + k))
+            p_value += pdf_value
+            if p_value > 0.5:
+                p_value = p_value - 1
+
+        if p_value < 0:
+            # print(f"1 - {-1 * p_value}")
+            p_value = 1 - (-1 * p_value)
+        # else:
+            # print(f"{p_value}")
+
+        print(f"pv {p_value}")
+        print(f"is uniform {p_value >= significance_level and p_value <= 1 - significance_level}")
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-c", "--cnf", type=str, help="path to the cnf formula")
@@ -609,10 +672,12 @@ parser.add_argument("-b", "--batch_size", type=int, default=20, help="set the ba
 parser.add_argument("-s", "--sampler", type=str, default="unigen3", help="set the sampler to test")
 
 parser.add_argument("--min_elem_per_cell", type=int, default=5, help="set the minimum expected elements per cell for chi-squared tests")
+parser.add_argument("--bday_prob", type=float, default=0.05, help="set the desired probability for the birthday test")
 
 parser.add_argument("--monobit", type=bool, const=True, nargs='?', default=False, help="if set then the monobit test will be executed")
 parser.add_argument("--freq_var", type=bool, const=True, nargs='?', default=False, help="if set then the var frequency test will be executed")
 parser.add_argument("--freq_nb_var", type=bool, const=True, nargs='?', default=False, help="if set then the number of selected var frequency test will be executed")
+parser.add_argument("--bday", type=bool, const=True, nargs='?', default=False, help="if set then the birthday test will be executed")
 
 UNIGEN3 = "unigen3"
 SPUR = "spur"
@@ -668,6 +733,8 @@ elif args.freq_var:
     frequency_variables()
 elif args.freq_nb_var:
     frequency_nb_variables()
+elif args.bday:
+    birthday_test()
 
 os.unlink(dDNNF_path)
 
