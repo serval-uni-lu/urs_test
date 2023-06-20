@@ -514,6 +514,7 @@ def monobit():
         print(f"pv {pv}")
         # print(f"u {X2 <= crit}")
         print(f"is uniform {pv >= significance_level}")
+        # print(f"is uniform {pv >= significance_level and pv <= 1 - significance_level}")
         # print(f"X2: {X2} ({pv})\ncrit: {crit}")
         # print(X2 <= crit)
 
@@ -564,6 +565,7 @@ def frequency_variables():
         print(f"pv {pv}")
         # print(f"u {X2 <= crit}")
         print(f"is uniform {pv >= significance_level}")
+        # print(f"is uniform {pv >= significance_level and pv <= 1 - significance_level}")
         # print(f"X2: {X2} ({pv})\ncrit: {crit}")
         # print(X2 <= crit)
 
@@ -610,6 +612,7 @@ def frequency_nb_variables():
         print(f"pv {pv}")
         # print(f"u {X2 <= crit}")
         print(f"is uniform {pv >= significance_level}")
+        # print(f"is uniform {pv >= significance_level and pv <= 1 - significance_level}")
         # print(f"X2: {X2} ({pv})\ncrit: {crit}")
         # print(X2 <= crit)
 
@@ -662,13 +665,48 @@ def birthday_test():
         print(f"pv {p_value}")
         print(f"is uniform {p_value >= significance_level and p_value <= 1 - significance_level}")
 
+def pearson_chisquared():
+    rng_range = nnf.get_node(1).mc
+    expected = [min_elem_per_cell] * rng_range
+    sample_size = rng_range * min_elem_per_cell
+
+    print(f"sample size: {sample_size}")
+
+    for _ in range(0, args.n):
+        samples = []
+        while len(samples) < sample_size:
+            # samples = getSolutionFromUniGen3(cnf_file, batch_size, random.randint(0, 2**32 - 1))
+            # samples = getSolutionFromSTS(cnf_file, batch_size, random.randint(0, 2**32 - 1))
+            # samples.extend(getSolutionFromSpur(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
+            samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
+            print("##############################")
+            print(len(samples))
+            print("##############################")
+
+        observed = make_bins(samples, sample_size)
+
+        while len(observed) < rng_range:
+            observed.append(0)
+        print(observed)
+
+        X2, pv = chisquare(observed, expected)
+        crit = chi2.ppf(1 - significance_level, df = rng_range - 1)
+        print(f"X2 {X2}")
+        print(f"crit {crit}")
+        print(f"pv {pv}")
+        # print(f"u {X2 <= crit}")
+        print(f"is uniform {pv >= significance_level}")
+        # print(f"is uniform {pv >= significance_level and pv <= 1 - significance_level}")
+        # print(f"X2: {X2} ({pv})\ncrit: {crit}")
+        # print(X2 <= crit)
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-c", "--cnf", type=str, help="path to the cnf formula")
 # parser.add_argument("-k", type=int, default=50)
 parser.add_argument("-a", type=float, default=0.05, help="set the significance level")
 parser.add_argument("-n", type=int, default=1, help="number of times to repeat the test")
-parser.add_argument("-b", "--batch_size", type=int, default=20, help="set the batch size, i.e. the number of solutions asked to the sampler")
+parser.add_argument("-b", "--batch_size", type=int, default=20, help="set the batch size, i.e. the number of solutions asked to the sampler. If it is k<0 then it is converted to abs(k) * #models of formula")
 parser.add_argument("-s", "--sampler", type=str, default="unigen3", help="set the sampler to test")
 
 parser.add_argument("--min_elem_per_cell", type=int, default=5, help="set the minimum expected elements per cell for chi-squared tests")
@@ -678,6 +716,7 @@ parser.add_argument("--monobit", type=bool, const=True, nargs='?', default=False
 parser.add_argument("--freq_var", type=bool, const=True, nargs='?', default=False, help="if set then the var frequency test will be executed")
 parser.add_argument("--freq_nb_var", type=bool, const=True, nargs='?', default=False, help="if set then the number of selected var frequency test will be executed")
 parser.add_argument("--bday", type=bool, const=True, nargs='?', default=False, help="if set then the birthday test will be executed")
+parser.add_argument("--chisquared", type=bool, const=True, nargs='?', default=False, help="if set then Pearson's chi-squared test will be executed")
 
 UNIGEN3 = "unigen3"
 SPUR = "spur"
@@ -727,14 +766,21 @@ dDNNF_path = compute_dDNNF(cnf_file)
 nnf = dDNNF.from_file(dDNNF_path)
 nnf.annotate_mc()
 
+if batch_size < 0:
+    batch_size = abs(batch_size) * nnf.get_node(1).mc
+
+print(f"batch size: {batch_size}")
+
 if args.monobit:
     monobit()
-elif args.freq_var:
+if args.freq_var:
     frequency_variables()
-elif args.freq_nb_var:
+if args.freq_nb_var:
     frequency_nb_variables()
-elif args.bday:
+if args.bday:
     birthday_test()
+if args.chisquared:
+    pearson_chisquared()
 
 os.unlink(dDNNF_path)
 
