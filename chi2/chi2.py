@@ -92,8 +92,6 @@ def getSolutionFromUniGen3(inputFile, numSolutions, newSeed):
     return solreturnList
 
 def getSolutionFromSpur(inputFile, numSolutions, newSeed):
-    rng = np.random.default_rng()
-
     inputFileSuffix = inputFile.split('/')[-1][:-4]
     # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".out"
     tempOutputFile = make_temp_name()
@@ -128,7 +126,7 @@ def getSolutionFromSpur(inputFile, numSolutions, newSeed):
                 elif (x == '1'):
                     sol += ' ' + str(i)
                 elif (x == '*'):
-                    sol += ' ' + str(i * (rng.choice([-1, 1])))
+                    sol += ' ' + str(i * (random.choice([-1, 1])))
                 else:
                     print("ERROR WHILE PARSING SPUR SAMPLES")
                 i += 1
@@ -662,7 +660,11 @@ def birthday_test():
         # else:
             # print(f"{p_value}")
 
+        # vnr = math.perm(rng_range, sample_size)
+        # vt = rng_range**sample_size
+
         print(f"pv {p_value}")
+        # print(f"pvb {1 - (vnr / vt)}")
         print(f"is uniform {p_value >= significance_level and p_value <= 1 - significance_level}")
 
 def pearson_chisquared():
