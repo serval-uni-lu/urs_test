@@ -158,7 +158,7 @@ def getSolutionFromSTS(inputFile, numSolutions, newSeed):
     if len(solList) < numSolutions:
         print(len(solList))
         print("STS Did not find required number of solutions")
-        sys.exit(1)
+        # sys.exit(1)
 
     if len(solList) > numSolutions:
         solreturnList = random.sample(solList, numSolutions)
@@ -202,7 +202,7 @@ def getSolutionFromQuickSampler(inputFile, numSolutions, newSeed):
 
     if len(solList) != numSolutions:
         print("Did not find required number of solutions")
-        sys.exit(1)
+        # sys.exit(1)
 
     return solList
 
@@ -696,11 +696,12 @@ def birthday_test():
         # vnr = math.perm(rng_range, sample_size)
         # vt = rng_range**sample_size
 
-        print(f"pvi {bday_repetition_pval(samples, sample_size, rng_range)}")
+        # print(f"pvi {bday_repetition_pval(samples, sample_size, rng_range)}")
 
-        print(f"pv {p_value}")
+        # print(f"pv {p_value}")
         # print(f"pvb {1 - (vnr / vt)}")
-        print(f"is uniform {p_value > significance_level and p_value < 1 - significance_level}")
+        # print(f"is uniform {p_value > significance_level and p_value < 1 - significance_level}")
+        # print(f"is uniform {pv > significance_level}")
 
 def pearson_chisquared():
     rng_range = nnf.get_node(1).mc
