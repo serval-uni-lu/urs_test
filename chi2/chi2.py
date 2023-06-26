@@ -624,6 +624,18 @@ def frequency_nb_variables():
         # print(f"X2: {X2} ({pv})\ncrit: {crit}")
         # print(X2 <= crit)
 
+def bday_repetition_pval(samples, sample_size, rng_range):
+    d = set()
+
+    nb = 0
+    for line in samples:
+        nb += 1
+        if line in d:
+            pv = 1 - (math.factorial(rng_range) / (math.factorial(rng_range - nb) * (rng_range**nb)))
+            return pv
+        d.add(line)
+
+
 def birthday_test():
     # implementation of:
     # https://www.pcg-random.org/posts/birthday-test.html
@@ -657,6 +669,17 @@ def birthday_test():
         print(f"expected repeats: {expected}")
         print(f"observed repeats: {repeats}")
 
+        gof_e = [expected, sample_size - expected]
+        gof_o = [repeats, sample_size - repeats]
+
+        X2, pv = chisquare(gof_o, gof_e)
+        crit = chi2.ppf(1 - significance_level, df = len(gof_e) - 1)
+        print(f"X2 {X2}")
+        print(f"crit {crit}")
+        print(f"pv {pv}")
+        # print(f"u {X2 <= crit}")
+        print(f"is uniform {pv > significance_level}")
+
         p_value = 0
         for k in range(0, repeats + 1):
             pdf_value = math.exp(math.log(expected) * k - expected - math.lgamma(1.01 + k))
@@ -672,6 +695,8 @@ def birthday_test():
 
         # vnr = math.perm(rng_range, sample_size)
         # vt = rng_range**sample_size
+
+        print(f"pvi {bday_repetition_pval(samples, sample_size, rng_range)}")
 
         print(f"pv {p_value}")
         # print(f"pvb {1 - (vnr / vt)}")
