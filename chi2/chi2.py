@@ -511,12 +511,11 @@ def monobit():
         print(f"crit {crit}")
         print(f"pv {pv}")
         # print(f"u {X2 <= crit}")
-        print(f"is uniform {pv >= significance_level}")
-        # print(f"is uniform {pv >= significance_level and pv <= 1 - significance_level}")
+        print(f"is uniform {pv > significance_level}")
+        # print(f"is uniform {pv > significance_level and pv < 1 - significance_level}")
         # print(f"X2: {X2} ({pv})\ncrit: {crit}")
         # print(X2 <= crit)
 
-# WRONG
 def frequency_variables():
     total_mc = nnf.get_node(1).mc
     expected = nnf.get_node(1).mc_by_var
@@ -538,10 +537,12 @@ def frequency_variables():
 
         observed = {}
         r_expected = {}
+        nb_tested_vars = 0
         for i in expected:
             if expected[i] != 0:
                 observed[i] = 0
                 r_expected[i] = expected[i] * len(samples) / total_mc
+                nb_tested_vars += 1
 
         for s in samples:
             for f in s.strip().split(" "):
@@ -549,23 +550,32 @@ def frequency_variables():
                 if l > 0 and expected[abs(l)] != 0:
                     observed[abs(l)] += 1
 
-        r_observed = []
-        r_expected = []
+        is_uniform = True
+        pvs = []
         for i in expected:
             if expected[i] != 0:
-                r_observed.append(observed[i])
-                r_expected.append(expected[i] * len(samples) / total_mc)
+                r_observed = [observed[i], total_mc - observed[i]]
 
-        X2, pv = chisquare(r_observed, r_expected, ddof = 0)
-        crit = chi2.ppf(1 - significance_level, df = len(r_observed) - 1)
-        print(f"X2 {X2}")
-        print(f"crit {crit}")
-        print(f"pv {pv}")
-        # print(f"u {X2 <= crit}")
-        print(f"is uniform {pv >= significance_level}")
-        # print(f"is uniform {pv >= significance_level and pv <= 1 - significance_level}")
-        # print(f"X2: {X2} ({pv})\ncrit: {crit}")
-        # print(X2 <= crit)
+                e = expected[i] * len(samples) / total_mc
+                r_expected = [e, total_mc - e]
+
+                X2, pv = chisquare(r_observed, r_expected, ddof = 0)
+                crit = chi2.ppf(1 - significance_level, df = len(r_observed) - 1)
+                print(f"X2 {X2}")
+                print(f"crit {crit}")
+                print(f"pv {pv}")
+                # print(f"u {X2 <= crit}")
+                pvs.append(pv)
+                is_uniform = is_uniform and pv > (significance_level / nb_tested_vars)
+                print(f"is uniform {pv > (significance_level / nb_tested_vars)}")
+                # print(f"is uniform {pv > significance_level and pv < 1 - significance_level}")
+                # print(f"X2: {X2} ({pv})\ncrit: {crit}")
+                # print(X2 <= crit)
+
+        pr = 1.0 / ((1.0 / nb_tested_vars) * (np.sum(1.0 / np.array(pvs))))
+
+        print(f"hmp {pr}")
+        print(f"is uniform {is_uniform}")
 
 
 def frequency_nb_variables():
@@ -609,8 +619,8 @@ def frequency_nb_variables():
         print(f"crit {crit}")
         print(f"pv {pv}")
         # print(f"u {X2 <= crit}")
-        print(f"is uniform {pv >= significance_level}")
-        # print(f"is uniform {pv >= significance_level and pv <= 1 - significance_level}")
+        print(f"is uniform {pv > significance_level}")
+        # print(f"is uniform {pv > significance_level and pv < 1 - significance_level}")
         # print(f"X2: {X2} ({pv})\ncrit: {crit}")
         # print(X2 <= crit)
 
@@ -665,7 +675,7 @@ def birthday_test():
 
         print(f"pv {p_value}")
         # print(f"pvb {1 - (vnr / vt)}")
-        print(f"is uniform {p_value >= significance_level and p_value <= 1 - significance_level}")
+        print(f"is uniform {p_value > significance_level and p_value < 1 - significance_level}")
 
 def pearson_chisquared():
     rng_range = nnf.get_node(1).mc
@@ -697,8 +707,8 @@ def pearson_chisquared():
         print(f"crit {crit}")
         print(f"pv {pv}")
         # print(f"u {X2 <= crit}")
-        print(f"is uniform {pv >= significance_level}")
-        # print(f"is uniform {pv >= significance_level and pv <= 1 - significance_level}")
+        print(f"is uniform {pv > significance_level}")
+        # print(f"is uniform {pv > significance_level and pv < 1 - significance_level}")
         # print(f"X2: {X2} ({pv})\ncrit: {crit}")
         # print(X2 <= crit)
 
@@ -816,6 +826,6 @@ os.unlink(dDNNF_path)
 #     print(f"crit {crit}")
 #     print(f"pv {pv}")
 #     # print(f"u {X2 <= crit}")
-#     print(f"u {pv >= significance_level}")
+#     print(f"u {pv > significance_level}")
 #     # print(f"X2: {X2} ({pv})\ncrit: {crit}")
 #     # print(X2 <= crit)
