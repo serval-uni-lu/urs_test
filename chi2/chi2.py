@@ -563,7 +563,7 @@ def frequency_variables():
                 print(f"exp: {r_expected}")
 
                 X2, pv = chisquare(r_observed, r_expected, ddof = 0)
-                crit = chi2.ppf(1 - significance_level, df = len(r_observed) - 1)
+                crit = chi2.ppf(1 - (significance_level / nb_tested_vars), df = len(r_observed) - 1)
                 print(f"v{i} X2 {X2}")
                 print(f"v{i} crit {crit}")
                 print(f"v{i} pv {pv}")
@@ -675,7 +675,7 @@ def birthday_test():
         gof_e = [expected, sample_size - expected]
         gof_o = [repeats, sample_size - repeats]
 
-        X2, pv = chisquare(gof_o, gof_e)
+        X2, pv = chisquare(gof_o, gof_e, ddof = 0)
         crit = chi2.ppf(1 - significance_level, df = len(gof_e) - 1)
         print(f"X2 {X2}")
         print(f"crit {crit}")
@@ -730,7 +730,7 @@ def pearson_chisquared():
             observed.append(0)
         print(observed)
 
-        X2, pv = chisquare(observed, expected)
+        X2, pv = chisquare(observed, expected, ddof = 0)
         crit = chi2.ppf(1 - significance_level, df = rng_range - 1)
         print(f"X2 {X2}")
         print(f"crit {crit}")
