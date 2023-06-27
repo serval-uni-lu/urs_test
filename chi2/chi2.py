@@ -561,13 +561,13 @@ def frequency_variables():
 
                 X2, pv = chisquare(r_observed, r_expected, ddof = 0)
                 crit = chi2.ppf(1 - significance_level, df = len(r_observed) - 1)
-                print(f"X2 {X2}")
-                print(f"crit {crit}")
-                print(f"pv {pv}")
+                print(f"v{i} X2 {X2}")
+                print(f"v{i} crit {crit}")
+                print(f"v{i} pv {pv}")
                 # print(f"u {X2 <= crit}")
                 pvs.append(pv)
                 is_uniform = is_uniform and pv > (significance_level / nb_tested_vars)
-                print(f"is uniform {pv > (significance_level / nb_tested_vars)}")
+                print(f"v{i} is uniform {pv > (significance_level / nb_tested_vars)}")
                 # print(f"is uniform {pv > significance_level and pv < 1 - significance_level}")
                 # print(f"X2: {X2} ({pv})\ncrit: {crit}")
                 # print(X2 <= crit)
@@ -747,8 +747,8 @@ parser.add_argument("-n", type=int, default=1, help="number of times to repeat t
 parser.add_argument("-b", "--batch_size", type=int, default=20, help="set the batch size, i.e. the number of solutions asked to the sampler. If it is k<0 then it is converted to abs(k) * #models of formula")
 parser.add_argument("-s", "--sampler", type=str, default="unigen3", help="set the sampler to test")
 
-parser.add_argument("--min_elem_per_cell", type=int, default=5, help="set the minimum expected elements per cell for chi-squared tests")
-parser.add_argument("--bday_prob", type=float, default=0.05, help="set the desired probability for the birthday test")
+parser.add_argument("--min_elem_per_cell", type=int, default=10, help="set the minimum expected elements per cell for chi-squared tests")
+parser.add_argument("--bday_prob", type=float, default=10, help="set the desired probability for the birthday test if v < 1.0, otherwise it sets the expected number of repeats")
 
 parser.add_argument("--monobit", type=bool, const=True, nargs='?', default=False, help="if set then the monobit test will be executed")
 parser.add_argument("--freq_var", type=bool, const=True, nargs='?', default=False, help="if set then the var frequency test will be executed")
