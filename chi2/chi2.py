@@ -522,7 +522,7 @@ def frequency_variables():
 
     m = nnf.get_node(1).mc
     for i in expected:
-        if expected[i] != 0:
+        if expected[i] != 0 and expected[i] != total_mc:
             m = min(m, nnf.get_node(1).mc_by_var[i])
 
     sample_size = max(batch_size, math.ceil(total_mc * min_elem_per_cell / m))
@@ -539,7 +539,7 @@ def frequency_variables():
         r_expected = {}
         nb_tested_vars = 0
         for i in expected:
-            if expected[i] != 0:
+            if expected[i] != 0 and expected[i] != total_mc:
                 observed[i] = 0
                 r_expected[i] = expected[i] * len(samples) / total_mc
                 nb_tested_vars += 1
@@ -547,17 +547,20 @@ def frequency_variables():
         for s in samples:
             for f in s.strip().split(" "):
                 l = int(f)
-                if l > 0 and expected[abs(l)] != 0:
+                if l > 0 and expected[abs(l)] != 0 and expected[abs(l)] != total_mc:
                     observed[abs(l)] += 1
 
         is_uniform = True
         pvs = []
         for i in expected:
-            if expected[i] != 0:
-                r_observed = [observed[i], total_mc - observed[i]]
+            if expected[i] != 0 and expected[i] != total_mc:
+                r_observed = [observed[i], len(samples) - observed[i]]
 
                 e = expected[i] * len(samples) / total_mc
-                r_expected = [e, total_mc - e]
+                r_expected = [e, len(samples) - e]
+
+                print(f"obs: {r_observed}")
+                print(f"exp: {r_expected}")
 
                 X2, pv = chisquare(r_observed, r_expected, ddof = 0)
                 crit = chi2.ppf(1 - significance_level, df = len(r_observed) - 1)
