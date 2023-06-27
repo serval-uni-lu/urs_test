@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function run {
-	r=$(./chi2.sif -b 50 "--$2" -c "$3" -s "$1" -a "0.01")
+	r=$(./chi2.sif -b 50 "--$2" -c "$3" -s "$1" -a "3.3333333333333335e-05")
 	u=$(echo "$r" | grep -E "^is uniform " | sed 's/^u //g')
 	pv=$(echo "$r" | grep -E "^hmp " | sed 's/^pv //g')
 	echo "$3, $u, $pv"
