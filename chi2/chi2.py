@@ -481,15 +481,25 @@ def monobit():
 
     uneven = total_mc - even
 
+    if uneven == 0 or even == 0:
+        print("pv 1")
+        print("is uniform True")
+        print("timeout even/uneven is zero")
+        return
+
     sample_size = max(batch_size, math.ceil(total_mc * min_elem_per_cell / min(uneven, even)))
 
     for _ in range(0, args.n):
         samples = []
         while len(samples) < sample_size:
-             samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
-             print("##############################")
-             print(len(samples))
-             print("##############################")
+            samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
+            print("##############################")
+            print(len(samples))
+            print("##############################")
+
+            if max_end_time <= time.time():
+                print("timeout True")
+                return
 
         # building the ovserved = [even, uneven] array
         # if nb features is even then modulo 2 becomes 0 thus the index in the array
@@ -517,6 +527,7 @@ def monobit():
         print(f"pv {pv}")
         # print(f"u {X2 <= crit}")
         print(f"is uniform {pv > significance_level}")
+        print("timeout False")
         # print(f"is uniform {pv > significance_level and pv < 1 - significance_level}")
         # print(f"X2: {X2} ({pv})\ncrit: {crit}")
         # print(X2 <= crit)
@@ -535,10 +546,14 @@ def frequency_variables():
     for _ in range(0, args.n):
         samples = []
         while len(samples) < sample_size:
-             samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
-             print("##############################")
-             print(len(samples))
-             print("##############################")
+            samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
+            print("##############################")
+            print(len(samples))
+            print("##############################")
+
+            if max_end_time <= time.time():
+                print("timeout True")
+                return
 
         observed = {}
         r_expected = {}
@@ -555,41 +570,47 @@ def frequency_variables():
                 if l > 0 and expected[abs(l)] != 0 and expected[abs(l)] != total_mc:
                     observed[abs(l)] += 1
 
-        is_uniform = True
-        pvs = []
-        for i in expected:
-            if expected[i] != 0 and expected[i] != total_mc:
-                r_observed = [observed[i], len(samples) - observed[i]]
+        if nb_tested_vars > 0:
+            is_uniform = True
+            pvs = []
+            for i in expected:
+                if expected[i] != 0 and expected[i] != total_mc:
+                    r_observed = [observed[i], len(samples) - observed[i]]
 
-                e = expected[i] * len(samples) / total_mc
-                r_expected = [e, len(samples) - e]
+                    e = expected[i] * len(samples) / total_mc
+                    r_expected = [e, len(samples) - e]
 
-                print(f"obs: {r_observed}")
-                print(f"exp: {r_expected}")
+                    print(f"obs: {r_observed}")
+                    print(f"exp: {r_expected}")
 
-                X2, pv = chisquare(r_observed, r_expected, ddof = 0)
-                crit = chi2.ppf(1 - (significance_level / nb_tested_vars), df = len(r_observed) - 1)
+                    X2, pv = chisquare(r_observed, r_expected, ddof = 0)
+                    crit = chi2.ppf(1 - (significance_level / nb_tested_vars), df = len(r_observed) - 1)
 
-                if pv <= 0:
-                    pv = sys.float_info.min
+                    if pv <= 0:
+                        pv = sys.float_info.min
 
-                print(f"v{i} X2 {X2}")
-                print(f"v{i} crit {crit}")
-                print(f"v{i} pv {pv}")
-                # print(f"u {X2 <= crit}")
-                pvs.append(pv)
-                is_uniform = is_uniform and pv > (significance_level / nb_tested_vars)
-                print(f"v{i} is uniform {pv > (significance_level / nb_tested_vars)}")
-                # print(f"is uniform {pv > significance_level and pv < 1 - significance_level}")
-                # print(f"X2: {X2} ({pv})\ncrit: {crit}")
-                # print(X2 <= crit)
+                    print(f"v{i} X2 {X2}")
+                    print(f"v{i} crit {crit}")
+                    print(f"v{i} pv {pv}")
+                    # print(f"u {X2 <= crit}")
+                    pvs.append(pv)
+                    is_uniform = is_uniform and pv > (significance_level / nb_tested_vars)
+                    print(f"v{i} is uniform {pv > (significance_level / nb_tested_vars)}")
+                    # print(f"is uniform {pv > significance_level and pv < 1 - significance_level}")
+                    # print(f"X2: {X2} ({pv})\ncrit: {crit}")
+                    # print(X2 <= crit)
 
-        pr = 1.0 / ((1.0 / nb_tested_vars) * (np.sum(1.0 / np.array(pvs))))
-        if pr <= 0:
-            pr = sys.float_info.min
+            pr = 1.0 / ((1.0 / nb_tested_vars) * (np.sum(1.0 / np.array(pvs))))
+            if pr <= 0:
+                pr = sys.float_info.min
 
-        print(f"pv {pr}")
-        print(f"is uniform {is_uniform}")
+            print(f"pv {pr}")
+            print(f"is uniform {is_uniform}")
+            print("timeout False")
+        else:
+            print(f"pv {1}")
+            print(f"is uniform {True}")
+            print("timeout no vars to test")
 
 
 def frequency_nb_variables():
@@ -606,10 +627,14 @@ def frequency_nb_variables():
     for _ in range(0, args.n):
         samples = []
         while len(samples) < sample_size:
-             samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
-             print("##############################")
-             print(len(samples))
-             print("##############################")
+            samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
+            print("##############################")
+            print(len(samples))
+            print("##############################")
+
+            if max_end_time <= time.time():
+                print("timeout True")
+                return
 
         observed = [0] * len(expected)
 
@@ -638,6 +663,7 @@ def frequency_nb_variables():
         print(f"pv {pv}")
         # print(f"u {X2 <= crit}")
         print(f"is uniform {pv > significance_level}")
+        print("timeout False")
         # print(f"is uniform {pv > significance_level and pv < 1 - significance_level}")
         # print(f"X2: {X2} ({pv})\ncrit: {crit}")
         # print(X2 <= crit)
@@ -677,10 +703,14 @@ def birthday_test():
     for _ in range(0, args.n):
         samples = []
         while len(samples) < sample_size:
-             samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
-             print("##############################")
-             print(len(samples))
-             print("##############################")
+            samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
+            print("##############################")
+            print(len(samples))
+            print("##############################")
+
+            if max_end_time <= time.time():
+                print("timeout True")
+                return
 
         repeats = count_repeats(samples, sample_size)
 
@@ -701,6 +731,7 @@ def birthday_test():
         print(f"pv {pv}")
         # print(f"u {X2 <= crit}")
         print(f"is uniform {pv > significance_level}")
+        print("timeout False")
 
         p_value = 0
         for k in range(0, repeats + 1):
@@ -743,6 +774,10 @@ def pearson_chisquared():
             print(len(samples))
             print("##############################")
 
+            if max_end_time <= time.time():
+                print("timeout True")
+                return
+
         observed = make_bins(samples, sample_size)
 
         while len(observed) < rng_range:
@@ -760,6 +795,7 @@ def pearson_chisquared():
         print(f"pv {pv}")
         # print(f"u {X2 <= crit}")
         print(f"is uniform {pv > significance_level}")
+        print("timeout False")
         # print(f"is uniform {pv > significance_level and pv < 1 - significance_level}")
         # print(f"X2: {X2} ({pv})\ncrit: {crit}")
         # print(X2 <= crit)
@@ -772,6 +808,8 @@ parser.add_argument("-a", type=float, default=0.05, help="set the significance l
 parser.add_argument("-n", type=int, default=1, help="number of times to repeat the test")
 parser.add_argument("-b", "--batch_size", type=int, default=20, help="set the batch size, i.e. the number of solutions asked to the sampler. If it is k<0 then it is converted to abs(k) * #models of formula")
 parser.add_argument("-s", "--sampler", type=str, default="unigen3", help="set the sampler to test")
+
+parser.add_argument("-t", "--timeout", type=int, default="18000", help="sets the timeout for the test, if exceeded the test is cancelled")
 
 parser.add_argument("--min_elem_per_cell", type=int, default=10, help="set the minimum expected elements per cell for chi-squared tests")
 parser.add_argument("--bday_prob", type=float, default=10, help="set the desired probability for the birthday test if v < 1.0, otherwise it sets the expected number of repeats")
@@ -800,6 +838,8 @@ cnf_file = args.cnf
 batch_size = args.batch_size
 min_elem_per_cell = args.min_elem_per_cell
 
+max_time = args.timeout
+
 sampler_fn = getSolutionFromUniGen3
 
 args.sampler = args.sampler.lower()
@@ -825,6 +865,7 @@ elif args.sampler == DISTAWARE:
     create_features_dict(cnf_file)
 
 start_time = time.time()
+max_end_time = time.time() + max_time
 
 dimacs = DIMACS.from_file(cnf_file)
 dDNNF_path = compute_dDNNF(cnf_file)
