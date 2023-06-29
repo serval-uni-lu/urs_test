@@ -13,6 +13,7 @@ import tempfile
 import pandas as pd
 import numpy as np
 import re
+import time
 
 from scipy.stats import chi2
 from scipy.stats import chisquare
@@ -507,6 +508,10 @@ def monobit():
 
         X2, pv = chisquare(observed, expected, ddof = 0)
         crit = chi2.ppf(1 - significance_level, df = len(observed) - 1)
+
+        if pv <= 0:
+            pv = sys.float_info.min
+
         print(f"X2 {X2}")
         print(f"crit {crit}")
         print(f"pv {pv}")
@@ -564,6 +569,10 @@ def frequency_variables():
 
                 X2, pv = chisquare(r_observed, r_expected, ddof = 0)
                 crit = chi2.ppf(1 - (significance_level / nb_tested_vars), df = len(r_observed) - 1)
+
+                if pv <= 0:
+                    pv = sys.float_info.min
+
                 print(f"v{i} X2 {X2}")
                 print(f"v{i} crit {crit}")
                 print(f"v{i} pv {pv}")
@@ -576,8 +585,10 @@ def frequency_variables():
                 # print(X2 <= crit)
 
         pr = 1.0 / ((1.0 / nb_tested_vars) * (np.sum(1.0 / np.array(pvs))))
+        if pr <= 0:
+            pr = sys.float_info.min
 
-        print(f"hmp {pr}")
+        print(f"pv {pr}")
         print(f"is uniform {is_uniform}")
 
 
@@ -618,6 +629,10 @@ def frequency_nb_variables():
 
         X2, pv = chisquare(r_observed, r_expected, ddof = 0)
         crit = chi2.ppf(1 - significance_level, df = len(r_observed) - 1)
+
+        if pv <= 0:
+            pv = sys.float_info.min
+
         print(f"X2 {X2}")
         print(f"crit {crit}")
         print(f"pv {pv}")
@@ -677,6 +692,10 @@ def birthday_test():
 
         X2, pv = chisquare(gof_o, gof_e, ddof = 0)
         crit = chi2.ppf(1 - significance_level, df = len(gof_e) - 1)
+
+        if pv <= 0:
+            pv = sys.float_info.min
+
         print(f"X2 {X2}")
         print(f"crit {crit}")
         print(f"pv {pv}")
@@ -732,6 +751,10 @@ def pearson_chisquared():
 
         X2, pv = chisquare(observed, expected, ddof = 0)
         crit = chi2.ppf(1 - significance_level, df = rng_range - 1)
+
+        if pv <= 0:
+            pv = sys.float_info.min
+
         print(f"X2 {X2}")
         print(f"crit {crit}")
         print(f"pv {pv}")
@@ -801,6 +824,8 @@ elif args.sampler == DISTAWARE:
     sampler_fn = getSolutionFromDistAware
     create_features_dict(cnf_file)
 
+start_time = time.time()
+
 dimacs = DIMACS.from_file(cnf_file)
 dDNNF_path = compute_dDNNF(cnf_file)
 
@@ -825,36 +850,5 @@ if args.chisquared:
 
 os.unlink(dDNNF_path)
 
-## Chi2 test
-# rng_range = get_mc(cnf_file)
-# expected = [5] * rng_range
-# sample_size = 5 * rng_range
-# 
-# print(f"sample size: {sample_size}")
-# 
-# for _ in range(0, args.n):
-#     samples = []
-#     while len(samples) < sample_size:
-#         # samples = getSolutionFromUniGen3(cnf_file, batch_size, random.randint(0, 2**32 - 1))
-#         # samples = getSolutionFromSTS(cnf_file, batch_size, random.randint(0, 2**32 - 1))
-#         # samples.extend(getSolutionFromSpur(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
-#         samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
-#         print("##############################")
-#         print(len(samples))
-#         print("##############################")
-# 
-#     observed = make_bins(samples, sample_size)
-# 
-#     while len(observed) < rng_range:
-#         observed.append(0)
-#     print(observed)
-# 
-#     X2, pv = chisquare(observed, expected)
-#     crit = chi2.ppf(1 - significance_level, df = rng_range - 1)
-#     print(f"X2 {X2}")
-#     print(f"crit {crit}")
-#     print(f"pv {pv}")
-#     # print(f"u {X2 <= crit}")
-#     print(f"u {pv > significance_level}")
-#     # print(f"X2: {X2} ({pv})\ncrit: {crit}")
-#     # print(X2 <= crit)
+exec_time = time.time() - start_time
+print(f"total time: {exec_time}")
