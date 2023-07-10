@@ -162,7 +162,15 @@ def count(dimacs_, constraints_):
     _features, _clauses, _vcount = read_dimacs(dimacs_)
 
     gen_dimacs(_vcount, _clauses, constraints_, _tempdimacs)
-    res = int(getoutput(SHARPSAT + ' -q ' + _tempdimacs))
+    err_msg = "FOUND UNSAT DURING PREPROCESSING"
+    res  = getoutput(SHARPSAT + ' -q ' + _tempdimacs)
+
+    if err_msg in res:
+        res = 0
+    else:
+        res = int(res)
+
+    #res = int(getoutput(SHARPSAT + ' -q ' + _tempdimacs))
 
     return res
 
@@ -222,7 +230,16 @@ def sample(vcount_, clauses_, n_, wdir_, const_=(), cache_=False, quiet_=False, 
         # execute sharpSAT to count solutions
         for _cube in _cubes:
             gen_dimacs(vcount_, clauses_, assigned_ + _cube, _dimacsfile)
-            res = int(getoutput(SHARPSAT + ' -q ' + _dimacsfile))
+            #res = int(getoutput(SHARPSAT + ' -q ' + _dimacsfile))
+
+            err_msg = "FOUND UNSAT DURING PREPROCESSING"
+            res  = getoutput(SHARPSAT + ' -q ' + _dimacsfile)
+
+            if err_msg in res:
+                res = 0
+            else:
+                res = int(res)
+
             # print(res)
             _total += res
             _counts.append(res)

@@ -282,7 +282,7 @@ def getSolutionFromSMARCH(inputFile, numSolutions, newSeed):
 
     # tmpdir = os.path.dirname(inputFile)
     tmpdir = make_temp_name()
-    cmd = "/usr/bin/python3 /samplers/smarch.py -o " + tmpdir + " " + inputFile + " " + str(numSolutions) + " > /dev/null 2>&1"
+    cmd = "/usr/bin/python3 /samplers/smarch.py -o " + tmpdir + " " + inputFile + " " + str(numSolutions) #+ " > /dev/null 2>&1"
     # cmd = "/usr/bin/python3 /samplers/smarch.py -o " + os.path.dirname(inputFile) + " " + inputFile + " " + str(numSolutions) + " > /dev/null 2>&1"
     # cmd = "/usr/bin/python3 /home/gilles/ICST2019-EMSE-Ext/Kclause_Smarch-local/Smarch/smarch.py " + " -o " + os.path.dirname(inputFile) + " " + inputFile + " " + str(numSolutions)
     # if args.verbose:
@@ -341,7 +341,7 @@ def getSolutionFromKUS(inputFile, numSolutions, newSeed):
 
     for line in lines:
         sol = re.sub('[0-9]*,', '', line)
-        sol = sol.strip()
+        sol = " ".join(set(sol.strip().split(" ")))
         solList.append(sol)
 
     os.unlink(str(tempOutputFile))
@@ -628,9 +628,9 @@ def frequency_nb_variables():
         samples = []
         while len(samples) < sample_size:
             samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
-            print("##############################")
-            print(len(samples))
-            print("##############################")
+            # print("##############################")
+            print(str(len(samples)) + " / " + str(sample_size))
+            # print("##############################")
 
             if max_end_time <= time.time():
                 print("timeout True")
@@ -643,6 +643,10 @@ def frequency_nb_variables():
             for f in s.strip().split(" "):
                 if int(f) > 0:
                     n += 1
+            print(expected)
+            print(observed)
+            print(n)
+            print(s)
             observed[n] += 1
 
         r_observed = []

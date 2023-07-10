@@ -1,0 +1,210 @@
+file, isUniform, pvalue, time, timeout
+unigen3_easy/V15/s832a_15_7.cnf, , , , 
+unigen3_easy/V15/s382_15_7.cnf, , , , 
+unigen3_easy/V15/s420_new_15_7.cnf, , , , 
+unigen3_easy/V15/s953a_15_7.cnf, , , , 
+unigen3_easy/V15/s344_15_7.cnf, , , , 
+unigen3_easy/V7/s510_7_4.cnf, , , , 
+unigen3_easy/V7/s27_new_7_4.cnf, , , , 
+unigen3_easy/V7/s832a_7_4.cnf, , , , 
+unigen3_easy/V15/s510_15_7.cnf, , , , 
+unigen3_easy/V15/s420_new1_15_7.cnf, , , , 
+unigen3_easy/V7/s444_7_4.cnf, , , , 
+unigen3_easy/V7/s1238a_7_4.cnf, , , , 
+unigen3_easy/V15/s27_15_7.cnf, , , , 
+unigen3_easy/V15/s444_15_7.cnf, , , , 
+unigen3_easy/V3/s526_3_2.cnf, , , , 
+unigen3_easy/V3/s444_3_2.cnf, , , , 
+unigen3_easy/V3/s27_3_2.cnf, , , , 
+unigen3_easy/polynomial.sk_7_25.cnf, False, 1.5920605130254467e-26, 1.505385398864746, False
+unigen3_easy/tableBasedAddition.sk_240_1024.cnf, True, 8.678836013505756e-06, 1.1520562171936035, False
+unigen3_easy/V3/s382_3_2.cnf, , , , 
+unigen3_easy/V7/s27_7_4.cnf, , , , 
+unigen3_easy/V15/s526a_15_7.cnf, , , , 
+unigen3_easy/V3/s344_3_2.cnf, , , , 
+unigen3_easy/V7/s526a_7_4.cnf, , , , 
+unigen3_easy/V15/s349_15_7.cnf, , , , 
+unigen3_easy/V3/s1196a_3_2.cnf, , , , 
+unigen3_easy/V7/s420_new1_7_4.cnf, , , , 
+unigen3_easy/Blasted_Real/blasted_case28.cnf, False, 1.0457847134983847e-306, 1.3704159259796143, False
+unigen3_easy/V3/s298_3_2.cnf, , , , 
+unigen3_easy/V3/s27_new_3_2.cnf, , , , 
+unigen3_easy/V7/s382_7_4.cnf, , , , 
+unigen3_easy/V7/s298_7_4.cnf, , , , 
+unigen3_easy/V3/s510_3_2.cnf, , , , 
+unigen3_easy/V3/s420_new1_3_2.cnf, , , , 
+unigen3_easy/V3/s953a_3_2.cnf, , , , 
+unigen3_easy/V15/s298_15_7.cnf, , , , 
+unigen3_easy/V7/s1488_7_4.cnf, , , , 
+unigen3_easy/V7/s820a_7_4.cnf, , , , 
+unigen3_easy/V7/s420_7_4.cnf, , , , 
+unigen3_easy/Blasted_Real/blasted_case22.cnf, False, 2.2250738585072014e-308, 2.326179265975952, False
+unigen3_easy/V15/s420_15_7.cnf, , , , 
+unigen3_easy/V3/s420_3_2.cnf, , , , 
+unigen3_easy/V7/s349_7_4.cnf, , , , 
+unigen3_easy/V3/s832a_3_2.cnf, , , , 
+unigen3_easy/V3/s349_3_2.cnf, , , , 
+unigen3_easy/V3/s1488_3_2.cnf, , , , 
+unigen3_easy/V7/s344_7_4.cnf, , , , 
+unigen3_easy/V15/s27_new_15_7.cnf, , , , 
+unigen3_easy/V3/s820a_3_2.cnf, , , , 
+unigen3_easy/79.sk_4_40.cnf, , , , 
+unigen3_easy/36.sk_3_77.cnf, , , , 
+unigen3_easy/V15/s820a_15_7.cnf, , , , 
+unigen3_easy/V3/s526a_3_2.cnf, , , , 
+unigen3_easy/V7/s526_7_4.cnf, , , , 
+unigen3_easy/35.sk_3_52.cnf, False, 2.2250738585072014e-308, 6.4262120723724365, False
+unigen3_easy/V3/s420_new_3_2.cnf, , , , 
+unigen3_easy/V7/s953a_7_4.cnf, , , , 
+unigen3_easy/Blasted_Real/blasted_case102.cnf, False, 2.1025879430458368e-61, 1.5638010501861572, False
+unigen3_easy/Blasted_Real/blasted_case59_1.cnf, False, 1.8742028062631552e-231, 1.5833313465118408, False
+unigen3_easy/Blasted_Real/blasted_case111.cnf, False, 2.2250738585072014e-308, 5.57701301574707, False
+unigen3_easy/V7/s420_new_7_4.cnf, , , , 
+unigen3_easy/V15/s526_15_7.cnf, , , , 
+unigen3_easy/V15/s1488_15_7.cnf, , , , 
+unigen3_easy/Blasted_Real/blasted_case63.cnf, False, 1.940351140601855e-231, 1.4026539325714111, False
+unigen3_easy/Blasted_Real/blasted_case117.cnf, False, 2.2250738585072014e-308, 6.209510326385498, False
+unigen3_easy/Blasted_Real/blasted_case44.cnf, False, 3.715873343707026e-306, 6.290072917938232, False
+unigen3_easy/Blasted_Real/blasted_case33.cnf, False, 1.0457847134983847e-306, 3.365677833557129, False
+unigen3_easy/Blasted_Real/blasted_case38.cnf, False, 1.468548746614753e-306, 6.21608567237854, False
+unigen3_easy/53.sk_4_32.cnf, False, 2.2250738585072014e-308, 8.631565570831299, False
+unigen3_easy/Blasted_Real/blasted_case60.cnf, False, 6.893008772473424e-22, 1.4737541675567627, False
+unigen3_easy/Blasted_Real/blasted_case103.cnf, False, 2.1025879430458368e-61, 1.3237571716308594, False
+unigen3_easy/Blasted_Real/blasted_case58.cnf, False, 1.940351140601855e-231, 1.3077163696289062, False
+unigen3_easy/111.sk_2_36.cnf, False, 2.2250738585072014e-308, 6.995778560638428, False
+unigen3_easy/Blasted_Real/blasted_case113.cnf, False, 2.2250738585072014e-308, 6.713788270950317, False
+unigen3_easy/FeatureModels/FM-3.6.1-refined.cnf, False, 2.2250738585072014e-308, 2.6088361740112305, False
+unigen3_easy/Blasted_Real/blasted_case29.cnf, False, 2.6218681066813676e-262, 2.508312225341797, False
+unigen3_easy/27.sk_3_32.cnf, False, 2.2250738585072014e-308, 3.85688853263855, False
+unigen3_easy/Blasted_Real/blasted_case25.cnf, False, 1.446298008029681e-306, 4.514658212661743, False
+unigen3_easy/registerlesSwap.sk_3_10.cnf, False, 2.2250738585072014e-308, 7.3158509731292725, False
+unigen3_easy/Blasted_Real/blasted_case110.cnf, False, 2.2250738585072014e-308, 7.1342175006866455, False
+unigen3_easy/Blasted_Real/blasted_case30.cnf, False, 1.446298008029681e-306, 4.929117202758789, False
+unigen3_easy/Blasted_Real/blasted_case32.cnf, False, 1.0457847134983847e-306, 2.5441107749938965, False
+unigen3_easy/Blasted_Real/blasted_case31.cnf, False, 1.0457847134983847e-306, 2.042895555496216, False
+unigen3_easy/Blasted_Real/blasted_case26.cnf, False, 1.0457847134983847e-306, 2.4792778491973877, False
+unigen3_easy/Blasted_Real/blasted_case128.cnf, False, 3.525555978262566e-105, 2.197690010070801, False
+unigen3_easy/Blasted_Real/blasted_case108.cnf, False, 4.123341734475379e-169, 3.0573558807373047, False
+unigen3_easy/Blasted_Real/blasted_case11.cnf, False, 2.2250738585072014e-308, 6.10269021987915, False
+unigen3_easy/Blasted_Real/blasted_case127.cnf, False, 3.525555978262566e-105, 2.2330403327941895, False
+unigen3_easy/Blasted_Real/blasted_case200.cnf, False, 2.319558363348333e-27, 3.3111350536346436, False
+unigen3_easy/Blasted_Real/blasted_case24.cnf, False, 2.6218681066813676e-262, 2.351888418197632, False
+unigen3_easy/Blasted_Real/blasted_case59.cnf, False, 1.8742028062631552e-231, 1.0237903594970703, False
+unigen3_easy/Blasted_Real/blasted_case206.cnf, False, 2.319558363348333e-27, 3.132193088531494, False
+unigen3_easy/Blasted_Real/blasted_case47.cnf, False, 2.5143334601131376e-306, 2.8600265979766846, False
+unigen3_easy/32.sk_4_38.cnf, False, 2.2250738585072014e-308, 8.078999519348145, False
+unigen3_easy/Blasted_Real/blasted_case27.cnf, False, 1.0457847134983847e-306, 2.304830312728882, False
+unigen3_easy/Blasted_Real/blasted_case36.cnf, False, 1.2788677972148589e-231, 0.8338139057159424, False
+unigen3_easy/Blasted_Real/blasted_case112.cnf, False, 2.2250738585072014e-308, 5.3680901527404785, False
+unigen3_easy/Blasted_Real/blasted_case17.cnf, False, 7.787758504775205e-307, 3.7358105182647705, False
+unigen3_easy/Blasted_Real/blasted_case64.cnf, False, 1.8742028062631552e-231, 0.844578742980957, False
+unigen3_easy/Blasted_Real/blasted_case21.cnf, False, 2.2250738585072014e-308, 4.0325422286987305, False
+unigen3_easy/Blasted_Real/blasted_case4.cnf, False, 2.2250738585072014e-308, 7.380087375640869, False
+unigen3_easy/Blasted_Real/blasted_case43.cnf, False, 1.2237906221789608e-306, 4.072306394577026, False
+unigen3_easy/Blasted_Real/blasted_case23.cnf, False, 7.787758504775205e-307, 2.8729124069213867, False
+unigen3_easy/Blasted_Real/blasted_case140.cnf, False, 2.2250738585072014e-308, 8.605383157730103, False
+unigen3_easy/tutorial1.sk_1_1.cnf, False, 7.744216431044088e-06, 1.4171240329742432, False
+unigen3_easy/Blasted_Real/blasted_case45.cnf, False, 1.2237906221789608e-306, 3.3972671031951904, False
+unigen3_easy/107.sk_3_90.cnf, False, 2.2250738585072014e-308, 13.39806604385376, False
+unigen3_easy/Blasted_Real/blasted_case109.cnf, False, 4.8690524736890115e-169, 2.3836617469787598, False
+unigen3_easy/Blasted_Real/blasted_case105.cnf, False, 2.2250738585072014e-308, 5.807217836380005, False
+unigen3_easy/51.sk_4_38.cnf, False, 2.2250738585072014e-308, 13.699853420257568, False
+unigen3_easy/Blasted_Real/blasted_case46.cnf, False, 3.7826255594622424e-306, 3.381502151489258, False
+unigen3_easy/Blasted_Real/blasted_case115.cnf, False, 4.661529733572587e-306, 6.500387668609619, False
+unigen3_easy/Blasted_Real/blasted_case131.cnf, False, 2.2250738585072014e-308, 5.072079181671143, False
+unigen3_easy/Blasted_Real/blasted_case114.cnf, False, 2.2250738585072014e-308, 6.21432089805603, False
+unigen3_easy/Blasted_Real/blasted_case116.cnf, False, 4.7616580572054116e-306, 6.21926736831665, False
+unigen3_easy/Blasted_Real/blasted_case118.cnf, False, 2.2250738585072014e-308, 3.8120734691619873, False
+unigen3_easy/Blasted_Real/blasted_case106.cnf, False, 2.2250738585072014e-308, 10.032634973526001, False
+unigen3_easy/Blasted_Real/blasted_case146.cnf, False, 2.2250738585072014e-308, 6.36581563949585, False
+unigen3_easy/Blasted_Real/blasted_squaring50.cnf, False, 2.2250738585072014e-308, 13.34722089767456, False
+unigen3_easy/Blasted_Real/blasted_case1.cnf, False, 2.2250738585072014e-308, 12.86263132095337, False
+unigen3_easy/Blasted_Real/blasted_case145.cnf, False, 2.2250738585072014e-308, 5.501986503601074, False
+unigen3_easy/Blasted_Real/blasted_case56.cnf, False, 2.2250738585072014e-308, 13.387018203735352, False
+unigen3_easy/Blasted_Real/blasted_case54.cnf, False, 2.2250738585072014e-308, 13.420599699020386, False
+unigen3_easy/Blasted_Real/blasted_squaring51.cnf, False, 2.2250738585072014e-308, 9.8211829662323, False
+unigen3_easy/Blasted_Real/blasted_case52.cnf, False, 2.2250738585072014e-308, 16.591262578964233, False
+unigen3_easy/55.sk_3_46.cnf, False, 2.2250738585072014e-308, 14.219703435897827, False
+unigen3_easy/Blasted_Real/blasted_case2.cnf, False, 2.2250738585072014e-308, 12.649694442749023, False
+unigen3_easy/Blasted_Real/blasted_case3.cnf, False, 2.2250738585072014e-308, 11.949380874633789, False
+unigen3_easy/Blasted_Real/blasted_case53.cnf, False, 2.2250738585072014e-308, 12.883873462677002, False
+unigen3_easy/Blasted_Real/blasted_case202.cnf, False, 2.2250738585072014e-308, 18.445003271102905, False
+unigen3_easy/70.sk_3_40.cnf, False, 2.2250738585072014e-308, 18.99376392364502, False
+unigen3_easy/Blasted_Real/blasted_case51.cnf, False, 2.2250738585072014e-308, 11.799993753433228, False
+unigen3_easy/Blasted_Real/blasted_case_1_b14_2.cnf, False, 2.2250738585072014e-308, 20.038164854049683, False
+unigen3_easy/Blasted_Real/blasted_case205.cnf, False, 2.2250738585072014e-308, 17.644296407699585, False
+unigen3_easy/Blasted_Real/blasted_case201.cnf, False, 2.2250738585072014e-308, 14.877044439315796, False
+unigen3_easy/Blasted_Real/blasted_case204.cnf, False, 2.2250738585072014e-308, 16.483518600463867, False
+unigen3_easy/80.sk_2_48.cnf, False, 2.2250738585072014e-308, 21.4004647731781, False
+unigen3_easy/56.sk_6_38.cnf, False, 2.2250738585072014e-308, 22.098308563232422, False
+unigen3_easy/Blasted_Real/blasted_case_2_b14_1.cnf, False, 2.2250738585072014e-308, 16.655728340148926, False
+unigen3_easy/Blasted_Real/blasted_case68.cnf, False, 2.2250738585072014e-308, 16.234073638916016, False
+unigen3_easy/Blasted_Real/blasted_case203.cnf, False, 2.2250738585072014e-308, 13.806904792785645, False
+unigen3_easy/Blasted_Real/blasted_case_3_b14_1.cnf, False, 2.2250738585072014e-308, 16.022067308425903, False
+unigen3_easy/Blasted_Real/blasted_case_2_b14_3.cnf, False, 2.2250738585072014e-308, 19.67247986793518, False
+unigen3_easy/Blasted_Real/blasted_case_1_b14_1.cnf, False, 2.2250738585072014e-308, 15.14241909980774, False
+unigen3_easy/Blasted_Real/blasted_case_3_b14_2.cnf, False, 2.2250738585072014e-308, 18.21034574508667, False
+unigen3_easy/Blasted_Real/blasted_case41.cnf, False, 2.2250738585072014e-308, 18.698628187179565, False
+unigen3_easy/Blasted_Real/blasted_case_2_b14_2.cnf, False, 2.2250738585072014e-308, 16.44223380088806, False
+unigen3_easy/Blasted_Real/blasted_case_3_b14_3.cnf, False, 2.2250738585072014e-308, 18.61734414100647, False
+unigen3_easy/Blasted_Real/blasted_case_1_b14_3.cnf, False, 2.2250738585072014e-308, 18.257431745529175, False
+unigen3_easy/Blasted_Real/blasted_case40.cnf, False, 2.2250738585072014e-308, 17.43352222442627, False
+unigen3_easy/Blasted_Real/blasted_case121.cnf, False, 2.2250738585072014e-308, 19.44760227203369, False
+unigen3_easy/Blasted_Real/blasted_case39.cnf, False, 2.2250738585072014e-308, 14.821783304214478, False
+unigen3_easy/Blasted_Real/blasted_case_0_b12_1.cnf, False, 2.2250738585072014e-308, 22.525946617126465, False
+unigen3_easy/Blasted_Real/blasted_case7.cnf, False, 2.2250738585072014e-308, 15.96797490119934, False
+unigen3_easy/7.sk_4_50.cnf, False, 2.2250738585072014e-308, 27.210295915603638, False
+unigen3_easy/Blasted_Real/blasted_case_2_b12_1.cnf, False, 2.2250738585072014e-308, 21.720055103302002, False
+unigen3_easy/Blasted_Real/blasted_case_1_b12_1.cnf, False, 2.2250738585072014e-308, 20.264362335205078, False
+unigen3_easy/Blasted_Real/blasted_case8.cnf, False, 2.2250738585072014e-308, 24.352449655532837, False
+unigen3_easy/109.sk_4_36.cnf, False, 2.2250738585072014e-308, 17.068994522094727, False
+unigen3_easy/Blasted_Real/blasted_case5.cnf, False, 2.2250738585072014e-308, 24.3955979347229, False
+unigen3_easy/Blasted_Real/blasted_case34.cnf, False, 2.2250738585072014e-308, 20.878648042678833, False
+unigen3_easy/77.sk_3_44.cnf, False, 2.2250738585072014e-308, 28.98416757583618, False
+unigen3_easy/Blasted_Real/blasted_case123.cnf, False, 2.2250738585072014e-308, 31.8083975315094, False
+unigen3_easy/17.sk_3_45.cnf, False, 2.2250738585072014e-308, 31.61995792388916, False
+unigen3_easy/FMEasy/toybox2.cnf, False, 2.2250738585072014e-308, 32.97223973274231, False
+unigen3_easy/Blasted_Real/blasted_case6.cnf, False, 2.2250738585072014e-308, 33.64025282859802, False
+unigen3_easy/FMEasy/toybox.cnf, False, 2.2250738585072014e-308, 32.03565502166748, False
+unigen3_easy/57.sk_4_64.cnf, False, 2.2250738585072014e-308, 30.152113914489746, False
+unigen3_easy/84.sk_4_77.cnf, False, 2.2250738585072014e-308, 37.474897623062134, False
+unigen3_easy/Blasted_Real/blasted_case61.cnf, False, 2.2250738585072014e-308, 41.97174072265625, False
+unigen3_easy/Blasted_Real/blasted_case14.cnf, False, 2.2250738585072014e-308, 49.70223069190979, False
+unigen3_easy/63.sk_3_64.cnf, False, 2.2250738585072014e-308, 55.00757360458374, False
+unigen3_easy/Blasted_Real/blasted_case9.cnf, False, 2.2250738585072014e-308, 53.69898271560669, False
+unigen3_easy/81.sk_5_51.cnf, False, 2.2250738585072014e-308, 93.39325547218323, False
+unigen3_easy/10.sk_1_46.cnf, False, 2.2250738585072014e-308, 101.66760659217834, False
+unigen3_easy/29.sk_3_45.cnf, False, 2.2250738585072014e-308, 103.72987723350525, False
+unigen3_easy/110.sk_3_88.cnf, False, 2.2250738585072014e-308, 137.75885272026062, False
+unigen3_easy/SetTest.sk_9_21.cnf, False, 1.6543862170312227e-78, 153.16094279289246, False
+unigen3_easy/Blasted_Real/blasted_case126.cnf, False, 2.2250738585072014e-308, 193.88286709785461, False
+unigen3_easy/20.sk_1_51.cnf, False, 2.2250738585072014e-308, 195.05031061172485, False
+unigen3_easy/Blasted_Real/blasted_case122.cnf, False, 2.2250738585072014e-308, 211.7548360824585, False
+unigen3_easy/Blasted_Real/blasted_case62.cnf, False, 2.2250738585072014e-308, 254.18883514404297, False
+unigen3_easy/Blasted_Real/blasted_case125.cnf, False, 2.2250738585072014e-308, 251.0140721797943, False
+unigen3_easy/Blasted_Real/blasted_case57.cnf, False, 2.2250738585072014e-308, 254.5554394721985, False
+unigen3_easy/Blasted_Real/blasted_case55.cnf, False, 2.2250738585072014e-308, 329.6012592315674, False
+unigen3_easy/reverse.sk_11_258.cnf, True, 8.346524222358137e-06, 459.7102780342102, False
+unigen3_easy/Blasted_Real/blasted_case137.cnf, False, 2.2250738585072014e-308, 862.6004059314728, False
+unigen3_easy/Blasted_Real/blasted_case134.cnf, False, 2.2250738585072014e-308, 868.5286712646484, False
+unigen3_easy/Blasted_Real/blasted_case100.cnf, False, 2.2250738585072014e-308, 987.7235870361328, False
+unigen3_easy/Blasted_Real/blasted_case101.cnf, False, 2.2250738585072014e-308, 1001.7938425540924, False
+unigen3_easy/tutorial2.sk_3_4.cnf, True, 8.317857321100144e-06, 1056.9963958263397, False
+unigen3_easy/30.sk_5_76.cnf, False, 2.2250738585072014e-308, 1175.7489230632782, False
+unigen3_easy/ProjectService3.sk_12_55.cnf, False, 2.2250738585072014e-308, 1282.8958675861359, False
+unigen3_easy/Blasted_Real/blasted_case124.cnf, False, 2.2250738585072014e-308, 1461.04922413826, False
+unigen3_easy/Blasted_Real/blasted_case133.cnf, False, 2.2250738585072014e-308, 2027.3904156684875, False
+unigen3_easy/Blasted_Real/blasted_case136.cnf, False, 2.2250738585072014e-308, 2042.809725522995, False
+unigen3_easy/Blasted_Real/blasted_case15.cnf, False, 2.2250738585072014e-308, 2742.443028450012, False
+unigen3_easy/Blasted_Real/blasted_case135.cnf, False, 2.2250738585072014e-308, 2808.9757685661316, False
+unigen3_easy/Blasted_Real/blasted_case132.cnf, False, 2.2250738585072014e-308, 2809.911123275757, False
+unigen3_easy/Blasted_Real/blasted_case10.cnf, False, 2.2250738585072014e-308, 3409.436772108078, False
+unigen3_easy/19.sk_3_48.cnf, False, 2.2250738585072014e-308, 3869.3559165000916, False
+unigen3_easy/lss.sk_6_7.cnf, False, 2.2250738585072014e-308, 4233.378963947296, False
+unigen3_easy/Blasted_Real/blasted_case18.cnf, False, 2.2250738585072014e-308, 5186.888966083527, False
+unigen3_easy/71.sk_3_65.cnf, False, 2.2250738585072014e-308, 13141.131261110306, False
+unigen3_easy/FMEasy/axTLS.cnf, False, 2.2250738585072014e-308, 17435.16373872757, False
+unigen3_easy/Blasted_Real/blasted_case208.cnf, , , 18000.345964431763, True
+unigen3_easy/FMEasy/fiasco.cnf, , , 18000.640828847885, True
+unigen3_easy/Blasted_Real/blasted_squaring20.cnf, , , 18000.220499515533, True
+unigen3_easy/Blasted_Real/blasted_case207.cnf, , , 18000.55030798912, True
