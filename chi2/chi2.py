@@ -17,6 +17,7 @@ import time
 
 from scipy.stats import chi2
 from scipy.stats import chisquare
+from scipy.stats import poisson
 
 import argparse
 
@@ -718,19 +719,25 @@ def birthday_test():
         print(f"expected repeats: {expected}")
         print(f"observed repeats: {repeats}")
 
-        gof_e = [expected, sample_size - expected]
-        gof_o = [repeats, sample_size - repeats]
+        pv = 0
+        if repeats >= expected:
+            pv = poisson.sf(repeats - 1, expected)
+        else:
+            pv = poisson.cdf(repeats, expected)
 
-        X2, pv = chisquare(gof_o, gof_e, ddof = 0)
-        crit = chi2.ppf(1 - significance_level, df = len(gof_e) - 1)
+        # gof_e = [expected, sample_size - expected]
+        # gof_o = [repeats, sample_size - repeats]
+
+        # X2, pv = chisquare(gof_o, gof_e, ddof = 0)
+        # crit = chi2.ppf(1 - significance_level, df = len(gof_e) - 1)
 
         if pv <= 0:
             pv = sys.float_info.min
         if math.isnan(pv):
             pv = 1
 
-        print(f"X2 {X2}")
-        print(f"crit {crit}")
+        # print(f"X2 {X2}")
+        # print(f"crit {crit}")
         print(f"pv {pv}")
         # print(f"u {X2 <= crit}")
         print(f"is uniform {pv > significance_level}")
