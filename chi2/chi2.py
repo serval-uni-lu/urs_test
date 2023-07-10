@@ -282,7 +282,7 @@ def getSolutionFromSMARCH(inputFile, numSolutions, newSeed):
 
     # tmpdir = os.path.dirname(inputFile)
     tmpdir = make_temp_name()
-    cmd = "/usr/bin/python3 /samplers/smarch.py -o " + tmpdir + " " + inputFile + " " + str(numSolutions) #+ " > /dev/null 2>&1"
+    cmd = "/usr/bin/python3 /samplers/smarch.py -o " + tmpdir + " " + inputFile + " " + str(numSolutions) + " > /dev/null 2>&1"
     # cmd = "/usr/bin/python3 /samplers/smarch.py -o " + os.path.dirname(inputFile) + " " + inputFile + " " + str(numSolutions) + " > /dev/null 2>&1"
     # cmd = "/usr/bin/python3 /home/gilles/ICST2019-EMSE-Ext/Kclause_Smarch-local/Smarch/smarch.py " + " -o " + os.path.dirname(inputFile) + " " + inputFile + " " + str(numSolutions)
     # if args.verbose:
@@ -439,24 +439,6 @@ def count_repeats(samples, sample_size):
             break
     return nb
 
-def make_bins(samples, sample_size):
-    d = dict()
-
-    i = 0
-    for s in samples:
-        i += 1
-        if s in d:
-            d[s] += 1
-        else:
-            d[s] = 1
-        if i >= sample_size:
-            break
-
-    res = []
-    for s in d:
-        res.append(d[s])
-    return res
-
 def count_repeats(samples, sample_size):
     d = set()
 
@@ -490,12 +472,21 @@ def monobit():
     sample_size = max(batch_size, math.ceil(total_mc * min_elem_per_cell / min(uneven, even)))
 
     for _ in range(0, args.n):
-        samples = []
-        while len(samples) < sample_size:
-            samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
-            print("##############################")
-            print(len(samples))
-            print("##############################")
+        observed = [0, 0]
+        nb_samples = 0
+        while nb_samples < sample_size:
+            samples = sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1))
+            nb_samples += len(samples)
+
+            print(str(nb_samples) + " / " + str(sample_size))
+
+            for s in samples:
+                n = 0
+                for f in s.strip().split(" "):
+                    if int(f) > 0:
+                        n += 1
+
+                observed[n % 2] += 1
 
             if max_end_time <= time.time():
                 print("timeout True")
@@ -505,22 +496,15 @@ def monobit():
         # if nb features is even then modulo 2 becomes 0 thus the index in the array
         # similarily for an uneven nb features
 
-        observed = [0, 0]
-        for s in samples:
-            n = 0
-            for f in s.strip().split(" "):
-                if int(f) > 0:
-                    n += 1
-
-            observed[n % 2] += 1
-
-        expected = [even * len(samples) / total_mc, uneven * len(samples) / total_mc]
+        expected = [even * nb_samples / total_mc, uneven * nb_samples / total_mc]
 
         X2, pv = chisquare(observed, expected, ddof = 0)
         crit = chi2.ppf(1 - significance_level, df = len(observed) - 1)
 
         if pv <= 0:
             pv = sys.float_info.min
+        if math.isnan(pv):
+            pv = 1
 
         print(f"X2 {X2}")
         print(f"crit {crit}")
@@ -544,41 +528,45 @@ def frequency_variables():
     sample_size = max(batch_size, math.ceil(total_mc * min_elem_per_cell / m))
 
     for _ in range(0, args.n):
-        samples = []
-        while len(samples) < sample_size:
-            samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
-            print("##############################")
-            print(len(samples))
-            print("##############################")
-
-            if max_end_time <= time.time():
-                print("timeout True")
-                return
-
         observed = {}
         r_expected = {}
         nb_tested_vars = 0
         for i in expected:
             if expected[i] != 0 and expected[i] != total_mc:
                 observed[i] = 0
-                r_expected[i] = expected[i] * len(samples) / total_mc
+                #r_expected[i] = expected[i] * len(samples) / total_mc
                 nb_tested_vars += 1
 
-        for s in samples:
-            for f in s.strip().split(" "):
-                l = int(f)
-                if l > 0 and expected[abs(l)] != 0 and expected[abs(l)] != total_mc:
-                    observed[abs(l)] += 1
+        nb_samples = 0
+        while nb_samples < sample_size:
+            samples = sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1))
+            nb_samples += len(samples)
+
+
+            for s in samples:
+                for f in s.strip().split(" "):
+                    l = int(f)
+                    if l > 0 and expected[abs(l)] != 0 and expected[abs(l)] != total_mc:
+                        observed[abs(l)] += 1
+
+            if max_end_time <= time.time():
+                print("timeout True")
+                return
+
+
+        for i in expected:
+            if expected[i] != 0 and expected[i] != total_mc:
+                r_expected[i] = expected[i] * nb_samples / total_mc
 
         if nb_tested_vars > 0:
             is_uniform = True
             pvs = []
             for i in expected:
                 if expected[i] != 0 and expected[i] != total_mc:
-                    r_observed = [observed[i], len(samples) - observed[i]]
+                    r_observed = [observed[i], nb_samples - observed[i]]
 
-                    e = expected[i] * len(samples) / total_mc
-                    r_expected = [e, len(samples) - e]
+                    e = expected[i] * nb_samples / total_mc
+                    r_expected = [e, nb_samples - e]
 
                     print(f"obs: {r_observed}")
                     print(f"exp: {r_expected}")
@@ -588,6 +576,8 @@ def frequency_variables():
 
                     if pv <= 0:
                         pv = sys.float_info.min
+                    if math.isnan(pv):
+                        pv = 1
 
                     print(f"v{i} X2 {X2}")
                     print(f"v{i} crit {crit}")
@@ -603,6 +593,8 @@ def frequency_variables():
             pr = 1.0 / ((1.0 / nb_tested_vars) * (np.sum(1.0 / np.array(pvs))))
             if pr <= 0:
                 pr = sys.float_info.min
+            if math.isnan(pr):
+                pr = 1
 
             print(f"pv {pr}")
             print(f"is uniform {is_uniform}")
@@ -625,28 +617,32 @@ def frequency_nb_variables():
     sample_size = max(batch_size, math.ceil(total_mc * min_elem_per_cell / m))
 
     for _ in range(0, args.n):
-        samples = []
-        while len(samples) < sample_size:
-            samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
-            # print("##############################")
-            print(str(len(samples)) + " / " + str(sample_size))
-            # print("##############################")
+        nb_samples = 0
+        observed = [0] * len(expected)
+
+        while nb_samples < sample_size:
+            samples = sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1))
+            nb_samples += len(samples)
+
+            print(str(nb_samples) + " / " + str(sample_size))
+
+            for s in samples:
+                n = 0
+                for f in s.strip().split(" "):
+                    if int(f) > 0:
+                        n += 1
+                observed[n] += 1
 
             if max_end_time <= time.time():
                 print("timeout True")
                 return
 
-        observed = [0] * len(expected)
 
         for s in samples:
             n = 0
             for f in s.strip().split(" "):
                 if int(f) > 0:
                     n += 1
-            print(expected)
-            print(observed)
-            print(n)
-            print(s)
             observed[n] += 1
 
         r_observed = []
@@ -654,13 +650,15 @@ def frequency_nb_variables():
         for i in range(0, len(expected)):
             if expected[i] != 0:
                 r_observed.append(observed[i])
-                r_expected.append(expected[i] * len(samples) / total_mc)
+                r_expected.append(expected[i] * nb_samples / total_mc)
 
         X2, pv = chisquare(r_observed, r_expected, ddof = 0)
         crit = chi2.ppf(1 - significance_level, df = len(r_observed) - 1)
 
         if pv <= 0:
             pv = sys.float_info.min
+        if math.isnan(pv):
+            pv = 1
 
         print(f"X2 {X2}")
         print(f"crit {crit}")
@@ -708,9 +706,8 @@ def birthday_test():
         samples = []
         while len(samples) < sample_size:
             samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
-            print("##############################")
-            print(len(samples))
-            print("##############################")
+
+            print(str(len(samples)) + " / " + str(sample_size))
 
             if max_end_time <= time.time():
                 print("timeout True")
@@ -729,6 +726,8 @@ def birthday_test():
 
         if pv <= 0:
             pv = sys.float_info.min
+        if math.isnan(pv):
+            pv = 1
 
         print(f"X2 {X2}")
         print(f"crit {crit}")
@@ -760,6 +759,25 @@ def birthday_test():
         # print(f"is uniform {p_value > significance_level and p_value < 1 - significance_level}")
         # print(f"is uniform {pv > significance_level}")
 
+def make_bins(samples, sample_size):
+    d = dict()
+
+    i = 0
+    for s in samples:
+        i += 1
+        if s in d:
+            d[s] += 1
+        else:
+            d[s] = 1
+        if i >= sample_size:
+            break
+
+    res = []
+    for s in d:
+        res.append(d[s])
+    return res
+
+
 def pearson_chisquared():
     rng_range = nnf.get_node(1).mc
     expected = [min_elem_per_cell] * rng_range
@@ -768,31 +786,46 @@ def pearson_chisquared():
     print(f"sample size: {sample_size}")
 
     for _ in range(0, args.n):
-        samples = []
-        while len(samples) < sample_size:
+        #samples = []
+        nb_samples = 0
+        bins = dict()
+        while nb_samples < sample_size:
             # samples = getSolutionFromUniGen3(cnf_file, batch_size, random.randint(0, 2**32 - 1))
             # samples = getSolutionFromSTS(cnf_file, batch_size, random.randint(0, 2**32 - 1))
             # samples.extend(getSolutionFromSpur(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
-            samples.extend(sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1)))
-            print("##############################")
-            print(len(samples))
-            print("##############################")
+            samples = sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1))
+            for s in samples:
+                nb_samples += 1
+                if s in bins:
+                    bins[s] += 1
+                else:
+                    bins[s] = 1
+                if nb_samples >= sample_size:
+                    break
+                
+            print(str(nb_samples) + " / " + str(sample_size))
 
             if max_end_time <= time.time():
                 print("timeout True")
                 return
 
-        observed = make_bins(samples, sample_size)
+        #observed = make_bins(samples, sample_size)
+
+        observed = []
+        for s in bins:
+            observed.append(bins[s])
 
         while len(observed) < rng_range:
             observed.append(0)
-        print(observed)
+        # print(observed)
 
         X2, pv = chisquare(observed, expected, ddof = 0)
         crit = chi2.ppf(1 - significance_level, df = rng_range - 1)
 
         if pv <= 0:
             pv = sys.float_info.min
+        if math.isnan(pv):
+            pv = 1
 
         print(f"X2 {X2}")
         print(f"crit {crit}")
