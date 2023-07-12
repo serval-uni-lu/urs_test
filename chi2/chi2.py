@@ -14,6 +14,7 @@ import pandas as pd
 import numpy as np
 import re
 import time
+import pycosat
 
 from scipy.stats import chi2
 from scipy.stats import chisquare
@@ -342,7 +343,9 @@ def getSolutionFromKUS(inputFile, numSolutions, newSeed):
 
     for line in lines:
         sol = re.sub('[0-9]*,', '', line)
-        sol = " ".join(set(sol.strip().split(" ")))
+        sol = ""
+        for x in set([str(x) for x in [int(x) for x in sol.strip().split(" ") if x != '']]):
+            sol = x + " "
         solList.append(sol)
 
     os.unlink(str(tempOutputFile))
@@ -639,12 +642,12 @@ def frequency_nb_variables():
                 return
 
 
-        for s in samples:
-            n = 0
-            for f in s.strip().split(" "):
-                if int(f) > 0:
-                    n += 1
-            observed[n] += 1
+        #for s in samples:
+        #    n = 0
+        #    for f in s.strip().split(" "):
+        #        if int(f) > 0:
+        #            n += 1
+        #    observed[n] += 1
 
         r_observed = []
         r_expected = []
@@ -652,6 +655,9 @@ def frequency_nb_variables():
             if expected[i] != 0:
                 r_observed.append(observed[i])
                 r_expected.append(expected[i] * nb_samples / total_mc)
+
+        #print(r_observed)
+        #print(r_expected)
 
         X2, pv = chisquare(r_observed, r_expected, ddof = 0)
         crit = chi2.ppf(1 - significance_level, df = len(r_observed) - 1)
@@ -796,6 +802,7 @@ def pearson_chisquared():
         #samples = []
         nb_samples = 0
         bins = dict()
+        nb_unsat = 0
         while nb_samples < sample_size:
             # samples = getSolutionFromUniGen3(cnf_file, batch_size, random.randint(0, 2**32 - 1))
             # samples = getSolutionFromSTS(cnf_file, batch_size, random.randint(0, 2**32 - 1))
@@ -803,10 +810,20 @@ def pearson_chisquared():
             samples = sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1))
             for s in samples:
                 nb_samples += 1
-                if s in bins:
-                    bins[s] += 1
+                ts = frozenset(s.strip().split(' '))
+                # ts = s
+                if ts in bins:
+                    bins[ts] += 1
                 else:
-                    bins[s] = 1
+                    bins[ts] = 1
+
+                    # tmp_s = [[int(x)] for x in s.strip().split(" ") if x != '']
+                    # s = pycosat.solve(tmp_s + dimacs.cls)
+                    # print(s)
+
+                    # if s == 'UNSAT':
+                    #     print('error UNSAT')
+                    #     nb_unsat += 1
                 if nb_samples >= sample_size:
                     break
                 
@@ -826,6 +843,10 @@ def pearson_chisquared():
             observed.append(0)
         # print(observed)
 
+        # print(len(observed))
+        # print(len(expected))
+        # print(rng_range)
+        # print(nb_unsat)
         X2, pv = chisquare(observed, expected, ddof = 0)
         crit = chi2.ppf(1 - significance_level, df = rng_range - 1)
 
