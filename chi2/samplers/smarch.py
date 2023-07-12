@@ -162,17 +162,17 @@ def count(dimacs_, constraints_):
     _features, _clauses, _vcount = read_dimacs(dimacs_)
 
     gen_dimacs(_vcount, _clauses, constraints_, _tempdimacs)
-    err_msg = "FOUND UNSAT DURING PREPROCESSING"
     res  = getoutput(SHARPSAT + ' -q ' + _tempdimacs)
 
-    if err_msg in res:
-        res = 0
-    else:
-        res = int(res)
+    r = 0
+    try:
+        r = int(res)
+    except ValueError:
+        pass
 
     #res = int(getoutput(SHARPSAT + ' -q ' + _tempdimacs))
 
-    return res
+    return r
 
 
 def checkSAT(dimacs_, constraints_):
@@ -232,13 +232,14 @@ def sample(vcount_, clauses_, n_, wdir_, const_=(), cache_=False, quiet_=False, 
             gen_dimacs(vcount_, clauses_, assigned_ + _cube, _dimacsfile)
             #res = int(getoutput(SHARPSAT + ' -q ' + _dimacsfile))
 
-            err_msg = "FOUND UNSAT DURING PREPROCESSING"
             res  = getoutput(SHARPSAT + ' -q ' + _dimacsfile)
 
-            if err_msg in res:
-                res = 0
-            else:
-                res = int(res)
+            r = 0
+            try:
+                r = int(res)
+            except ValueError:
+                pass
+            res = r
 
             # print(res)
             _total += res

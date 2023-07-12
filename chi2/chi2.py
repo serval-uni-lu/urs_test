@@ -283,7 +283,7 @@ def getSolutionFromSMARCH(inputFile, numSolutions, newSeed):
 
     # tmpdir = os.path.dirname(inputFile)
     tmpdir = make_temp_name()
-    cmd = "/usr/bin/python3 /samplers/smarch.py -o " + tmpdir + " " + inputFile + " " + str(numSolutions) + " > /dev/null 2>&1"
+    cmd = "/usr/bin/python3 /samplers/smarch.py -o " + tmpdir + " " + inputFile + " " + str(numSolutions) #+ " > /dev/null 2>&1"
     # cmd = "/usr/bin/python3 /samplers/smarch.py -o " + os.path.dirname(inputFile) + " " + inputFile + " " + str(numSolutions) + " > /dev/null 2>&1"
     # cmd = "/usr/bin/python3 /home/gilles/ICST2019-EMSE-Ext/Kclause_Smarch-local/Smarch/smarch.py " + " -o " + os.path.dirname(inputFile) + " " + inputFile + " " + str(numSolutions)
     # if args.verbose:
