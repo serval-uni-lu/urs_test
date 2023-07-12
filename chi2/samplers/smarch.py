@@ -21,6 +21,10 @@ srcdir = os.path.dirname(os.path.abspath(__file__))
 SHARPSAT = '/samplers/sharpsat-smarch/sharpSAT'
 MARCH = '/samplers/march_cu'
 
+def get_mc(cnf):
+    D4_cmd = '/d4 -mc \"{}\" 2>&1 | grep -E \'^s [0-9]+$\' | sed \'s/^s //g\''
+    r = getoutput(D4_cmd.format(cnf))
+    return int(r)
 
 
 def read_dimacs(dimacsfile_):
@@ -162,13 +166,14 @@ def count(dimacs_, constraints_):
     _features, _clauses, _vcount = read_dimacs(dimacs_)
 
     gen_dimacs(_vcount, _clauses, constraints_, _tempdimacs)
-    res  = getoutput(SHARPSAT + ' -q ' + _tempdimacs)
+    res = get_mc(_tempdimacs)
+    # res  = getoutput(SHARPSAT + ' -q ' + _tempdimacs)
 
-    r = 0
-    try:
-        r = int(res)
-    except ValueError:
-        pass
+    # r = 0
+    # try:
+    #     r = int(res)
+    # except ValueError:
+    #     pass
 
     #res = int(getoutput(SHARPSAT + ' -q ' + _tempdimacs))
 
@@ -230,16 +235,17 @@ def sample(vcount_, clauses_, n_, wdir_, const_=(), cache_=False, quiet_=False, 
         # execute sharpSAT to count solutions
         for _cube in _cubes:
             gen_dimacs(vcount_, clauses_, assigned_ + _cube, _dimacsfile)
-            #res = int(getoutput(SHARPSAT + ' -q ' + _dimacsfile))
+            res = get_mc(_dimacsfile)
+            # #res = int(getoutput(SHARPSAT + ' -q ' + _dimacsfile))
 
-            res  = getoutput(SHARPSAT + ' -q ' + _dimacsfile)
+            # res  = getoutput(SHARPSAT + ' -q ' + _dimacsfile)
 
-            r = 0
-            try:
-                r = int(res)
-            except ValueError:
-                pass
-            res = r
+            # r = 0
+            # try:
+            #     r = int(res)
+            # except ValueError:
+            #     pass
+            # res = r
 
             # print(res)
             _total += res
