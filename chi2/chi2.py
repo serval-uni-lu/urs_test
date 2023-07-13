@@ -487,7 +487,7 @@ def monobit():
             for s in samples:
                 n = 0
                 for f in s.strip().split(" "):
-                    if int(f) > 0:
+                    if f != '' and int(f) > 0:
                         n += 1
 
                 observed[n % 2] += 1
@@ -549,9 +549,10 @@ def frequency_variables():
 
             for s in samples:
                 for f in s.strip().split(" "):
-                    l = int(f)
-                    if l > 0 and expected[abs(l)] != 0 and expected[abs(l)] != total_mc:
-                        observed[abs(l)] += 1
+                    if f != '':
+                        l = int(f)
+                        if l > 0 and expected[abs(l)] != 0 and expected[abs(l)] != total_mc:
+                            observed[abs(l)] += 1
 
             if max_end_time <= time.time():
                 print("timeout True")
@@ -633,7 +634,7 @@ def frequency_nb_variables():
             for s in samples:
                 n = 0
                 for f in s.strip().split(" "):
-                    if int(f) > 0:
+                    if f != '' and int(f) > 0:
                         n += 1
                 observed[n] += 1
 
