@@ -8,8 +8,8 @@ import math
 
 significance_level = 0.01
 
-samplers = ["cmsgen", "quicksampler", "kus", "spur", "sts", "unigen3", "distaware"]
-tests = ["monobit", "freq_var", "chisquared"]
+samplers = ["cmsgen", "quicksampler", "spur", "sts", "unigen3", "distaware"]
+tests = ["freq_nb_var"]
 benchmarks = ["r30c90", "r30c114", "r30c150b1000", "r50c195", "r50c200"]
 
 batch_size = 20
