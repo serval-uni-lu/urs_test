@@ -1,0 +1,11 @@
+file, isUniform, pvalue
+r50c200/50.200.130.cnf, is uniform True, hmp 1.0
+r50c200/50.200.89.cnf, is uniform False, hmp 8.79207978149645e-96
+r50c200/50.200.203.cnf, is uniform False, hmp 0.0
+r50c200/50.200.185.cnf, is uniform False, hmp 0.0
+r50c200/50.200.166.cnf, is uniform False, hmp 4.042681059180658e-23
+r50c200/50.200.100.cnf, is uniform False, hmp 0.0
+r50c200/50.200.106.cnf, is uniform True, hmp 0.09089365033236281
+r50c200/50.200.167.cnf, is uniform True, hmp 0.8936625131095384
+r50c200/50.200.239.cnf, is uniform False, hmp 1.8517364093841716e-33
+r50c200/50.200.23.cnf, is uniform True, hmp 0.1284378851610612
