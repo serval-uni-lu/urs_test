@@ -329,7 +329,7 @@ def getSolutionFromKUS(inputFile, numSolutions, newSeed):
     tempOutputFile = make_temp_name()
     cwd = os.getcwd()
     cmd = '/usr/bin/python3  /samplers/KUS.py --samples=' + str(numSolutions) + ' ' + '--outputfile ' + tempOutputFile
-    cmd += ' ' + str(os.path.abspath(inputFile)) + ' > /dev/null 2>&1'
+    cmd += ' ' + str(os.path.abspath(inputFile)) # + ' > /dev/null 2>&1'
     # if args.verbose:
     print("cmd: ", cmd)
     # os.chdir(str(os.getcwd()) + '/samplers')
