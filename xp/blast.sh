@@ -2,7 +2,7 @@
 mkdir -p logs
 
 function run {
-	../blast/blast "$1" 1000 > "$1.tmp"
+	../blast/blast "$1" 1000 simple > "$1.tmp"
 	mv "$1.tmp" "$1"
 
 	### d4 NO compression

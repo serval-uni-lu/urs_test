@@ -144,7 +144,7 @@ class CNF {
         void compute_free_vars();
 
         void insert_model(std::set<Literal> const& m);
-        void single_blast();
+        void single_blast(bool simple);
 
         inline std::size_t nb_vars() const { return vars.size(); }
         inline std::size_t nb_free_vars() const { return free.size(); }

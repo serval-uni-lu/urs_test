@@ -1,6 +1,8 @@
 #include<iostream>
 #include<string>
 
+#include<cstring>
+
 #include "CNF.hpp"
 #include "xoshiro512starstar.h"
 
@@ -26,8 +28,15 @@ int main(int argc, char const** argv) {
     CNF cnf(path.c_str());
     uint64_t nb = parse_int(argv[2]);
 
+    uint32_t type = 0;
+    if(strcmp("simple", argv[3]))
+        type = 0;
+    else if(strcmp("imbalance", argv[3]))
+        type = 1;
+
+
     for(uint64_t i = 0; i < nb; i++) {
-        cnf.single_blast();
+        cnf.single_blast(type == 0);
     }
 
     std::cout << cnf;

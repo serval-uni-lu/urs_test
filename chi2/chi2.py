@@ -343,10 +343,13 @@ def getSolutionFromKUS(inputFile, numSolutions, newSeed):
 
     for line in lines:
         sol = re.sub('[0-9]*,', '', line)
-        sol = ""
-        for x in set([str(x) for x in [int(x) for x in sol.strip().split(" ") if x != '']]):
-            sol = x + " "
-        solList.append(sol)
+        sol = set([int(x) for x in sol.strip().split(" ") if x != ''])
+        sol_tmp = ""
+        for x in sol:
+            sol_tmp += str(x) + " "
+
+        sol = sol_tmp
+        solList.append(sol.strip())
 
     os.unlink(str(tempOutputFile))
 
@@ -553,6 +556,8 @@ def frequency_variables():
                         l = int(f)
                         if l > 0 and expected[abs(l)] != 0 and expected[abs(l)] != total_mc:
                             observed[abs(l)] += 1
+
+            print(str(nb_samples) + " / " + str(sample_size))
 
             if max_end_time <= time.time():
                 print("timeout True")
