@@ -816,20 +816,21 @@ def pearson_chisquared():
             samples = sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1))
             for s in samples:
                 nb_samples += 1
-                ts = frozenset(s.strip().split(' '))
+                ts = frozenset([int (x) for x in s.strip().split(' ') if x != ''])
                 # ts = s
                 if ts in bins:
                     bins[ts] += 1
                 else:
                     bins[ts] = 1
 
-                    # tmp_s = [[int(x)] for x in s.strip().split(" ") if x != '']
-                    # s = pycosat.solve(tmp_s + dimacs.cls)
-                    # print(s)
+                    print(ts)
+                    tmp_s = [[x] for x in ts]
+                    s = pycosat.solve(tmp_s + dimacs.cls)
+                    print(s)
 
-                    # if s == 'UNSAT':
-                    #     print('error UNSAT')
-                    #     nb_unsat += 1
+                    if s == 'UNSAT':
+                        print('error UNSAT')
+                        nb_unsat += 1
                 if nb_samples >= sample_size:
                     break
                 
@@ -849,10 +850,10 @@ def pearson_chisquared():
             observed.append(0)
         # print(observed)
 
-        # print(len(observed))
-        # print(len(expected))
-        # print(rng_range)
-        # print(nb_unsat)
+        print(f"obs len: {len(observed)}")
+        print(f"exp len: {len(expected)}")
+        print(f"rng range: {rng_range}")
+        print(f"nb unsat: {nb_unsat}")
         X2, pv = chisquare(observed, expected, ddof = 0)
         crit = chi2.ppf(1 - significance_level, df = rng_range - 1)
 
@@ -943,6 +944,8 @@ dDNNF_path = compute_dDNNF(cnf_file)
 
 nnf = dDNNF.from_file(dDNNF_path)
 nnf.annotate_mc()
+
+print(f"model count: {nnf.get_node(1).mc}")
 
 if batch_size < 0:
     batch_size = abs(batch_size) * nnf.get_node(1).mc

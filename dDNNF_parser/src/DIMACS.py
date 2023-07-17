@@ -23,7 +23,7 @@ def from_file(path):
 
             if line.startswith("p cnf "):
                 res.nb_vars = int(line.split(' ')[2])
-            elif not line.startswith("c "):
+            elif not line.startswith("c"):
                 c = list(set([int(x) for x in line.split(' ') if x != '0']))
                 res.cls.append(c)
 
