@@ -19,6 +19,7 @@ import pycosat
 from scipy.stats import chi2
 from scipy.stats import chisquare
 from scipy.stats import poisson
+import scipy.special
 
 import argparse
 
@@ -431,21 +432,6 @@ def compute_dDNNF(cnf):
     return tmp
 
 
-
-def count_repeats(samples, sample_size):
-    d = set()
-
-    nb = 0
-    i = 0
-    for line in samples:
-        i += 1
-        if line in d:
-            nb += 1
-        d.add(line)
-        if i >= sample_size:
-            break
-    return nb
-
 def count_repeats(samples, sample_size):
     d = set()
 
@@ -638,8 +624,9 @@ def frequency_nb_variables():
 
             for s in samples:
                 n = 0
-                for f in s.strip().split(" "):
-                    if f != '' and int(f) > 0:
+                ts = frozenset([int (x) for x in s.strip().split(' ') if x != ''])
+                for f in ts:
+                    if f > 0:
                         n += 1
                 observed[n] += 1
 
@@ -683,18 +670,6 @@ def frequency_nb_variables():
         # print(f"X2: {X2} ({pv})\ncrit: {crit}")
         # print(X2 <= crit)
 
-def bday_repetition_pval(samples, sample_size, rng_range):
-    d = set()
-
-    nb = 0
-    for line in samples:
-        nb += 1
-        if line in d:
-            pv = 1 - (math.factorial(rng_range) / (math.factorial(rng_range - nb) * (rng_range**nb)))
-            return pv
-        d.add(line)
-
-
 def birthday_test():
     # implementation of:
     # https://www.pcg-random.org/posts/birthday-test.html
@@ -708,7 +683,8 @@ def birthday_test():
 
     rng_range = nnf.get_node(1).mc
     sample_size = math.ceil(factor * math.sqrt(rng_range))
-    expected = sample_size - rng_range * -1 * math.expm1(sample_size * math.log1p(-1 / rng_range))
+    #expected = sample_size - rng_range * -1 * math.expm1(sample_size * math.log1p(-1 / rng_range))
+    expected = scipy.special.binom(sample_size, 2) / rng_range
     p_zero = math.exp(-1 * expected)
 
     print(f"sample size: {sample_size} ({factor})")
@@ -731,17 +707,7 @@ def birthday_test():
         print(f"expected repeats: {expected}")
         print(f"observed repeats: {repeats}")
 
-        pv = 0
-        if repeats >= expected:
-            pv = poisson.sf(repeats - 1, expected)
-        else:
-            pv = poisson.cdf(repeats, expected)
-
-        # gof_e = [expected, sample_size - expected]
-        # gof_o = [repeats, sample_size - repeats]
-
-        # X2, pv = chisquare(gof_o, gof_e, ddof = 0)
-        # crit = chi2.ppf(1 - significance_level, df = len(gof_e) - 1)
+        pv = 2 * min(poisson.sf(repeats - 1, expected), poisson.cdf(repeats, expected))
 
         if pv <= 0:
             pv = sys.float_info.min
@@ -754,29 +720,6 @@ def birthday_test():
         # print(f"u {X2 <= crit}")
         print(f"is uniform {pv > significance_level}")
         print("timeout False")
-
-        p_value = 0
-        for k in range(0, repeats + 1):
-            pdf_value = math.exp(math.log(expected) * k - expected - math.lgamma(1.01 + k))
-            p_value += pdf_value
-            if p_value > 0.5:
-                p_value = p_value - 1
-
-        if p_value < 0:
-            # print(f"1 - {-1 * p_value}")
-            p_value = 1 - (-1 * p_value)
-        # else:
-            # print(f"{p_value}")
-
-        # vnr = math.perm(rng_range, sample_size)
-        # vt = rng_range**sample_size
-
-        # print(f"pvi {bday_repetition_pval(samples, sample_size, rng_range)}")
-
-        # print(f"pv {p_value}")
-        # print(f"pvb {1 - (vnr / vt)}")
-        # print(f"is uniform {p_value > significance_level and p_value < 1 - significance_level}")
-        # print(f"is uniform {pv > significance_level}")
 
 def make_bins(samples, sample_size):
     d = dict()
