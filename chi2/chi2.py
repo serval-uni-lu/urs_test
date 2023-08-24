@@ -418,6 +418,37 @@ def getSolutionFromDistAware(inputFile, numSolutions, newSeed):
 
     return solList
 
+def getSolutionFromWalkSAT(inputFile, numSolutions, newSeed):
+
+    tempOutputFile = make_temp_name()
+    cmd = f'/Walksat-master/Walksat_v56/walksat -numsol {numSolutions} -tries {numSolutions * 10} -seed {newSeed} -arc4 -sol {inputFile} > {tempOutputFile}'
+    # if args.verbose:
+    print("cmd: ", cmd)
+    # os.chdir(str(os.getcwd()) + '/samplers')
+    os.system(cmd)
+    # os.chdir(str(cwd))
+
+    with open(tempOutputFile, 'r') as f:
+        lines = f.readlines()
+
+    solList = []
+
+    for line in lines:
+        if line.startswith("s0 "):
+            sol = line[3:]
+            # print(sol.strip().split(" "))
+            sol = set([int(x) for x in sol.strip().split(" ") if x != ''])
+            sol_tmp = ""
+            for x in sol:
+                sol_tmp += str(x) + " "
+
+            sol = sol_tmp
+            solList.append(sol.strip())
+
+    os.unlink(str(tempOutputFile))
+
+    return solList
+
 
 
 def get_mc(cnf):
@@ -844,6 +875,7 @@ QUICKSAMPLER = "quicksampler"
 CMSGEN = "cmsgen"
 KUS = "kus"
 DISTAWARE = "distaware"
+WALKSAT = "walksat"
 
 args = parser.parse_args()
 
@@ -878,6 +910,8 @@ elif args.sampler == KUS:
 elif args.sampler == DISTAWARE:
     sampler_fn = getSolutionFromDistAware
     create_features_dict(cnf_file)
+elif args.sampler == WALKSAT:
+    sampler_fn = getSolutionFromWalkSAT
 
 start_time = time.time()
 max_end_time = time.time() + max_time

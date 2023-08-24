@@ -10,3 +10,4 @@ From: base.sif
 
 %runscript
     /usr/bin/python3 /chi2.py "$@"
+

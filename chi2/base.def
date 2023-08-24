@@ -4,6 +4,7 @@ From: ubuntu:22.04
 %files
     /home/oz/Documents/projects/cpp/d4/d4 /d4
     ./STS/core/STS /STS
+    ./Walksat-master /Walksat-master
 
 %post
     echo "setup start"
@@ -42,6 +43,12 @@ From: ubuntu:22.04
     make -j4
     make install
 
+#WALKSAT
+    cd /Walksat-master/Walksat_v56
+
+    apt-get install -y libbsd-dev
+    make clean
+    make -j8
 
 
 # %runscript
