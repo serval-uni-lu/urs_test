@@ -56,3 +56,5 @@ os.unlink(tempfile)
 # print("")
 # print(res.get_node(1).mc_by_var)
 # res.print_dot()
+
+print(f"done {args.file}")

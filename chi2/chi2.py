@@ -21,8 +21,6 @@ from scipy.stats import chisquare
 from scipy.stats import poisson
 import scipy.special
 
-import argparse
-
 import dDNNF
 import DIMACS
 
