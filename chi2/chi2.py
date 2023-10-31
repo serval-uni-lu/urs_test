@@ -354,6 +354,26 @@ def getSolutionFromKUS(inputFile, numSolutions, newSeed):
 
     return solList
 
+def getSolutionFromKUS2(inputFile, numSolutions, newSeed):
+
+    inputFileSuffix = inputFile.split('/')[-1][:-4]
+    # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
+    tempOutputFile = make_temp_name()
+    cwd = os.getcwd()
+    cmd = f'/usr/bin/python3 /samplers/KUS2.py -n {numSolutions} -c {os.path.abspath(inputFile)} | grep -E -v "^c" > {tempOutputFile}'
+    # if args.verbose:
+    print("cmd: ", cmd)
+    # os.chdir(str(os.getcwd()) + '/samplers')
+    os.system(cmd)
+    # os.chdir(str(cwd))
+
+    with open(tempOutputFile, 'r') as f:
+        lines = f.readlines()
+
+    os.unlink(str(tempOutputFile))
+
+    return lines
+
 def getSolutionFromDistAware(inputFile, numSolutions, newSeed):
 
     inputFileSuffix = inputFile.split('/')[-1][:-4]
@@ -872,6 +892,7 @@ LOOKAHEAD = "lookahead"
 QUICKSAMPLER = "quicksampler"
 CMSGEN = "cmsgen"
 KUS = "kus"
+KUS2 = "kus2"
 DISTAWARE = "distaware"
 WALKSAT = "walksat"
 
@@ -905,6 +926,8 @@ elif args.sampler == CMSGEN:
     sampler_fn = getSolutionFromCMSsampler
 elif args.sampler == KUS:
     sampler_fn = getSolutionFromKUS
+elif args.sampler == KUS2:
+    sampler_fn = getSolutionFromKUS2
 elif args.sampler == DISTAWARE:
     sampler_fn = getSolutionFromDistAware
     create_features_dict(cnf_file)
