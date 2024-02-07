@@ -513,9 +513,9 @@ def monobit():
         print("timeout even/uneven is zero")
         return
 
-    # sample_size = max(batch_size, math.ceil(total_mc * min_elem_per_cell / min(uneven, even)))
-    gof = GofChisquarePower()
-    sample_size = gof.solve_power(effect_size = effect_size, nobs = None, alpha = significance_level, power = power, n_bins = 2)
+    sample_size = max(batch_size, math.ceil(total_mc * min_elem_per_cell / min(uneven, even)))
+    # gof = GofChisquarePower()
+    # sample_size = gof.solve_power(effect_size = effect_size, nobs = None, alpha = significance_level, power = power, n_bins = 2)
 
     for _ in range(0, args.n):
         observed = [0, 0]
@@ -571,9 +571,9 @@ def frequency_variables():
         if expected[i] != 0 and expected[i] != total_mc:
             m = min(m, nnf.get_node(1).mc_by_var[i])
 
-    # sample_size = max(batch_size, math.ceil(total_mc * min_elem_per_cell / m))
-    gof = GofChisquarePower()
-    sample_size = gof.solve_power(effect_size = effect_size, nobs = None, alpha = significance_level, power = power, n_bins = 2)
+    sample_size = max(batch_size, math.ceil(total_mc * min_elem_per_cell / m))
+    # gof = GofChisquarePower()
+    # sample_size = gof.solve_power(effect_size = effect_size, nobs = None, alpha = significance_level, power = power, n_bins = 2)
 
     for _ in range(0, args.n):
         observed = {}
@@ -667,10 +667,10 @@ def frequency_nb_variables():
             nb_bins += 1
             m = min(m, i)
 
-    # sample_size = max(batch_size, math.ceil(total_mc * min_elem_per_cell / m))
+    sample_size = max(batch_size, math.ceil(total_mc * min_elem_per_cell / m))
 
-    gof = GofChisquarePower()
-    sample_size = gof.solve_power(effect_size = effect_size, nobs = None, alpha = significance_level, power = power, n_bins = nb_bins)
+    # gof = GofChisquarePower()
+    # sample_size = gof.solve_power(effect_size = effect_size, nobs = None, alpha = significance_level, power = power, n_bins = nb_bins)
 
     for _ in range(0, args.n):
         nb_samples = 0
@@ -803,10 +803,10 @@ def make_bins(samples, sample_size):
 def pearson_chisquared():
     rng_range = nnf.get_node(1).mc
     expected = [min_elem_per_cell] * rng_range
-    # sample_size = rng_range * min_elem_per_cell
+    sample_size = rng_range * min_elem_per_cell
 
-    gof = GofChisquarePower()
-    sample_size = gof.solve_power(effect_size = effect_size, nobs = None, alpha = significance_level, power = power, n_bins = rng_range)
+    # gof = GofChisquarePower()
+    # sample_size = gof.solve_power(effect_size = effect_size, nobs = None, alpha = significance_level, power = power, n_bins = rng_range)
 
     print(f"sample size: {sample_size}")
 
@@ -889,9 +889,9 @@ parser.add_argument("-s", "--sampler", type=str, default="unigen3", help="set th
 
 parser.add_argument("-t", "--timeout", type=int, default="18000", help="sets the timeout for the test, if exceeded the test is cancelled")
 
-# parser.add_argument("--min_elem_per_cell", type=int, default=10, help="set the minimum expected elements per cell for chi-squared tests")
-parser.add_argument("--effect_size", type=float, default=0.1, help="set the individual effect size for the power analysis")
-parser.add_argument("--power", type=float, default=0.99, help="set the target power of individual tests for the power analysis")
+parser.add_argument("--min_elem_per_cell", type=int, default=20, help="set the minimum expected elements per cell for chi-squared tests")
+# parser.add_argument("--effect_size", type=float, default=0.3, help="set the individual effect size for the power analysis")
+# parser.add_argument("--power", type=float, default=0.99, help="set the target power of individual tests for the power analysis")
 parser.add_argument("--bday_prob", type=float, default=10, help="set the desired probability for the birthday test if v < 1.0, otherwise it sets the expected number of repeats")
 
 parser.add_argument("--monobit", type=bool, const=True, nargs='?', default=False, help="if set then the monobit test will be executed")
@@ -918,10 +918,10 @@ args = parser.parse_args()
 significance_level = args.a
 cnf_file = args.cnf
 batch_size = args.batch_size
-# min_elem_per_cell = args.min_elem_per_cell
 
-effect_size = args.effect_size
-power = args.power
+min_elem_per_cell = args.min_elem_per_cell
+# effect_size = args.effect_size
+# power = args.power
 
 max_time = args.timeout
 
