@@ -362,7 +362,7 @@ def getSolutionFromKUS2(inputFile, numSolutions, newSeed):
     # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
     tempOutputFile = make_temp_name()
     cwd = os.getcwd()
-    cmd = f'/usr/bin/python3 /samplers/KUS2.py -c {os.path.abspath(inputFile)} -n {numSolutions}  | grep -E -v "^c" > {tempOutputFile}'
+    cmd = f'/usr/bin/python3 /samplers/KUS2.py -c {os.path.abspath(inputFile)} -n {numSolutions} -s {newSeed}  | grep -E -v "^c" > {tempOutputFile}'
     # if args.verbose:
     print("cmd: ", cmd)
     # os.chdir(str(os.getcwd()) + '/samplers')

@@ -66,9 +66,13 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-c", "--cnf", type=str, help="path to the cnf formula")
 # parser.add_argument("-k", type=int, default=50)
 parser.add_argument("-n", type=int, default=100, help="number of samples")
+parser.add_argument("-s", type=int, default=0, help="rng seed")
 
 args = parser.parse_args()
 cnf_file = args.cnf
+
+if args.s != 0:
+    random.seed(args.s)
 
 dDNNF_path = compute_dDNNF(cnf_file)
 nnf = dDNNF.from_file(dDNNF_path)
