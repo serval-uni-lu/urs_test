@@ -2,6 +2,7 @@ from subprocess import getoutput
 import random
 import argparse
 import os
+import sys
 
 import dDNNF
 
@@ -58,7 +59,7 @@ def sample(nnf):
         elif type(node) is dDNNF.TrueNode:
             pass
         elif type(node) is dDNNF.FalseNode:
-            raise ValueError('encountered FalseNode wihle sampling')
+            raise ValueError('encountered FalseNode while sampling')
 
     return sample
 
@@ -79,9 +80,10 @@ nnf = dDNNF.from_file(dDNNF_path)
 nnf.annotate_mc()
 
 print(f"c {dDNNF_path}")
-print(f"c mc {nnf.get_node(1).mc}")
+print(f"c mc {nnf.get_node(1).mc}", file=sys.stderr)
 
 for _ in range(0, args.n):
     s = sample(nnf)
     s.sort(key=abs)
     print(" ".join(map(str, s)))
+    # print(" ".join(map(str, s)), file=sys.stderr)

@@ -737,9 +737,9 @@ def birthday_test():
     desired = args.bday_prob
     factor = 0
     if desired < 1.0:
-        factor = math.sqrt(-2.01 * math.log(desired))
+        factor = math.sqrt(-2.0 * math.log(desired))
     else:
-        factor = math.sqrt(2.01 * desired)
+        factor = math.sqrt(2.0 * desired)
 
     rng_range = nnf.get_node(1).mc
     sample_size = math.ceil(factor * math.sqrt(rng_range))
