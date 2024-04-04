@@ -214,11 +214,13 @@ def getSolutionFromCMSsampler(inputFile, numSolutions, newSeed):
     # inputFileSuffix = inputFile.split('/')[-1][:-4]
     # outputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".out"
     outputFile = make_temp_name()
-    cmd = "/samplers/cryptominisat5 --restart luby --maple 0 --verb 10 --nobansol"
-    cmd += " --scc 1 -n1 --presimp 0 --polar rnd --freq 0.9999"
-    cmd += " --random " + str(int(newSeed)) + " --maxsol " + str(numSolutions)
-    cmd += " " + inputFile
-    cmd += " --dumpresult " + outputFile + " > /dev/null 2>&1"
+    # cmd = "/samplers/cryptominisat5 --restart luby --maple 0 --verb 10 --nobansol"
+    # cmd += " --scc 1 -n1 --presimp 0 --polar rnd --freq 0.9999"
+    # cmd += " --random " + str(int(newSeed)) + " --maxsol " + str(numSolutions)
+    # cmd += " " + inputFile
+    # cmd += " --dumpresult " + outputFile + " > /dev/null 2>&1"
+
+    cmd = f"/cmsgen/build/cmsgen --seed {newSeed} --samples {numSolutions} --samplefile \"{outputFile}\" \"{inputFile}\" > /dev/null 2>&1"
 
     # if args.verbose:
     print("cmd: ", cmd)
@@ -472,13 +474,13 @@ def getSolutionFromWalkSAT(inputFile, numSolutions, newSeed):
 
 
 def get_mc(cnf):
-    D4_cmd = '/d4 -mc \"{}\" 2>&1 | grep -E \'^s [0-9]+$\' | sed \'s/^s //g\''
+    D4_cmd = '/d4/d4 -mc \"{}\" 2>&1 | grep -E \'^s [0-9]+$\' | sed \'s/^s //g\''
     r = getoutput(D4_cmd.format(cnf))
     return int(r)
 
 def compute_dDNNF(cnf):
     tmp = make_temp_name()
-    D4_cmd = '/d4 \"{}\" -dDNNF -out=\"{}\" 2>&1 | grep -E \'^s [0-9]+$\' | sed \'s/^s //g\''
+    D4_cmd = '/d4/d4 \"{}\" -dDNNF -out=\"{}\" 2>&1'
     r = getoutput(D4_cmd.format(cnf, tmp))
     return tmp
 
