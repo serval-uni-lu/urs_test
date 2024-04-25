@@ -173,7 +173,7 @@ def getSolutionFromSTS(inputFile, numSolutions, newSeed):
     return solList
 
 def getSolutionFromQuickSampler(inputFile, numSolutions, newSeed):
-    cmd = "/samplers/quicksampler -n " + str(numSolutions * 5) + ' ' + str(inputFile) + ' > /dev/null 2>&1'
+    cmd = "/samplers/quicksampler -s " + str(newSeed) + " -n " + str(numSolutions * 5) + ' ' + str(inputFile) + ' > /dev/null 2>&1'
     # if args.verbose:
     print("cmd: ", cmd)
     os.system(cmd)
@@ -204,7 +204,7 @@ def getSolutionFromQuickSampler(inputFile, numSolutions, newSeed):
     if len(solList) > numSolutions:
         solList = random.sample(solList, numSolutions)
 
-    if len(solList) != numSolutions:
+    if len(solList) < numSolutions:
         print("Did not find required number of solutions")
         # sys.exit(1)
 
@@ -500,6 +500,8 @@ def count_repeats(samples, sample_size):
     return nb
 
 def monobit():
+    global batch_size
+
     total_mc = nnf.get_node(1).mc
 
     even = 0
@@ -568,6 +570,8 @@ def monobit():
         # print(X2 <= crit)
 
 def frequency_variables():
+    global batch_size
+
     total_mc = nnf.get_node(1).mc
     expected = nnf.get_node(1).mc_by_var
 
@@ -665,6 +669,8 @@ def frequency_variables():
 
 
 def frequency_nb_variables():
+    global batch_size
+
     total_mc = nnf.get_node(1).mc
     expected = nnf.get_node(1).mc_by_nb_vars
 
@@ -742,6 +748,8 @@ def frequency_nb_variables():
         # print(X2 <= crit)
 
 def birthday_test():
+    global batch_size
+
     # implementation of:
     # https://www.pcg-random.org/posts/birthday-test.html
 
@@ -816,6 +824,8 @@ def make_bins(samples, sample_size):
 
 
 def pearson_chisquared():
+    global batch_size
+
     rng_range = nnf.get_node(1).mc
     expected = [min_elem_per_cell] * rng_range
     sample_size = rng_range * min_elem_per_cell

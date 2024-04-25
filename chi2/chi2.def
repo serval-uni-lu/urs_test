@@ -8,6 +8,14 @@ From: base.sif
     ../dDNNF_parser/src/dDNNF.py /dDNNF.py
     ../dDNNF_parser/src/dDNNF.py /samplers/dDNNF.py
     ../dDNNF_parser/src/DIMACS.py /DIMACS.py
+    ../quicksampler /quicksampler
+
+%post
+#quicksampler
+    cd /quicksampler
+    make
+    mv ./quicksampler /samplers/quicksampler
+    cd /
 
 %runscript
     /usr/bin/python3 /chi2.py "$@"
