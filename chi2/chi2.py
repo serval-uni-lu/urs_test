@@ -519,6 +519,9 @@ def monobit():
     # gof = GofChisquarePower()
     # sample_size = gof.solve_power(effect_size = effect_size, nobs = None, alpha = significance_level, power = power, n_bins = 2)
 
+    if batch_size == -1:
+        batch_size = sample_size
+
     for _ in range(0, args.n):
         observed = [0, 0]
         nb_samples = 0
@@ -576,6 +579,9 @@ def frequency_variables():
     sample_size = max(batch_size, math.ceil(total_mc * min_elem_per_cell / m))
     # gof = GofChisquarePower()
     # sample_size = gof.solve_power(effect_size = effect_size, nobs = None, alpha = significance_level, power = power, n_bins = 2)
+
+    if batch_size == -1:
+        batch_size = sample_size
 
     for _ in range(0, args.n):
         observed = {}
@@ -671,6 +677,9 @@ def frequency_nb_variables():
 
     sample_size = max(batch_size, math.ceil(total_mc * min_elem_per_cell / m))
 
+    if batch_size == -1:
+        batch_size = sample_size
+
     # gof = GofChisquarePower()
     # sample_size = gof.solve_power(effect_size = effect_size, nobs = None, alpha = significance_level, power = power, n_bins = nb_bins)
 
@@ -746,6 +755,10 @@ def birthday_test():
     rng_range = nnf.get_node(1).mc
     sample_size = math.ceil(factor * math.sqrt(rng_range))
     #expected = sample_size - rng_range * -1 * math.expm1(sample_size * math.log1p(-1 / rng_range))
+
+    if batch_size == -1:
+        batch_size = sample_size
+
     expected = scipy.special.binom(sample_size, 2) / rng_range
     p_zero = math.exp(-1 * expected)
 
@@ -806,6 +819,9 @@ def pearson_chisquared():
     rng_range = nnf.get_node(1).mc
     expected = [min_elem_per_cell] * rng_range
     sample_size = rng_range * min_elem_per_cell
+
+    if batch_size == -1:
+        batch_size = sample_size
 
     # gof = GofChisquarePower()
     # sample_size = gof.solve_power(effect_size = effect_size, nobs = None, alpha = significance_level, power = power, n_bins = rng_range)
