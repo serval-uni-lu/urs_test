@@ -701,7 +701,7 @@ def frequency_nb_variables():
 
             for s in samples:
                 n = 0
-                ts = frozenset([int (x) for x in s.strip().split(' ') if x != ''])
+                ts = frozenset([int (x) for x in s.strip().split(' ') if x != '' and int(x) != 0])
                 for f in ts:
                     if f > 0:
                         n += 1
@@ -850,17 +850,17 @@ def pearson_chisquared():
             samples = sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1))
             for s in samples:
                 nb_samples += 1
-                ts = frozenset([int (x) for x in s.strip().split(' ') if x != ''])
+                ts = frozenset([int (x) for x in s.strip().split(' ') if x != '' and int(x) != 0])
                 # ts = s
                 if ts in bins:
                     bins[ts] += 1
                 else:
                     bins[ts] = 1
 
-                    print(ts)
+                    # print(ts)
                     tmp_s = [[x] for x in ts]
                     s = pycosat.solve(tmp_s + dimacs.cls)
-                    print(s)
+                    # print(s)
 
                     if s == 'UNSAT':
                         print('error UNSAT')
