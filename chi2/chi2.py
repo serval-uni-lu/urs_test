@@ -159,10 +159,10 @@ def getSolutionFromSTS(inputFile, numSolutions, newSeed):
     for j in range(len(lines)):
         solList.append(lines[j])
 
-    if len(solList) < numSolutions:
+    if len(solList) <= 0:
         print(len(solList))
-        print("STS Did not find required number of solutions")
-        # sys.exit(1)
+        print("STS Did not find solutions")
+        sys.exit(1)
 
     if len(solList) > numSolutions:
         solreturnList = random.sample(solList, numSolutions)
@@ -204,9 +204,9 @@ def getSolutionFromQuickSampler(inputFile, numSolutions, newSeed):
     if len(solList) > numSolutions:
         solList = random.sample(solList, numSolutions)
 
-    if len(solList) < numSolutions:
-        print("Did not find required number of solutions")
-        # sys.exit(1)
+    if len(solList) <= 0:
+        print("Did not find solutions")
+        sys.exit(1)
 
     return solList
 
@@ -241,8 +241,8 @@ def getSolutionFromCMSsampler(inputFile, numSolutions, newSeed):
     solreturnList = solList
     if len(solList) > numSolutions:
         solreturnList = random.sample(solList, numSolutions)
-    if len(solList) < numSolutions:
-        print("cryptominisat5 Did not find required number of solutions")
+    if len(solList) <= 0:
+        print("cryptominisat5 Did not find solutions")
         sys.exit(1)
     os.unlink(outputFile)
     return solreturnList
@@ -267,9 +267,9 @@ def getSolutionFromLookahead(inputFile, numSolutions, newSeed):
         sol = lines[j].strip()
         solList.append(sol)
 
-    if len(solList) < numSolutions:
+    if len(solList) <= 0:
         print(len(solList))
-        print("Lookahead Did not find required number of solutions")
+        print("Lookahead Did not find solutions")
         sys.exit(1)
 
     if len(solList) > numSolutions:
