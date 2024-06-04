@@ -11,10 +11,10 @@ significance_level = 0.01
 samplers = ["cmsgen", "quicksampler", "kus", "spur", "smarch", "sts", "unigen3", "distaware"]
 tests = ["monobit", "freq_var", "freq_nb_var", "chisquared"]
 # tests = ["freq_var"]
-benchmarks = ["r30c90", "r30c114", "r30c150b1000", "r30c150br1000", "r50c195", "r50c200"]
+benchmarks = ["r30c90", "r30c114", "r30c150b1000", "r50c200"]
 #benchmarks = ["unigen3_easy"]
 
-batch_size = 20
+batch_size = 1000
 
 for b in benchmarks:
     # print(b)
@@ -27,13 +27,16 @@ for b in benchmarks:
             data.dropna(inplace = True)
             nb = len(data)
 
-            data['pvalue'].replace(0, 10**(-1))
+            if nb != 0:
+                data['pvalue'].replace(0, 10**(-1))
 
-            pr = 1.0 / ((1.0 / nb) * (np.sum(1.0 / data['pvalue'])))
-            nb_rejects = len(data[data.pvalue <= (significance_level / nb)])
-            total_time = np.sum(data['time'])
+                pr = 1.0 / ((1.0 / nb) * (np.sum(1.0 / data['pvalue'])))
+                nb_rejects = len(data[data.pvalue <= (significance_level / nb)])
+                total_time = np.sum(data['time']) / 3600
 
-            print(f"{b}, {t}, {s}, {pr}, {nb_rejects} / {nb}, {total_time}")
+                print(f"{b}, {t}, {s}, {pr}, {nb_rejects} / {nb}, {total_time}")
+            else:
+                print(f"{b}, {t}, {s}, -, - / {nb}, {total_time}")
 
 # data.dropna(inplace = True)
 
