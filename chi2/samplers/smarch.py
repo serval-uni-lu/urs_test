@@ -22,8 +22,10 @@ SHARPSAT = '/samplers/sharpsat-smarch/sharpSAT'
 MARCH = '/samplers/march_cu'
 
 def get_mc(cnf):
-    D4_cmd = '/d4 -mc \"{}\" 2>&1 | grep -E \'^s [0-9]+$\' | sed \'s/^s //g\''
+    D4_cmd = '/d4/d4 -mc \"{}\" 2>&1 | grep -E \'^s [0-9]+$\' | sed \'s/^s //g\''
+    # D4_cmd = '/d4/d4 -mc \"{}\" 2>&1'
     r = getoutput(D4_cmd.format(cnf))
+    # print(f">>\"{r}\"<<")
     return int(r)
 
 
