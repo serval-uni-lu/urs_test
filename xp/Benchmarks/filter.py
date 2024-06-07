@@ -3,7 +3,7 @@ import os
 
 data = pd.read_csv("unigen3.csv", skipinitialspace = True)
 
-m = data[data.mem <= 1000000]
+m = data[data.mem <= 400000]
 m = m[m.time <= (10 * 60)]
 
 for f in m.file:
