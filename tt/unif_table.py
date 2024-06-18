@@ -11,11 +11,12 @@ tests = ["monobit", "freq_var", "freq_nb_var", "chisquared"]
 samplers = ["kus", "quicksampler", "smarch", "spur", "sts", "cmsgen", "unigen3"]
 sm = {"kus":"KUS", "quicksampler": "QuickSampler", "smarch":"Smarch"
       , "spur": "SPUR", "sts":"STS", "cmsgen": "CMSGen", "unigen3":"UniGen3"}
+tm = {"monobit":"Monobit", "freq_var":"VF", "freq_nb_var":"SFpC", "chisquared":"GOF"}
 
 pad = max(map(lambda x : len(sm[x]), samplers))
 
 for test in tests:
-    print("& \\multicolumn{2}{c|}{" + test + "}", end = '')
+    print("& \\multicolumn{2}{c|}{" + tm[test] + "}", end = '')
 
 print(" \\\\\nsampler", end = '')
 
