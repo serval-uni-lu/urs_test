@@ -5,8 +5,8 @@ import math
 significance_level = 0.01
 bench = "unigen3_easy"
 batch_size = "b1000"
-# tests = ["monobit", "freq_var", "freq_nb_var", "chisquared"]
-tests = ["birthday"]
+tests = ["monobit", "freq_var", "freq_nb_var", "chisquared"]
+# tests = ["birthday"]
 
 samplers = ["distaware", "kus", "quicksampler", "smarch", "spur", "sts", "cmsgen", "unigen3"]
 
@@ -24,7 +24,7 @@ print("\\\\\n\\hline")
 for s in samplers:
     print(s.ljust(pad, ' '), end = '')
     for test in tests:
-        fp = f"{bench}_{test}_{batch_size}_{s}.csv"
+        fp = f"csv/{bench}_{test}_{batch_size}_{s}.csv"
 
         data = pd.read_csv(fp, skipinitialspace = True, index_col = 'file')
         data.dropna(inplace = True)

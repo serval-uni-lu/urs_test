@@ -19,7 +19,7 @@ print("\\\\\n\\hline")
 
 for s in samplers:
     print(s.ljust(pad, ' '), end = '')
-    fp = f"{bench}_{test}_{batch_size}_{s}.csv"
+    fp = f"csv/{bench}_{test}_{batch_size}_{s}.csv"
 
     data = pd.read_csv(fp, skipinitialspace = True, index_col = 'file')
     data.dropna(inplace = True)
