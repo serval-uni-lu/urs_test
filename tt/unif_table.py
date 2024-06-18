@@ -8,9 +8,11 @@ batch_size = "b1000"
 tests = ["monobit", "freq_var", "freq_nb_var", "chisquared"]
 # tests = ["birthday"]
 
-samplers = ["distaware", "kus", "quicksampler", "smarch", "spur", "sts", "cmsgen", "unigen3"]
+samplers = ["kus", "quicksampler", "smarch", "spur", "sts", "cmsgen", "unigen3"]
+sm = {"kus":"KUS", "quicksampler": "QuickSampler", "smarch":"Smarch"
+      , "spur": "SPUR", "sts":"STS", "cmsgen": "CMSGen", "unigen3":"UniGen3"}
 
-pad = max(map(lambda x : len(x), samplers))
+pad = max(map(lambda x : len(sm[x]), samplers))
 
 for test in tests:
     print("& \\multicolumn{2}{c|}{" + test + "}", end = '')
@@ -22,7 +24,7 @@ for test in tests:
 print("\\\\\n\\hline")
 
 for s in samplers:
-    print(s.ljust(pad, ' '), end = '')
+    print(sm[s].ljust(pad, ' '), end = '')
     for test in tests:
         fp = f"csv/{bench}_{test}_{batch_size}_{s}.csv"
 
