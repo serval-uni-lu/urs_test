@@ -15,8 +15,12 @@ tm = {"monobit":"Monobit", "freq_var":"VF", "freq_nb_var":"SFpC", "chisquared":"
 
 pad = max(map(lambda x : len(sm[x]), samplers))
 
-for test in tests:
-    print("& \\multicolumn{2}{c|}{" + tm[test] + "}", end = '')
+for i in range(0, len(tests)):
+    test = tests[i]
+    sep = ''
+    if i + 1 < len(tests):
+        sep = '|'
+    print("& \\multicolumn{2}{c" + sep + "}{" + tm[test] + "}", end = '')
 
 print(" \\\\\nsampler", end = '')
 
