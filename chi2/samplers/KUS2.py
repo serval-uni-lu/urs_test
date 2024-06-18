@@ -13,7 +13,7 @@ def compute_dDNNF(cnf):
     # tmp = make_temp_name()
     tmp = cnf + ".nnf"
     if not os.path.exists(tmp):
-        D4_cmd = '/d4 \"{}\" -dDNNF -out=\"{}\" 2>&1'
+        D4_cmd = '/d4/d4 \"{}\" -dDNNF -out=\"{}\" 2>&1'
         r = getoutput(D4_cmd.format(cnf, tmp))
     return tmp
 
