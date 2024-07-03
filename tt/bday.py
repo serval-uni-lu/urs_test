@@ -8,9 +8,11 @@ batch_size = "b1000"
 # tests = ["monobit", "freq_var", "freq_nb_var", "chisquared"]
 test = "birthday"
 
-samplers = ["distaware", "kus", "quicksampler", "smarch", "spur", "sts", "cmsgen", "unigen3"]
+samplers = ["kus", "quicksampler", "smarch", "spur", "sts", "cmsgen", "unigen3"]
+sm = {"kus":"KUS", "quicksampler": "QuickSampler", "smarch":"Smarch"
+      , "spur": "SPUR", "sts":"STS", "cmsgen": "CMSGen", "unigen3":"UniGen3"}
 
-pad = max(map(lambda x : len(x), samplers))
+pad = max(map(lambda x : len(sm[x]), samplers))
 
 print("sampler", end = '')
 
@@ -18,7 +20,7 @@ print(" & \\#formulae & result & min & max & average", end = '')
 print("\\\\\n\\hline")
 
 for s in samplers:
-    print(s.ljust(pad, ' '), end = '')
+    print(sm[s].ljust(pad, ' '), end = '')
     fp = f"csv/{bench}_{test}_{batch_size}_{s}.csv"
 
     data = pd.read_csv(fp, skipinitialspace = True, index_col = 'file')
@@ -27,12 +29,17 @@ for s in samplers:
     nb = len(data)
     if nb != 0:
         pr = 1.0 / (np.sum((1.0 / nb) / data['pvalue']))
+        tt = np.sum(data['time'])
     res = " "
 
     if nb != 0 and pr > significance_level:
         res = "T"
     elif nb == 0:
         res = "-"
+
+    stt = "-"
+    if nb != 0:
+        stt = '{:5.1f}'.format(np.sum(data['time']) / 3600)
 
     tmp = '{:4}'.format(nb)
 
