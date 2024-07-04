@@ -67,4 +67,10 @@ else:
 
 sample_size = math.ceil(factor * math.sqrt(tmc))
 print(sample_size, end = "")
+
+print("--")
+nb_v = len(res.get_node(1).mc_by_var) - 1
+print(str(res.get_node(1).mc), end = "")
+for i in range(1, nb_v+1):
+    print(f", {res.get_node(1).mc_by_var[i] / res.get_node(1).mc}", end = "")
 print("")
