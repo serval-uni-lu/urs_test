@@ -3,15 +3,15 @@ import numpy as np
 import math
 
 significance_level = 0.01
-bench = "r30c150b1000"
+bench = "unigen3_easy"
 batch_size = "b1000"
-tests = ["monobit", "freq_var", "freq_nb_var", "chisquared"]
+tests = ["monobit", "freq_var", "birthday", "freq_nb_var", "chisquared"]
 # tests = ["birthday"]
 
 samplers = ["kus", "quicksampler", "smarch", "spur", "sts", "cmsgen", "unigen3"]
 sm = {"kus":"KUS", "quicksampler": "QuickSampler", "smarch":"Smarch"
       , "spur": "SPUR", "sts":"STS", "cmsgen": "CMSGen", "unigen3":"UniGen3"}
-tm = {"monobit":"Monobit", "freq_var":"VF", "freq_nb_var":"SFpC", "chisquared":"GOF"}
+tm = {"monobit":"Monobit", "birthday": "Birthday", "freq_var":"VF", "freq_nb_var":"SFpC", "chisquared":"GOF"}
 
 pad = max(map(lambda x : len(sm[x]), samplers))
 
@@ -25,7 +25,7 @@ for i in range(0, len(tests)):
 print(" \\\\\nsampler", end = '')
 
 for test in tests:
-    print(" & \\#formulae & result", end = '')
+    print(" & \\#form. & U?", end = '')
 print("\\\\\n\\hline")
 
 for s in samplers:
