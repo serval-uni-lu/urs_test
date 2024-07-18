@@ -518,6 +518,7 @@ def monobit():
         return
 
     sample_size = max(batch_size, math.ceil(total_mc * min_elem_per_cell / min(uneven, even)))
+    print(f"sample size: {sample_size}")
     # gof = GofChisquarePower()
     # sample_size = gof.solve_power(effect_size = effect_size, nobs = None, alpha = significance_level, power = power, n_bins = 2)
 
@@ -581,6 +582,7 @@ def frequency_variables():
             m = min(m, nnf.get_node(1).mc_by_var[i])
 
     sample_size = max(batch_size, math.ceil(total_mc * min_elem_per_cell / m))
+    print(f"sample size: {sample_size}")
     # gof = GofChisquarePower()
     # sample_size = gof.solve_power(effect_size = effect_size, nobs = None, alpha = significance_level, power = power, n_bins = 2)
 
@@ -682,6 +684,7 @@ def frequency_nb_variables():
             m = min(m, i)
 
     sample_size = max(batch_size, math.ceil(total_mc * min_elem_per_cell / m))
+    print(f"sample size: {sample_size}")
 
     if batch_size == -1:
         batch_size = sample_size
@@ -770,7 +773,7 @@ def birthday_test():
     expected = scipy.special.binom(sample_size, 2) / rng_range
     p_zero = math.exp(-1 * expected)
 
-    print(f"sample size: {sample_size} ({factor})")
+    print(f"sample size: {sample_size}")
     print(f"expected: {expected}")
     print(f"prob of zero duplicates: {p_zero}")
 
