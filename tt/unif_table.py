@@ -25,7 +25,7 @@ for i in range(0, len(tests)):
 print(" \\\\\nsampler", end = '')
 
 for test in tests:
-    print(" & \\#form. & U?", end = '')
+    print(" & \\#F & Uniform?", end = '')
 print("\\\\\n\\hline")
 
 for s in samplers:

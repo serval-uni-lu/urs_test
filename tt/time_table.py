@@ -25,7 +25,7 @@ for i in range(0, len(tests)):
 print(" \\\\\nsampler", end = '')
 
 for test in tests:
-    print(" & \\#form. & t (h)", end = '')
+    print(" & \\#F & time (h)", end = '')
 print("\\\\\n\\hline")
 
 for s in samplers:
