@@ -16,12 +16,12 @@ pad = max(map(lambda x : len(sm[x]), samplers))
 
 print("sampler", end = '')
 
-print(" & \\#formulae & result & min & max & average", end = '')
+print(" & \\#F & Uniform? & min & max & average & median", end = '')
 print("\\\\\n\\hline")
 
 for s in samplers:
     print(sm[s].ljust(pad, ' '), end = '')
-    fp = f"csv/{bench}_{test}_{batch_size}_{s}.csv"
+    fp = f"csv/{bench}_{test}_{batch_size}_c10_{s}.csv"
 
     data = pd.read_csv(fp, skipinitialspace = True, index_col = 'file')
     data.dropna(inplace = True)
