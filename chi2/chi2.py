@@ -172,6 +172,41 @@ def getSolutionFromSTS(inputFile, numSolutions, newSeed):
     os.unlink(outputFile)
     return solList
 
+def getSolutionFromSTSsingle(inputFile, numSolutions, newSeed):
+    kValue = 50
+    samplingRounds = numSolutions
+    inputFileSuffix = inputFile.split('/')[-1][:-4]
+    # outputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".out"
+    outputFile = make_temp_name()
+    cmd = '/STS -k=' + str(kValue) + ' -rnd-seed=' + str(newSeed) + ' -nsamples=' + str(samplingRounds) + ' ' + str(inputFile)
+    cmd += ' > ' + str(outputFile)
+    # if args.verbose:
+    print("cmd: ", cmd)
+    os.system(cmd)
+
+    tmpl = []
+    solList = []
+    with open(outputFile, 'r') as f:
+        for line in f:
+            if line.startswith('s '):
+                tmpl.append(line[1:].strip())
+            elif len(tmpl) > 0:
+                solList.append(random.choice(tmpl))
+                tmpl = []
+
+    if len(solList) <= 0:
+        print(len(solList))
+        print("STS single Did not find solutions")
+        sys.exit(1)
+
+    if len(solList) > numSolutions:
+        solreturnList = random.sample(solList, numSolutions)
+
+
+
+    os.unlink(outputFile)
+    return solList
+
 def getSolutionFromQuickSampler(inputFile, numSolutions, newSeed):
     cmd = "/samplers/quicksampler -s " + str(newSeed) + " -n " + str(numSolutions * 5) + ' ' + str(inputFile) + ' > /dev/null 2>&1'
     # if args.verbose:
@@ -934,6 +969,7 @@ parser.add_argument("--chisquared", type=bool, const=True, nargs='?', default=Fa
 UNIGEN3 = "unigen3"
 SPUR = "spur"
 STS = "sts"
+STSsingle = "sts1"
 SMARCH = "smarch"
 LOOKAHEAD = "lookahead"
 QUICKSAMPLER = "quicksampler"
@@ -966,6 +1002,8 @@ elif args.sampler == SPUR:
     sampler_fn = getSolutionFromSpur
 elif args.sampler == STS:
     sampler_fn = getSolutionFromSTS
+elif args.sampler == STSsingle:
+    sampler_fn = getSolutionFromSTSsingle
 elif args.sampler == SMARCH:
     sampler_fn = getSolutionFromSMARCH
 elif args.sampler == LOOKAHEAD:
