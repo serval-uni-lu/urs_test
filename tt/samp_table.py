@@ -38,29 +38,30 @@ for s in samplers:
         fp = f"csv/{bench}_{test}_{batch_size}_c10_{s}.csv"
 
         data = pd.read_csv(fp, skipinitialspace = True, index_col = 'file')
+        # data = data['N']
         data.dropna(inplace = True)
 
         nb = len(data)
-        if nb != 0:
-            tt = np.sum(data['time'])
-        res = " "
+        # if nb != 0:
+        #     tt = np.sum(data['time'])
+        # res = " "
 
-        if nb != 0:
-            res = '{:5.1f}'.format(tt / 3600)
-        elif nb == 0:
-            res = "-"
+        # if nb != 0:
+        #     res = '{:5.1f}'.format(tt / 3600)
+        # elif nb == 0:
+        #     res = "-"
 
         # tmp = '{:5.1f}'.format(np.sum(data['N']) / 1000000)
         tmp = 0
         for i in data['N']:
             tmp += int(i)
         tmp /= 1000000
-        X.append(tt / 3600)
-        Y.append(tmp)
-        print(f" & {tmp:5.1f} & {res}", end = '')
+        # X.append(tt / 3600)
+        # Y.append(tmp)
+        print(f" & {tmp:5.1f} & {nb:3d}", end = '')
 
     print(" \\\\")
 
-print(stats.kendalltau(X, Y))
+# print(stats.kendalltau(X, Y))
 
 

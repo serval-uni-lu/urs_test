@@ -521,18 +521,34 @@ def compute_dDNNF(cnf):
 
 
 def count_repeats(samples, sample_size):
-    d = set()
+    # d = set()
 
-    nb = 0
+    # nb = 0
+    # i = 0
+    # for line in samples:
+    #     i += 1
+    #     if line in d:
+    #         nb += 1
+    #     d.add(line)
+    #     if i >= sample_size:
+    #         break
+    # return nb
+    d = dict()
     i = 0
     for line in samples:
         i += 1
         if line in d:
-            nb += 1
-        d.add(line)
+            d[line] += 1
+        else:
+            d[line] = 1
         if i >= sample_size:
             break
-    return nb
+
+    res = 0
+    for i in d:
+        res += scipy.special.binom(d[i], 2)
+
+    return res
 
 def monobit():
     global batch_size
@@ -809,6 +825,7 @@ def birthday_test():
     p_zero = math.exp(-1 * expected)
 
     print(f"sample size: {math.ceil(sample_size / batch_size) * batch_size}")
+    print(f"used sample size: {sample_size}")
     print(f"expected: {expected}")
     print(f"prob of zero duplicates: {p_zero}")
 
