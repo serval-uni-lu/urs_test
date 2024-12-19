@@ -546,7 +546,7 @@ def count_repeats(samples, sample_size):
 
     res = 0
     for i in d:
-        res += scipy.special.binom(d[i], 2)
+        res += scipy.special.comb(d[i], 2, exact = True)
 
     return res
 
