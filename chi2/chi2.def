@@ -5,10 +5,10 @@ From: base.sif
     ./lookahead.py /lookahead.py
     ./chi2.py /chi2.py
     ./samplers /samplers
-    ../dDNNF_parser/src/dDNNF.py /dDNNF.py
-    ../dDNNF_parser/src/dDNNF.py /samplers/dDNNF.py
-    ../dDNNF_parser/src/DIMACS.py /DIMACS.py
-    ../quicksampler /quicksampler
+    ../utils/dDNNF_parser/src/dDNNF.py /dDNNF.py
+    ../utils/dDNNF_parser/src/dDNNF.py /samplers/dDNNF.py
+    ../utils/dDNNF_parser/src/DIMACS.py /DIMACS.py
+    ../deps/quicksampler /quicksampler
 
 %post
 #quicksampler
