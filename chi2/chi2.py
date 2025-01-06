@@ -145,7 +145,7 @@ def getSolutionFromSTS(inputFile, numSolutions, newSeed):
     inputFileSuffix = inputFile.split('/')[-1][:-4]
     # outputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".out"
     outputFile = make_temp_name()
-    cmd = '/STS -k=' + str(kValue) + ' -rnd-seed=' + str(newSeed) + ' -nsamples=' + str(samplingRounds) + ' ' + str(inputFile)
+    cmd = '/deps/STS/core/STS -k=' + str(kValue) + ' -rnd-seed=' + str(newSeed) + ' -nsamples=' + str(samplingRounds) + ' ' + str(inputFile)
     cmd += ' |grep -E "^s " | sed "s/^s //g" > ' + str(outputFile)
     # if args.verbose:
     print("cmd: ", cmd)
@@ -178,7 +178,7 @@ def getSolutionFromSTSsingle(inputFile, numSolutions, newSeed):
     inputFileSuffix = inputFile.split('/')[-1][:-4]
     # outputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".out"
     outputFile = make_temp_name()
-    cmd = '/STS -k=' + str(kValue) + ' -rnd-seed=' + str(newSeed) + ' -nsamples=' + str(samplingRounds) + ' ' + str(inputFile)
+    cmd = '/deps/STS/core/STS -k=' + str(kValue) + ' -rnd-seed=' + str(newSeed) + ' -nsamples=' + str(samplingRounds) + ' ' + str(inputFile)
     cmd += ' > ' + str(outputFile)
     # if args.verbose:
     print("cmd: ", cmd)
@@ -208,7 +208,7 @@ def getSolutionFromSTSsingle(inputFile, numSolutions, newSeed):
     return solList
 
 def getSolutionFromQuickSampler(inputFile, numSolutions, newSeed):
-    cmd = "/samplers/quicksampler -s " + str(newSeed) + " -n " + str(numSolutions * 5) + ' ' + str(inputFile) + ' > /dev/null 2>&1'
+    cmd = "/deps/quicksampler/quicksampler -s " + str(newSeed) + " -n " + str(numSolutions * 5) + ' ' + str(inputFile) + ' > /dev/null 2>&1'
     # if args.verbose:
     print("cmd: ", cmd)
     os.system(cmd)
@@ -478,7 +478,7 @@ def getSolutionFromDistAware(inputFile, numSolutions, newSeed):
 def getSolutionFromWalkSAT(inputFile, numSolutions, newSeed):
 
     tempOutputFile = make_temp_name()
-    cmd = f'/Walksat-master/Walksat_v56/walksat -numsol {numSolutions} -tries {numSolutions * 10} -seed {newSeed} -arc4 -sol {inputFile} > {tempOutputFile}'
+    cmd = f'/deps/Walksat-master/Walksat_v56/walksat -numsol {numSolutions} -tries {numSolutions * 10} -seed {newSeed} -arc4 -sol {inputFile} > {tempOutputFile}'
     # if args.verbose:
     print("cmd: ", cmd)
     # os.chdir(str(os.getcwd()) + '/samplers')

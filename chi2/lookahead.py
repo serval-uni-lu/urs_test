@@ -74,7 +74,7 @@ def get_sts_samples(cnf, assignment, eqvs, nb):
 
     cnf.to_file(dimacs, assignment, eqvs)
 
-    STS_cmd = "/STS -rnd-seed=\"{}\" -nsamples=1 -k=\"{}\" \"{}\" | grep -E '^s ' | sed 's/^s //g'"
+    STS_cmd = "/deps/STS/core/STS -rnd-seed=\"{}\" -nsamples=1 -k=\"{}\" \"{}\" | grep -E '^s ' | sed 's/^s //g'"
     seed = random.randint(a = 0, b = 2**32 - 1)
 
     cmd = STS_cmd.format(seed, nb, dimacs)

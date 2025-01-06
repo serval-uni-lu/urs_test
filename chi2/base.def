@@ -2,19 +2,20 @@ BootStrap: docker
 From: ubuntu:22.04
 
 %files
-    ./STS/core/STS /STS
-    ./Walksat-master /Walksat-master
+    # ./STS/core/STS /STS
+    # ./Walksat-master /Walksat-master
+    ./deps /deps
 
 %post
     echo "setup start"
     apt-get -y update
 
     apt-get -y install tzdata
-    apt-get -y install build-essential cmake git libgmp-dev libgmpxx4ldbl libboost-dev
-    apt-get -y install zlib1g-dev libboost-program-options-dev libm4ri-dev z3 help2man
-    apt-get -y install python3 python3-pandas python3-numpy python3-setuptools python3-pycosat
-    apt-get -y install python3-pip z3 python3-pydot python3-statsmodels
-    apt-get -y install mono-devel
+    apt-get -y install build-essential cmake git libgmp-dev libgmpxx4ldbl libboost-dev \
+        zlib1g-dev libboost-program-options-dev libm4ri-dev z3 help2man \
+        python3 python3-pandas python3-numpy python3-setuptools python3-pycosat \
+        python3-pip z3 python3-pydot python3-statsmodels \
+        mono-devel
     pip3 install anytree
 
 #D4
@@ -60,12 +61,19 @@ From: ubuntu:22.04
     make install
 
 #WALKSAT
-    cd /Walksat-master/Walksat_v56
+    cd /deps/Walksat-master/Walksat_v56
 
     apt-get install -y libbsd-dev
     make clean
     make -j8
 
+# Quicksampler
+    cd /deps/quicksampler
+    make
+
+# STS
+    cd /deps/STS
+    export MROOT=$(pwd) && cd core && make clean && make -j8
 
 # %runscript
     # /wrap 64000 18000 /unigen/build/unigen "$@"

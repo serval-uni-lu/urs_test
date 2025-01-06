@@ -8,13 +8,9 @@ From: base.sif
     ../utils/dDNNF_parser/src/dDNNF.py /dDNNF.py
     ../utils/dDNNF_parser/src/dDNNF.py /samplers/dDNNF.py
     ../utils/dDNNF_parser/src/DIMACS.py /DIMACS.py
-    ../deps/quicksampler /quicksampler
+    # ../deps/quicksampler /quicksampler
 
 %post
-#quicksampler
-    cd /quicksampler
-    make
-    mv ./quicksampler /samplers/quicksampler
     cd /
 
 %runscript
