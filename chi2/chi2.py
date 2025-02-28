@@ -419,7 +419,7 @@ def getSolutionFromJSampler(inputFile, numSolutions, newSeed):
     # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
     tempOutputFile = make_temp_name()
     cwd = os.getcwd()
-    cmd = f'/root/.juliaup/bin/julia /jsampler/sampler.jl {os.path.abspath(inputFile)} {numSolutions} {50}  | grep -E -v "^c" > {tempOutputFile}'
+    cmd = f'/julia/bin/julia /jsampler/sampler.jl {os.path.abspath(inputFile)} {numSolutions} {50}  | grep -E -v "^c" > {tempOutputFile}'
     # if args.verbose:
     print("cmd: ", cmd)
     # os.chdir(str(os.getcwd()) + '/samplers')
