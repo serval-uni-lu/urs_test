@@ -9,6 +9,7 @@ From: base.sif
     ../utils/dDNNF_parser/src/dDNNF.py /samplers/dDNNF.py
     ../utils/dDNNF_parser/src/DIMACS.py /DIMACS.py
     # ../deps/quicksampler /quicksampler
+    ../../appNNF/ddnnf/src /jsampler
 
 %post
     cd /

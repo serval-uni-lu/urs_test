@@ -413,6 +413,26 @@ def getSolutionFromKUS2(inputFile, numSolutions, newSeed):
 
     return lines
 
+def getSolutionFromJSampler(inputFile, numSolutions, newSeed):
+
+    inputFileSuffix = inputFile.split('/')[-1][:-4]
+    # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
+    tempOutputFile = make_temp_name()
+    cwd = os.getcwd()
+    cmd = f'/root/.juliaup/bin/julia /jsampler/sampler.jl {os.path.abspath(inputFile)} {numSolutions} {50}  | grep -E -v "^c" > {tempOutputFile}'
+    # if args.verbose:
+    print("cmd: ", cmd)
+    # os.chdir(str(os.getcwd()) + '/samplers')
+    os.system(cmd)
+    # os.chdir(str(cwd))
+
+    with open(tempOutputFile, 'r') as f:
+        lines = f.readlines()
+
+    os.unlink(str(tempOutputFile))
+
+    return lines
+
 def getSolutionFromDistAware(inputFile, numSolutions, newSeed):
 
     inputFileSuffix = inputFile.split('/')[-1][:-4]
@@ -995,6 +1015,7 @@ KUS = "kus"
 KUS2 = "kus2"
 DISTAWARE = "distaware"
 WALKSAT = "walksat"
+JSAMPLER = "jsampler"
 
 args = parser.parse_args()
 
@@ -1038,6 +1059,8 @@ elif args.sampler == DISTAWARE:
     create_features_dict(cnf_file)
 elif args.sampler == WALKSAT:
     sampler_fn = getSolutionFromWalkSAT
+elif args.sampler == JSAMPLER:
+    sampler_fn = getSolutionFromJSampler
 
 start_time = time.time()
 max_end_time = time.time() + max_time
