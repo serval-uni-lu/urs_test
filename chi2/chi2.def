@@ -11,13 +11,14 @@ From: base.sif
     # ../deps/quicksampler /quicksampler
     ../../appNNF/ddnnf/src /jsampler
 
-    ../../appNNF/cppddnnfv2/src /ksampler/src
-    ../../appNNF/cppddnnfv2/CMakeLists.txt /ksampler/CMakeLists.txt
+    ../../appNNF/cppddnnf/src /ksampler/src
+    ../../appNNF/cppddnnf/CMakeLists.txt /ksampler/CMakeLists.txt
 
 %post
     cd /ksampler
     cmake .
     make -j8 ksampler
+    make -j8 rsampler
 
 %runscript
     /usr/bin/python3 /chi2.py "$@"

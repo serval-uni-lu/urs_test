@@ -453,6 +453,26 @@ def getSolutionFromKSampler(inputFile, numSolutions, newSeed):
 
     return lines
 
+def getSolutionFromRSampler(inputFile, numSolutions, newSeed):
+
+    inputFileSuffix = inputFile.split('/')[-1][:-4]
+    # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
+    tempOutputFile = make_temp_name()
+    cwd = os.getcwd()
+    cmd = f'/ksampler/rsampler {os.path.abspath(inputFile)} {numSolutions} {10000}  | grep -E -v "^c" > {tempOutputFile}'
+    # if args.verbose:
+    print("cmd: ", cmd)
+    # os.chdir(str(os.getcwd()) + '/samplers')
+    os.system(cmd)
+    # os.chdir(str(cwd))
+
+    with open(tempOutputFile, 'r') as f:
+        lines = f.readlines()
+
+    os.unlink(str(tempOutputFile))
+
+    return lines
+
 def getSolutionFromDistAware(inputFile, numSolutions, newSeed):
 
     inputFileSuffix = inputFile.split('/')[-1][:-4]
@@ -1037,6 +1057,7 @@ DISTAWARE = "distaware"
 WALKSAT = "walksat"
 JSAMPLER = "jsampler"
 KSAMPLER = "ksampler"
+RSAMPLER = "rsampler"
 
 args = parser.parse_args()
 
@@ -1084,6 +1105,8 @@ elif args.sampler == JSAMPLER:
     sampler_fn = getSolutionFromJSampler
 elif args.sampler == KSAMPLER:
     sampler_fn = getSolutionFromKSampler
+elif args.sampler == RSAMPLER:
+    sampler_fn = getSolutionFromRSampler
 
 start_time = time.time()
 max_end_time = time.time() + max_time
