@@ -459,7 +459,7 @@ def getSolutionFromRSampler(inputFile, numSolutions, newSeed):
     # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
     tempOutputFile = make_temp_name()
     cwd = os.getcwd()
-    cmd = f'/ksampler/rsampler {os.path.abspath(inputFile)} {numSolutions} {10000}  | grep -E -v "^c" > {tempOutputFile}'
+    cmd = f'/ksampler/rsampler {os.path.abspath(inputFile)} {numSolutions} {50000}  | grep -E -v "^c" > {tempOutputFile}'
     # if args.verbose:
     print("cmd: ", cmd)
     # os.chdir(str(os.getcwd()) + '/samplers')
