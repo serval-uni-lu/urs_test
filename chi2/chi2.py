@@ -255,6 +255,7 @@ def getSolutionFromCMSsampler(inputFile, numSolutions, newSeed):
     # cmd += " " + inputFile
     # cmd += " --dumpresult " + outputFile + " > /dev/null 2>&1"
 
+    # cmd = f"/cmsgen/build/cmsgen --fixedconfl 3000 --seed {newSeed} --samples {numSolutions} --samplefile \"{outputFile}\" \"{inputFile}\" > /dev/null 2>&1"
     cmd = f"/cmsgen/build/cmsgen --seed {newSeed} --samples {numSolutions} --samplefile \"{outputFile}\" \"{inputFile}\" > /dev/null 2>&1"
 
     # if args.verbose:
@@ -439,7 +440,7 @@ def getSolutionFromKSampler(inputFile, numSolutions, newSeed):
     # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
     tempOutputFile = make_temp_name()
     cwd = os.getcwd()
-    cmd = f'/ksampler/ksampler {os.path.abspath(inputFile)} {numSolutions} {50}  | grep -E -v "^c" > {tempOutputFile}'
+    cmd = f'/ksampler/sampler.r {os.path.abspath(inputFile)} {numSolutions} {50}  | grep -E -v "^c" > {tempOutputFile}'
     # if args.verbose:
     print("cmd: ", cmd)
     # os.chdir(str(os.getcwd()) + '/samplers')
@@ -459,7 +460,7 @@ def getSolutionFromRSampler(inputFile, numSolutions, newSeed):
     # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
     tempOutputFile = make_temp_name()
     cwd = os.getcwd()
-    cmd = f'/ksampler/rsampler {os.path.abspath(inputFile)} {numSolutions} {50000}  | grep -E -v "^c" > {tempOutputFile}'
+    cmd = f'/ksampler/rsampler.r {os.path.abspath(inputFile)} {numSolutions} {50000}  | grep -E -v "^c" > {tempOutputFile}'
     # if args.verbose:
     print("cmd: ", cmd)
     # os.chdir(str(os.getcwd()) + '/samplers')
@@ -664,6 +665,87 @@ def monobit():
         expected = [even * nb_samples / total_mc, uneven * nb_samples / total_mc]
 
         X2, pv = chisquare(observed, expected, ddof = 0)
+        crit = chi2.ppf(1 - significance_level, df = len(observed) - 1)
+
+        if pv <= 0:
+            pv = sys.float_info.min
+        if math.isnan(pv):
+            pv = 1
+
+        print(f"X2 {X2}")
+        print(f"crit {crit}")
+        print(f"pv {pv}")
+        # print(f"u {X2 <= crit}")
+        print(f"is uniform {pv > significance_level}")
+        print("timeout False")
+        # print(f"is uniform {pv > significance_level and pv < 1 - significance_level}")
+        # print(f"X2: {X2} ({pv})\ncrit: {crit}")
+        # print(X2 <= crit)
+
+# Test with n bits mod k instead of k=2
+def modbit():
+    global batch_size
+
+    Q = args.modbit_q
+
+    total_mc = nnf.get_node(1).mc
+
+    expected = []
+    for i in range(0, Q):
+        expected.append(0)
+
+    for i in range(0, len(nnf.get_node(1).mc_by_nb_vars)):
+        idx = i % Q
+        expected[idx] += nnf.get_node(1).mc_by_nb_vars[i]
+
+    m = total_mc
+    nb_bins = 0
+    for i in expected:
+        if i != 0:
+            nb_bins += 1
+            m = min(m, i)
+
+    sample_size = max(batch_size, math.ceil(total_mc * min_elem_per_cell / m))
+    print(f"sample size: {math.ceil(sample_size / batch_size) * batch_size}")
+
+    if batch_size == -1:
+        batch_size = sample_size
+
+    for _ in range(0, args.n):
+        observed = [0] * len(expected)
+        nb_samples = 0
+
+        while nb_samples < sample_size:
+            samples = sampler_fn(cnf_file, batch_size, random.randint(0, 2**31 - 1))
+            nb_samples += len(samples)
+
+            print(str(nb_samples) + " / " + str(sample_size))
+
+            for s in samples:
+                n = 0
+                ts = frozenset([int (x) for x in s.strip().split(' ') if x != '' and int(x) != 0])
+                for f in ts:
+                    if f > 0:
+                        n += 1
+
+                observed[n % Q] += 1
+
+            if max_end_time <= time.time():
+                print("timeout True")
+                return
+
+        # building the ovserved = [even, uneven] array
+        # if nb features is even then modulo 2 becomes 0 thus the index in the array
+        # similarily for an uneven nb features
+
+        r_observed = []
+        r_expected = []
+        for i in range(0, len(expected)):
+            if expected[i] != 0:
+                r_observed.append(observed[i])
+                r_expected.append(expected[i] * nb_samples / total_mc)
+
+        X2, pv = chisquare(r_observed, r_expected, ddof = 0)
         crit = chi2.ppf(1 - significance_level, df = len(observed) - 1)
 
         if pv <= 0:
@@ -1036,8 +1118,10 @@ parser.add_argument("--min_elem_per_cell", type=int, default=20, help="set the m
 # parser.add_argument("--effect_size", type=float, default=0.3, help="set the individual effect size for the power analysis")
 # parser.add_argument("--power", type=float, default=0.99, help="set the target power of individual tests for the power analysis")
 parser.add_argument("--bday_prob", type=float, default=10, help="set the desired probability for the birthday test if v < 1.0, otherwise it sets the expected number of repeats")
+parser.add_argument("--modbit_q", type=int, default=2, help="set the desired value Q for the modbit test")
 
 parser.add_argument("--monobit", type=bool, const=True, nargs='?', default=False, help="if set then the monobit test will be executed")
+parser.add_argument("--modbit", type=bool, const=True, nargs='?', default=False, help="if set then the modbit test will be executed")
 parser.add_argument("--freq_var", type=bool, const=True, nargs='?', default=False, help="if set then the var frequency test will be executed")
 parser.add_argument("--freq_nb_var", type=bool, const=True, nargs='?', default=False, help="if set then the number of selected var frequency test will be executed")
 parser.add_argument("--bday", type=bool, const=True, nargs='?', default=False, help="if set then the birthday test will be executed")
@@ -1126,6 +1210,8 @@ print(f"batch size: {batch_size}")
 
 if args.monobit:
     monobit()
+if args.modbit:
+    modbit()
 if args.freq_var:
     frequency_variables()
 if args.freq_nb_var:

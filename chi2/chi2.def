@@ -9,16 +9,16 @@ From: base.sif
     ../utils/dDNNF_parser/src/dDNNF.py /samplers/dDNNF.py
     ../utils/dDNNF_parser/src/DIMACS.py /DIMACS.py
     # ../deps/quicksampler /quicksampler
-    ../../appNNF/ddnnf/src /jsampler
+    # ../../appNNF/ddnnf/src /jsampler
 
     ../../appNNF/cppddnnf/src /ksampler/src
-    ../../appNNF/cppddnnf/CMakeLists.txt /ksampler/CMakeLists.txt
+    ../../appNNF/cppddnnf/gem.cpp /ksampler/gem.cpp
 
 %post
     cd /ksampler
-    cmake .
-    make -j8 ksampler
-    make -j8 rsampler
+    g++ gem.cpp -o gem
+    ./gem
+    make -j8 rsampler.r sampler.r
 
 %runscript
     /usr/bin/python3 /chi2.py "$@"
