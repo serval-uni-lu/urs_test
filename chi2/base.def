@@ -18,12 +18,12 @@ From: ubuntu:22.04
         mono-devel curl
     pip3 install anytree
 
-# Julia
-    curl "https://julialang-s3.julialang.org/bin/linux/x64/1.11/julia-1.11.3-linux-x86_64.tar.gz" | tar xzf -
-    mv /julia-1.11.3 /julia
-
-    /julia/bin/julia -e 'using Pkg; Pkg.add(["DataStructures", "Distributions"]); Pkg.precompile()'
-    # chmod -R 755 /julia
+# # Julia
+#     curl "https://julialang-s3.julialang.org/bin/linux/x64/1.11/julia-1.11.3-linux-x86_64.tar.gz" | tar xzf -
+#     mv /julia-1.11.3 /julia
+# 
+#     /julia/bin/julia -e 'using Pkg; Pkg.add(["DataStructures", "Distributions"]); Pkg.precompile()'
+#     # chmod -R 755 /julia
 
 #D4
     git clone "https://github.com/zyno1/d4.git"
