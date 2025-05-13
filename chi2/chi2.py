@@ -137,7 +137,11 @@ def getSolutionFromSpur(inputFile, numSolutions, newSeed):
             solList.append(sol)
 
     os.unlink(tempOutputFile)
-    return solList
+
+    solreturnList = solList
+    if len(solList) > numSolutions:
+        solreturnList = random.sample(solList, numSolutions)
+    return solreturnList
 
 def getSolutionFromSTS(inputFile, numSolutions, newSeed):
     kValue = numSolutions
@@ -164,13 +168,12 @@ def getSolutionFromSTS(inputFile, numSolutions, newSeed):
         print("STS Did not find solutions")
         sys.exit(1)
 
+    os.unlink(outputFile)
+
+    solreturnList = solList
     if len(solList) > numSolutions:
         solreturnList = random.sample(solList, numSolutions)
-
-
-
-    os.unlink(outputFile)
-    return solList
+    return solreturnList
 
 def getSolutionFromSTSsingle(inputFile, numSolutions, newSeed):
     kValue = 50
@@ -199,13 +202,12 @@ def getSolutionFromSTSsingle(inputFile, numSolutions, newSeed):
         print("STS single Did not find solutions")
         sys.exit(1)
 
+    os.unlink(outputFile)
+
+    solreturnList = solList
     if len(solList) > numSolutions:
         solreturnList = random.sample(solList, numSolutions)
-
-
-
-    os.unlink(outputFile)
-    return solList
+    return solreturnList
 
 def getSolutionFromQuickSampler(inputFile, numSolutions, newSeed):
     cmd = "/deps/quicksampler/quicksampler -s " + str(newSeed) + " -n " + str(numSolutions * 5) + ' ' + str(inputFile) + ' > /dev/null 2>&1'
@@ -307,13 +309,14 @@ def getSolutionFromLookahead(inputFile, numSolutions, newSeed):
         print("Lookahead Did not find solutions")
         sys.exit(1)
 
+    solreturnList = solList
     if len(solList) > numSolutions:
         solreturnList = random.sample(solList, numSolutions)
 
 
 
     os.unlink(outputFile)
-    return solList
+    return solreturnList
 
 def getSolutionFromSMARCH(inputFile, numSolutions, newSeed):
     # multi process
@@ -358,7 +361,10 @@ def getSolutionFromSMARCH(inputFile, numSolutions, newSeed):
     # os.unlink(tmpdir)
     shutil.rmtree(tmpdir)
 
-    return solList
+    solreturnList = solList
+    if len(solList) > numSolutions:
+        solreturnList = random.sample(solList, numSolutions)
+    return solreturnList
 
 def getSolutionFromKUS(inputFile, numSolutions, newSeed):
 
@@ -391,7 +397,10 @@ def getSolutionFromKUS(inputFile, numSolutions, newSeed):
 
     os.unlink(str(tempOutputFile))
 
-    return solList
+    solreturnList = solList
+    if len(solList) > numSolutions:
+        solreturnList = random.sample(solList, numSolutions)
+    return solreturnList
 
 def getSolutionFromKUS2(inputFile, numSolutions, newSeed):
 
@@ -533,7 +542,10 @@ def getSolutionFromDistAware(inputFile, numSolutions, newSeed):
     # os.unlink(str(tempfile.gettempdir()) + '/' + "output.txt_error")
     os.unlink(logFile + "_error")
 
-    return solList
+    solreturnList = solList
+    if len(solList) > numSolutions:
+        solreturnList = random.sample(solList, numSolutions)
+    return solreturnList
 
 def getSolutionFromWalkSAT(inputFile, numSolutions, newSeed):
 
@@ -564,7 +576,10 @@ def getSolutionFromWalkSAT(inputFile, numSolutions, newSeed):
 
     os.unlink(str(tempOutputFile))
 
-    return solList
+    solreturnList = solList
+    if len(solList) > numSolutions:
+        solreturnList = random.sample(solList, numSolutions)
+    return solreturnList
 
 
 
