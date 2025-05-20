@@ -582,6 +582,41 @@ def getSolutionFromWalkSAT(inputFile, numSolutions, newSeed):
         solreturnList = random.sample(solList, numSolutions)
     return solreturnList
 
+def getSolutionFromBDDSampler(inputFile, numSolutions, newSeed):
+    # must construct: ./approxmc3 -s 1 -v2 --sampleout /dev/null --samples 500
+    inputFileSuffix = inputFile.split('/')[-1][:-4]
+    # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
+    tempOutputFile = make_temp_name()
+
+    cmd = f'/deps/BDDSampler/bin/BDDSampler -seed {int(newSeed)} {numSolutions} {inputFile}.bdd > {tempOutputFile}'
+    print("cmd: ", cmd)
+    os.system(cmd)
+    # os.system(f"ls \"{tempfile.gettempdir()}\"")
+
+    with open(tempOutputFile, 'r') as f:
+        lines = f.readlines()
+
+    solList = []
+    for line in lines:
+        line = line.strip()
+        l = []
+        i = 1
+        for j in line.split(' '):
+            if j == '0':
+                l.append(-1 * i)
+                i += 1
+            elif j == '1':
+                l.append(i)
+                i += 1
+        solList.append(' '.join(map(str, frozenset(l))))
+
+    print(f"BDDSampler: {numSolutions} generated: {len(solList)}, seed: {newSeed}")
+    solreturnList = solList
+    if len(solList) > numSolutions:
+        solreturnList = random.sample(solList, numSolutions)
+
+    os.unlink(str(tempOutputFile))
+    return solreturnList
 
 
 def get_mc(cnf):
@@ -1157,6 +1192,7 @@ WALKSAT = "walksat"
 JSAMPLER = "jsampler"
 KSAMPLER = "ksampler"
 RSAMPLER = "rsampler"
+BDDSAMPLER = "bddsampler"
 
 args = parser.parse_args()
 
@@ -1206,6 +1242,8 @@ elif args.sampler == KSAMPLER:
     sampler_fn = getSolutionFromKSampler
 elif args.sampler == RSAMPLER:
     sampler_fn = getSolutionFromRSampler
+elif args.sampler == BDDSAMPLER:
+    sampler_fn = getSolutionFromBDDSampler
 
 start_time = time.time()
 max_end_time = time.time() + max_time

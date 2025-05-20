@@ -82,5 +82,15 @@ From: ubuntu:22.04
     cd /deps/STS
     export MROOT=$(pwd) && cd core && make clean && make -j8
 
+# BDDSampler
+    cd /deps/BDDSampler
+    ./configure
+    cd cudd-3.0.0
+    ./configure
+    make -j8
+    cd ../sampler
+    make -j8
+
+
 # %runscript
     # /wrap 64000 18000 /unigen/build/unigen "$@"

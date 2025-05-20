@@ -11,14 +11,14 @@ From: base.sif
     # ../deps/quicksampler /quicksampler
     # ../../appNNF/ddnnf/src /jsampler
 
-    ../../appNNF/cppddnnf/src /ksampler/src
-    ../../appNNF/cppddnnf/gem.cpp /ksampler/gem.cpp
+    # ../../appNNF/cppddnnf/src /ksampler/src
+    # ../../appNNF/cppddnnf/gem.cpp /ksampler/gem.cpp
 
 %post
-    cd /ksampler
-    g++ gem.cpp -o gem
-    ./gem
-    make -j8 rsampler.r sampler.r
+    # cd /ksampler
+    # g++ gem.cpp -o gem
+    # ./gem
+    # make -j8 rsampler.r sampler.r
 
 %runscript
     /usr/bin/python3 /chi2.py "$@"
