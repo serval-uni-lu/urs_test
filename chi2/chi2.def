@@ -2,8 +2,11 @@ BootStrap: localimage
 From: base.sif
 
 %files
-    ./lookahead.py /lookahead.py
-    ./chi2.py /chi2.py
+    ./src/lookahead.py /lookahead.py
+    ./src/chi2.py /chi2.py
+    ./src/samplers.py /samplers.py
+    ./src/tests.py /tests.py
+    ./src/util.py /util.py
     ./samplers /samplers
     ../utils/dDNNF_parser/src/dDNNF.py /dDNNF.py
     ../utils/dDNNF_parser/src/dDNNF.py /samplers/dDNNF.py
