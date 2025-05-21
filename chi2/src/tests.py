@@ -74,8 +74,8 @@ def monobit(settings):
 
             for s in samples:
                 n = 0
-                for f in s.strip().split(" "):
-                    if f != '' and int(f) > 0:
+                for f in s:
+                    if f > 0:
                         n += 1
 
                 observed[n % 2] += 1
@@ -147,8 +147,7 @@ def modbit(settings):
 
             for s in samples:
                 n = 0
-                ts = frozenset([int (x) for x in s.strip().split(' ') if x != '' and int(x) != 0])
-                for f in ts:
+                for f in s:
                     if f > 0:
                         n += 1
 
@@ -219,11 +218,9 @@ def frequency_variables(settings):
 
 
             for s in samples:
-                for f in s.strip().split(" "):
-                    if f != '':
-                        l = int(f)
-                        if l > 0 and expected[abs(l)] != 0 and expected[abs(l)] != total_mc:
-                            observed[abs(l)] += 1
+                for f in s:
+                    if f > 0 and expected[abs(f)] != 0 and expected[abs(f)] != total_mc:
+                        observed[abs(f)] += 1
 
             print(str(nb_samples) + " / " + str(sample_size))
 
@@ -313,8 +310,7 @@ def frequency_nb_variables(settings):
 
             for s in samples:
                 n = 0
-                ts = frozenset([int (x) for x in s.strip().split(' ') if x != '' and int(x) != 0])
-                for f in ts:
+                for f in s:
                     if f > 0:
                         n += 1
                 observed[n] += 1
@@ -454,12 +450,10 @@ def pearson_chisquared(settings):
             samples = settings.sampler_fn(settings.cnf_file, settings.batch_size, random.randint(0, 2**31 - 1))
             for s in samples:
                 nb_samples += 1
-                ts = frozenset([int (x) for x in s.strip().split(' ') if x != '' and int(x) != 0])
-                # ts = s
-                if ts in bins:
-                    bins[ts] += 1
+                if s in bins:
+                    bins[s] += 1
                 else:
-                    bins[ts] = 1
+                    bins[s] = 1
 
                     # print(ts)
                     # tmp_s = [[x] for x in ts]
@@ -509,3 +503,21 @@ def pearson_chisquared(settings):
         # print(f"is uniform {pv > settings.significance_level and pv < 1 - settings.significance_level}")
         # print(f"X2: {X2} ({pv})\ncrit: {crit}")
         # print(X2 <= crit)
+
+def getTestFunction(test_str):
+    test_fn = frequency_variables
+
+    if "monobit" == test_str:
+        test_fn = monobit
+    elif "modbit" == test_str:
+        test_fn = modbit
+    elif "freq_var" == test_str:
+        test_fn = frequency_variables
+    elif "sfpc" == test_str:
+        test_fn = frequency_nb_variables
+    elif "chisquared" == test_str:
+        test_fn = pearson_chisquared
+    elif "birthday" == test_str:
+        test_fn = birthday_test
+
+    return test_fn

@@ -70,7 +70,7 @@ def getSolutionFromUniGen3(inputFile, numSolutions, newSeed):
         solreturnList = random.sample(solList, numSolutions)
 
     os.unlink(str(tempOutputFile))
-    return solreturnList
+    return list(map(util.solstr_to_frozenset, solreturnList))
 
 def getSolutionFromSpur(inputFile, numSolutions, newSeed):
     inputFileSuffix = inputFile.split('/')[-1][:-4]
@@ -118,7 +118,7 @@ def getSolutionFromSpur(inputFile, numSolutions, newSeed):
     solreturnList = solList
     if len(solList) > numSolutions:
         solreturnList = random.sample(solList, numSolutions)
-    return solreturnList
+    return list(map(util.solstr_to_frozenset, solreturnList))
 
 def getSolutionFromSTS(inputFile, numSolutions, newSeed):
     kValue = numSolutions
@@ -150,7 +150,7 @@ def getSolutionFromSTS(inputFile, numSolutions, newSeed):
     solreturnList = solList
     if len(solList) > numSolutions:
         solreturnList = random.sample(solList, numSolutions)
-    return solreturnList
+    return list(map(util.solstr_to_frozenset, solreturnList))
 
 def getSolutionFromSTSsingle(inputFile, numSolutions, newSeed):
     kValue = 50
@@ -184,7 +184,7 @@ def getSolutionFromSTSsingle(inputFile, numSolutions, newSeed):
     solreturnList = solList
     if len(solList) > numSolutions:
         solreturnList = random.sample(solList, numSolutions)
-    return solreturnList
+    return list(map(util.solstr_to_frozenset, solreturnList))
 
 def getSolutionFromQuickSampler(inputFile, numSolutions, newSeed):
     cmd = "/deps/quicksampler/quicksampler -s " + str(newSeed) + " -n " + str(numSolutions * 5) + ' ' + str(inputFile) + ' > /dev/null 2>&1'
@@ -222,7 +222,10 @@ def getSolutionFromQuickSampler(inputFile, numSolutions, newSeed):
         print("Did not find solutions")
         sys.exit(1)
 
-    return solList
+    solreturnList = solList
+    if len(solList) > numSolutions:
+        solreturnList = random.sample(solList, numSolutions)
+    return list(map(util.solstr_to_frozenset, solreturnList))
 
 def getSolutionFromCMSsampler(inputFile, numSolutions, newSeed):
     # inputFileSuffix = inputFile.split('/')[-1][:-4]
@@ -260,7 +263,7 @@ def getSolutionFromCMSsampler(inputFile, numSolutions, newSeed):
         print("cryptominisat5 Did not find solutions")
         sys.exit(1)
     os.unlink(outputFile)
-    return solreturnList
+    return list(map(util.solstr_to_frozenset, solreturnList))
 
 def getSolutionFromLookahead(inputFile, numSolutions, newSeed):
     kValue = 50
@@ -294,7 +297,7 @@ def getSolutionFromLookahead(inputFile, numSolutions, newSeed):
 
 
     os.unlink(outputFile)
-    return solreturnList
+    return list(map(util.solstr_to_frozenset, solreturnList))
 
 def getSolutionFromSMARCH(inputFile, numSolutions, newSeed):
     # multi process
@@ -342,7 +345,7 @@ def getSolutionFromSMARCH(inputFile, numSolutions, newSeed):
     solreturnList = solList
     if len(solList) > numSolutions:
         solreturnList = random.sample(solList, numSolutions)
-    return solreturnList
+    return list(map(util.solstr_to_frozenset, solreturnList))
 
 def getSolutionFromKUS(inputFile, numSolutions, newSeed):
 
@@ -378,7 +381,7 @@ def getSolutionFromKUS(inputFile, numSolutions, newSeed):
     solreturnList = solList
     if len(solList) > numSolutions:
         solreturnList = random.sample(solList, numSolutions)
-    return solreturnList
+    return list(map(util.solstr_to_frozenset, solreturnList))
 
 def getSolutionFromKUS2(inputFile, numSolutions, newSeed):
 
@@ -398,7 +401,7 @@ def getSolutionFromKUS2(inputFile, numSolutions, newSeed):
 
     os.unlink(str(tempOutputFile))
 
-    return lines
+    return list(map(util.solstr_to_frozenset, lines))
 
 def getSolutionFromJSampler(inputFile, numSolutions, newSeed):
 
@@ -418,7 +421,7 @@ def getSolutionFromJSampler(inputFile, numSolutions, newSeed):
 
     os.unlink(str(tempOutputFile))
 
-    return lines
+    return list(map(util.solstr_to_frozenset, lines))
 
 def getSolutionFromKSampler(inputFile, numSolutions, newSeed):
 
@@ -438,7 +441,7 @@ def getSolutionFromKSampler(inputFile, numSolutions, newSeed):
 
     os.unlink(str(tempOutputFile))
 
-    return lines
+    return list(map(util.solstr_to_frozenset, lines))
 
 def getSolutionFromRSampler(inputFile, numSolutions, newSeed):
 
@@ -458,7 +461,7 @@ def getSolutionFromRSampler(inputFile, numSolutions, newSeed):
 
     os.unlink(str(tempOutputFile))
 
-    return lines
+    return list(map(util.solstr_to_frozenset, lines))
 
 def getSolutionFromDistAware(inputFile, numSolutions, newSeed):
 
@@ -523,7 +526,7 @@ def getSolutionFromDistAware(inputFile, numSolutions, newSeed):
     solreturnList = solList
     if len(solList) > numSolutions:
         solreturnList = random.sample(solList, numSolutions)
-    return solreturnList
+    return list(map(util.solstr_to_frozenset, solreturnList))
 
 def getSolutionFromWalkSAT(inputFile, numSolutions, newSeed):
 
@@ -557,7 +560,7 @@ def getSolutionFromWalkSAT(inputFile, numSolutions, newSeed):
     solreturnList = solList
     if len(solList) > numSolutions:
         solreturnList = random.sample(solList, numSolutions)
-    return solreturnList
+    return list(map(util.solstr_to_frozenset, solreturnList))
 
 def getSolutionFromBDDSampler(inputFile, numSolutions, newSeed):
     # must construct: ./approxmc3 -s 1 -v2 --sampleout /dev/null --samples 500
@@ -593,7 +596,7 @@ def getSolutionFromBDDSampler(inputFile, numSolutions, newSeed):
         solreturnList = random.sample(solList, numSolutions)
 
     os.unlink(str(tempOutputFile))
-    return solreturnList
+    return list(map(util.solstr_to_frozenset, solreturnList))
 
 def getSamplerFunction(sampler, cnf_file):
     UNIGEN3 = "unigen3"

@@ -22,6 +22,10 @@ def compute_dDNNF(cnf):
     r = getoutput(D4_cmd.format(cnf, tmp))
     return tmp
 
+def solstr_to_frozenset(sol):
+    t1 = filter(lambda x : x != '', sol.split(' '))
+    return frozenset(filter(lambda x : x != 0, map(int, t1)))
+
 class Settings:
     def __init__(self, args):
         self.significance_level = args.a
