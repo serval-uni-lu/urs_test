@@ -59,6 +59,9 @@ walksat
 bddsampler
 ```
 
+The current integration of `BDDSampler` expects that there exist a file
+`<cnf file>.bdd` which has been computed before running the test.
+
 ## Adding a Sampler
 
 To add a sampler, please modify the `src/samplers.py` file.
