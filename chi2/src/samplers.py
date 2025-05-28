@@ -1,5 +1,6 @@
 import util
 import os
+import sys
 import math
 import pandas as pd
 import shutil
@@ -563,6 +564,10 @@ def getSolutionFromWalkSAT(inputFile, numSolutions, newSeed):
     return list(map(util.solstr_to_frozenset, solreturnList))
 
 def getSolutionFromBDDSampler(inputFile, numSolutions, newSeed):
+    if not os.path.isfile(f'{inputFile}.bdd'):
+        print(f"BDDSampler Error: File '{inputFile}.bdd' does not exist.")
+        sys.exit(1)
+
     # must construct: ./approxmc3 -s 1 -v2 --sampleout /dev/null --samples 500
     inputFileSuffix = inputFile.split('/')[-1][:-4]
     # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
