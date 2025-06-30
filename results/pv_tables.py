@@ -2,14 +2,11 @@ import pandas as pd
 import numpy as np
 import math
 
-import scipy.stats as stats
-
 significance_level = 0.01
 bench = "omega"
 batch_size = "b1000"
 tests = ["monobit", "freq_var", "birthday", "freq_nb_var", "chisquared"]
 # tests = ["birthday"]
-
 
 samplers = ["kus", "quicksampler", "smarch", "spur", "sts", "cmsgen", "unigen3"]
 sm = {"kus":"KUS", "quicksampler": "QuickSampler", "smarch":"Smarch"
@@ -24,44 +21,34 @@ for i in range(0, len(tests)):
     if i + 1 < len(tests):
         sep = '|'
     print("& \\multicolumn{2}{c" + sep + "}{" + tm[test] + "}", end = '')
+
 print(" \\\\\nsampler", end = '')
 
 for test in tests:
-    print(" & |S| & time (h)", end = '')
+    print(" & \\#F & p-value", end = '')
 print("\\\\\n\\hline")
 
-X = []
-Y = []
 for s in samplers:
     print(sm[s].ljust(pad, ' '), end = '')
     for test in tests:
         fp = f"csv/{bench}_{test}_{batch_size}_c10_{s}.csv"
 
         data = pd.read_csv(fp, skipinitialspace = True, index_col = 'file')
-        # data = data['N']
         data.dropna(inplace = True)
 
         nb = len(data)
-        # if nb != 0:
-        #     tt = np.sum(data['time'])
-        # res = " "
+        if nb != 0:
+            pr = 1.0 / (np.sum((1.0 / nb) / data['pvalue']))
+        res = " "
 
-        # if nb != 0:
-        #     res = '{:5.1f}'.format(tt / 3600)
-        # elif nb == 0:
-        #     res = "-"
+        if nb != 0:
+            res = f"{pr:5.3f}"
+            if pr > significance_level:
+                res = "\\textbf{" + res + "}"
+        elif nb == 0:
+            res = "-"
 
-        # tmp = '{:5.1f}'.format(np.sum(data['N']) / 1000000)
-        tmp = 0
-        for i in data['N']:
-            tmp += int(i)
-        tmp /= 1000000
-        # X.append(tt / 3600)
-        # Y.append(tmp)
-        print(f" & {tmp:5.1f} & {nb:3d}", end = '')
-
+        tmp = '{:4}'.format(nb)
+        print(f" & {tmp} & {res}", end = '')
     print(" \\\\")
-
-# print(stats.kendalltau(X, Y))
-
 

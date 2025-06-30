@@ -3,7 +3,7 @@ import numpy as np
 import math
 
 significance_level = 0.01
-bench = "r30c90"
+bench = "omega"
 batch_size = "b1000"
 tests = ["monobit", "freq_var", "birthday", "freq_nb_var", "chisquared"]
 # tests = ["birthday"]
