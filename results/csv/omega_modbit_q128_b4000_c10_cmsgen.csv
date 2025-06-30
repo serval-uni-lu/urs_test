@@ -1,0 +1,23 @@
+file, isUniform, pvalue, time, timeout, N
+/tmp/omega/V3/s420_new_3_2.cnf, , , , , 335548000
+/tmp/omega/V3/s1488_3_2.cnf, , , , , 36000
+/tmp/omega/V3/s420_new1_3_2.cnf, , , , , 335548000
+/tmp/omega/79.sk_4_40.cnf, , , , , 
+/tmp/omega/V3/s298_3_2.cnf, , , , , 44000
+/tmp/omega/tutorial1.sk_1_1.cnf, True, 0.5066401924693249, 0.16755366325378418, False, 4000
+/tmp/omega/V3/s832a_3_2.cnf, , , , , 1476000
+/tmp/omega/V3/s349_3_2.cnf, , , , , 83888000
+/tmp/omega/V3/s820a_3_2.cnf, , , , , 500000
+/tmp/omega/V3/s526_3_2.cnf, , , , , 1168000
+/tmp/omega/V3/s27_new_3_2.cnf, , , , , 4000
+/tmp/omega/V3/s27_3_2.cnf, , , , , 4000
+/tmp/omega/V3/s382_3_2.cnf, , , , , 3084000
+/tmp/omega/V3/s344_3_2.cnf, , , , , 41944000
+/tmp/omega/V3/s420_3_2.cnf, , , , , 335548000
+/tmp/omega/V3/s444_3_2.cnf, , , , , 9252000
+/tmp/omega/V3/s526a_3_2.cnf, , , , , 7868000
+/tmp/omega/V3/s953a_3_2.cnf, , , , , 3779571224000
+/tmp/omega/V3/s510_3_2.cnf, , , , , 25996000
+/tmp/omega/registerlesSwap.sk_3_10.cnf, False, 2.2250738585072014e-308, 22.380592107772827, False, 120000
+/tmp/omega/tutorial2.sk_3_4.cnf, True, 0.23452735245641948, 30.27978825569153, False, 4000
+/tmp/omega/FMEasy/fiasco.cnf, False, 2.2250738585072014e-308, 1802.987539768219, False, 2388000

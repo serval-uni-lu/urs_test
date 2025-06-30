@@ -1,0 +1,14 @@
+file, isUniform, pvalue, time, timeout, N
+/tmp/omega.cl/V3/s420_new1_3_2.cnf, , , , , 335548000
+/tmp/omega.cl/FMEasy/fiasco.cnf, , , , , 2388000
+/tmp/omega.cl/FMEasy/axTLS.cnf, , , , , 91920519135356000
+/tmp/omega.cl/V3/s526a_3_2.cnf, , , , , 7868000
+/tmp/omega.cl/V3/s526_3_2.cnf, , , , , 1168000
+/tmp/omega.cl/V3/s420_new_3_2.cnf, , , , , 335548000
+/tmp/omega.cl/V3/s27_3_2.cnf, True, 0.9982708351661119, 0.11860108375549316, False, 4000
+/tmp/omega.cl/V3/s27_new_3_2.cnf, True, 0.1086311409944517, 0.1204068660736084, False, 4000
+/tmp/omega.cl/V3/s420_3_2.cnf, , , , , 335548000
+/tmp/omega.cl/V3/s298_3_2.cnf, True, 0.8989615591696681, 29.72460436820984, False, 44000
+/tmp/omega.cl/V3/s1488_3_2.cnf, True, 0.20560643192878944, 35.58543372154236, False, 36000
+/tmp/omega.cl/V3/s820a_3_2.cnf, True, 0.8374302317381845, 915.0021960735321, False, 500000
+/tmp/omega.cl/17.sk_3_45.cnf, , , , , 687194768000

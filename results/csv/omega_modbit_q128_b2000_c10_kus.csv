@@ -1,0 +1,9 @@
+file, isUniform, pvalue, time, timeout, N
+/tmp/omega/polynomial.sk_7_25.cnf, True, 0.5852211399277121, 1.2519710063934326, False, 2000
+/tmp/omega/FeatureModels/FM-3.6.1-refined.cnf, True, 0.25635188011359333, 8.753836154937744, False, 66000
+/tmp/omega/tutorial2.sk_3_4.cnf, True, 0.9241315692341187, 242.8898708820343, False, 2000
+/tmp/omega/V15/s298_15_7.cnf, True, 0.9259749212623554, 252.8861153125763, False, 328000
+/tmp/omega/SetTest.sk_9_21.cnf, True, 0.06763945345067496, 2886.629646062851, False, 2000
+/tmp/omega/V15/s832a_15_7.cnf, True, 0.482883480928192, 3730.5809984207153, False, 3096000
+/tmp/omega/V15/s27_15_7.cnf, True, 0.7120490752056248, 0.28733158111572266, False, 2000
+/tmp/omega/V15/s526a_15_7.cnf, False, 2.2250738585072014e-308, 4856.958529472351, False, 3496000

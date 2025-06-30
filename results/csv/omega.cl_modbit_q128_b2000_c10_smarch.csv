@@ -1,0 +1,3 @@
+file, isUniform, pvalue, time, timeout, N
+/tmp/omega.cl/V3/s27_new_3_2.cnf, False, 0.0008143071361942903, 108.6104633808136, False, 2000
+/tmp/omega.cl/V3/s27_3_2.cnf, True, 0.02441113735275945, 196.32667136192322, False, 2000

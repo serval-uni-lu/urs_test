@@ -1,0 +1,15 @@
+file, isUniform, pvalue, time, timeout, N
+/tmp/omega/Blasted_Real/blasted_case103.cnf, True, 0.5852388116834417, 0.5960278511047363, False, 3000
+/tmp/omega/Blasted_Real/blasted_case24.cnf, True, 0.9850403835830687, 0.7266597747802734, False, 3000
+/tmp/omega/Blasted_Real/blasted_case32.cnf, True, 0.49567048535210023, 1.2873179912567139, False, 6000
+/tmp/omega/Blasted_Real/blasted_case30.cnf, True, 0.894584598797996, 1.4235260486602783, False, 6000
+/tmp/omega/FeatureModels/FM-3.6.1-refined.cnf, True, 0.027840744227122377, 12.628735542297363, False, 66000
+/tmp/omega/Blasted_Real/blasted_case52.cnf, True, 0.7661736927731745, 905.1719696521759, False, 2622000
+/tmp/omega/Blasted_Real/blasted_case_0_b12_1.cnf, False, 2.2250738585072014e-308, 1710.942863225937, False, 383000
+/tmp/omega/Blasted_Real/blasted_case109.cnf, True, 0.8758190919991407, 3150.2520599365234, False, 5243000
+/tmp/omega/Blasted_Real/blasted_case127.cnf, True, 0.9739242502431159, 0.2513306140899658, False, 1000
+/tmp/omega/Blasted_Real/blasted_case7.cnf, True, 0.9269240846327931, 425.0231840610504, False, 1311000
+/tmp/omega/Blasted_Real/blasted_case_1_b12_1.cnf, False, 2.2250738585072014e-308, 1717.4424974918365, False, 383000
+/tmp/omega/Blasted_Real/blasted_case28.cnf, True, 0.3915430212974958, 1.2670173645019531, False, 6000
+/tmp/omega/Blasted_Real/blasted_case17.cnf, True, 0.5374496427039867, 5.232484579086304, False, 21000
+/tmp/omega/Blasted_Real/blasted_case101.cnf, False, 0.0067468762448587615, 4746.77346944809, False, 20972000

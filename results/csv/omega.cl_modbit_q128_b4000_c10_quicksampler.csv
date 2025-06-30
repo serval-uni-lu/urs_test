@@ -1,0 +1,9 @@
+file, isUniform, pvalue, time, timeout, N
+/tmp/omega.cl/V3/s27_new_3_2.cnf, True, 1.0, 317.24217438697815, False, 4000
+/tmp/omega.cl/V3/s820a_3_2.cnf, False, 2.2250738585072014e-308, 1178.65331864357, False, 500000
+/tmp/omega.cl/V3/s298_3_2.cnf, False, 1.2799930852539799e-166, 93.81075310707092, False, 44000
+/tmp/omega.cl/V3/s27_3_2.cnf, True, 1.0, 181.10571455955505, False, 4000
+/tmp/omega.cl/V3/s382_3_2.cnf, False, 2.2250738585072014e-308, 3133.4338319301605, False, 3084000
+/tmp/omega.cl/V3/s832a_3_2.cnf, False, 2.2250738585072014e-308, 3575.7119901180267, False, 1476000
+/tmp/omega.cl/79.sk_4_40.cnf, , , , , 
+/tmp/omega.cl/V3/s526_3_2.cnf, False, 3.382747103238564e-100, 3744.5606088638306, False, 1168000

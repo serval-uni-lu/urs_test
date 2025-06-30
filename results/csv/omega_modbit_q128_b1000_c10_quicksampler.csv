@@ -1,0 +1,4 @@
+file, isUniform, pvalue, time, timeout, N
+/tmp/omega/V15/s27_15_7.cnf, True, 1.0, 13.584475994110107, False, 1000
+/tmp/omega/V15/s27_new_15_7.cnf, True, 1.0, 20.005048990249634, False, 1000
+/tmp/omega/registerlesSwap.sk_3_10.cnf, False, 2.2250738585072014e-308, 971.1509993076324, False, 118000

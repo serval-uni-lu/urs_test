@@ -1,0 +1,7 @@
+file, isUniform, pvalue, time, timeout, N
+/tmp/omega.cl/Blasted_Real/blasted_case30.cnf, False, 9.545333871226657e-56, 18.876815795898438, False, 6000
+/tmp/omega.cl/Blasted_Real/blasted_case36.cnf, True, 0.9096224780581299, 19.23334789276123, False, 3000
+/tmp/omega.cl/Blasted_Real/blasted_case25.cnf, False, 4.664373904913046e-29, 22.127665281295776, False, 6000
+/tmp/omega.cl/Blasted_Real/blasted_case11.cnf, False, 1.5718563884877894e-55, 251.18327736854553, False, 82000
+/tmp/omega.cl/Blasted_Real/blasted_case27.cnf, False, 7.559992662520425e-06, 6.179948806762695, False, 6000
+/tmp/omega.cl/Blasted_Real/blasted_case59.cnf, False, 2.2250738585072014e-308, 536.1254639625549, False, 354000

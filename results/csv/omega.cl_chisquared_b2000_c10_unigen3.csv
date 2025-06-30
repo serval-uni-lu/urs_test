@@ -1,0 +1,196 @@
+file, isUniform, pvalue, time, timeout, N
+/tmp/omega.cl/FMEasy/toybox2.cnf, , , , , 
+/tmp/omega.cl/FMEasy/fiasco.cnf, , , , , 
+/tmp/omega.cl/7.sk_4_50.cnf, , , , , 
+/tmp/omega.cl/19.sk_3_48.cnf, , , , , 
+/tmp/omega.cl/FMEasy/toybox.cnf, , , , , 
+/tmp/omega.cl/FMEasy/axTLS.cnf, , , , , 
+/tmp/omega.cl/V7/s27_new_7_4.cnf, True, 0.5389987184297643, 0.07934331893920898, False, 2000
+/tmp/omega.cl/V7/s27_7_4.cnf, True, 0.6675163049827778, 0.08582496643066406, False, 2000
+/tmp/omega.cl/V7/s420_new_7_4.cnf, , , , , 
+/tmp/omega.cl/ProjectService3.sk_12_55.cnf, , , , , 
+/tmp/omega.cl/35.sk_3_52.cnf, , , , , 
+/tmp/omega.cl/70.sk_3_40.cnf, , , , , 
+/tmp/omega.cl/V7/s1488_7_4.cnf, True, 0.627225359971681, 3239.1344356536865, False, 90000
+/tmp/omega.cl/V3/s420_new_3_2.cnf, , , , , 
+/tmp/omega.cl/V7/s298_7_4.cnf, True, 0.8708121417069523, 3377.842432498932, False, 656000
+/tmp/omega.cl/V3/s953a_3_2.cnf, , , , , 
+/tmp/omega.cl/V3/s27_3_2.cnf, True, 0.43051084518627064, 0.0834798812866211, False, 2000
+/tmp/omega.cl/V3/s420_new1_3_2.cnf, , , , , 
+/tmp/omega.cl/V3/s1488_3_2.cnf, True, 0.13366937503768905, 729.9336204528809, False, 34000
+/tmp/omega.cl/V3/s27_new_3_2.cnf, True, 0.2477925888179206, 0.07247233390808105, False, 2000
+/tmp/omega.cl/V3/s298_3_2.cnf, True, 0.2983220453190309, 1153.510873556137, False, 328000
+/tmp/omega.cl/V7/s420_7_4.cnf, , , , , 85899346000
+/tmp/omega.cl/V7/s420_new1_7_4.cnf, , , , , 85899346000
+/tmp/omega.cl/V7/s510_7_4.cnf, , , , , 150734000
+/tmp/omega.cl/V7/s349_7_4.cnf, , , 18006.454940080643, True, 83888000
+/tmp/omega.cl/V7/s832a_7_4.cnf, , , 18009.724544525146, True, 8192000
+/tmp/omega.cl/V7/s382_7_4.cnf, , , 18018.808619499207, True, 36998000
+/tmp/omega.cl/V7/s820a_7_4.cnf, , , 18015.635501146317, True, 5920000
+/tmp/omega.cl/55.sk_3_46.cnf, , , , , 
+/tmp/omega.cl/V7/s444_7_4.cnf, , , 18044.90997028351, True, 128186000
+/tmp/omega.cl/Blasted_Real/blasted_case32.cnf, True, 0.9154912820881711, 3.1800765991210938, False, 12000
+/tmp/omega.cl/Blasted_Real/blasted_case30.cnf, True, 0.7193594932601637, 2.0919835567474365, False, 6000
+/tmp/omega.cl/V7/s344_7_4.cnf, , , 18054.337245464325, True, 83888000
+/tmp/omega.cl/Blasted_Real/blasted_case15.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case29.cnf, True, 0.4706088676271671, 1.022118091583252, False, 4000
+/tmp/omega.cl/Blasted_Real/blasted_case23.cnf, True, 0.5170482040570803, 8.31907033920288, False, 22000
+/tmp/omega.cl/V3/s344_3_2.cnf, , , 18008.906940460205, True, 83888000
+/tmp/omega.cl/V7/s526_7_4.cnf, , , 18485.400114774704, True, 62916000
+/tmp/omega.cl/V7/s526a_7_4.cnf, , , 18553.065346717834, True, 73402000
+/tmp/omega.cl/V3/s510_3_2.cnf, , , 18016.842319726944, True, 155976000
+/tmp/omega.cl/Blasted_Real/blasted_case103.cnf, True, 0.5766352636499277, 0.5744695663452148, False, 4000
+/tmp/omega.cl/Blasted_Real/blasted_case46.cnf, True, 0.6605280984412568, 2251.207142829895, False, 656000
+/tmp/omega.cl/Blasted_Real/blasted_case205.cnf, , , , , 
+/tmp/omega.cl/V3/s444_3_2.cnf, , , 18027.305804014206, True, 36998000
+/tmp/omega.cl/Blasted_Real/blasted_case118.cnf, True, 0.7186218188833254, 1866.767682313919, False, 328000
+/tmp/omega.cl/V3/s526a_3_2.cnf, , , 18082.673455238342, True, 62916000
+/tmp/omega.cl/Blasted_Real/blasted_case33.cnf, True, 0.4923566013859948, 3.178264617919922, False, 12000
+/tmp/omega.cl/Blasted_Real/blasted_case26.cnf, True, 0.5100028726476594, 3.200653553009033, False, 12000
+/tmp/omega.cl/V3/s526_3_2.cnf, , , 18032.811855793, True, 41944000
+/tmp/omega.cl/Blasted_Real/blasted_case45.cnf, True, 0.38988317020922814, 216.1723029613495, False, 164000
+/tmp/omega.cl/Blasted_Real/blasted_case11.cnf, True, 0.05507706786874694, 184.20360660552979, False, 164000
+/tmp/omega.cl/Blasted_Real/blasted_case106.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case44.cnf, True, 0.37579456476549766, 2213.5850019454956, False, 656000
+/tmp/omega.cl/Blasted_Real/blasted_case47.cnf, True, 0.012617424238999775, 5086.57786989212, False, 2622000
+/tmp/omega.cl/Blasted_Real/blasted_case61.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case24.cnf, True, 0.2843952774747676, 1.0179426670074463, False, 4000
+/tmp/omega.cl/Blasted_Real/blasted_case4.cnf, True, 0.5700053913824086, 377.45452213287354, False, 328000
+/tmp/omega.cl/Blasted_Real/blasted_case21.cnf, True, 0.28937063733827306, 70.30415439605713, False, 82000
+/tmp/omega.cl/Blasted_Real/blasted_case59.cnf, True, 0.34840546758825525, 226.19569969177246, False, 354000
+/tmp/omega.cl/Blasted_Real/blasted_case128.cnf, True, 0.13267273139277386, 0.09117913246154785, False, 2000
+/tmp/omega.cl/V3/s820a_3_2.cnf, True, 0.4457036045629561, 9027.355786323547, False, 1988000
+/tmp/omega.cl/Blasted_Real/blasted_case14.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case64.cnf, True, 0.8195858901481334, 230.42003273963928, False, 354000
+/tmp/omega.cl/Blasted_Real/blasted_case105.cnf, , , , , 
+/tmp/omega.cl/V3/s832a_3_2.cnf, , , 18029.403764247894, True, 2950000
+/tmp/omega.cl/V3/s420_3_2.cnf, , , , , 85899346000
+/tmp/omega.cl/Blasted_Real/blasted_case41.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case53.cnf, True, 0.9669825678319872, 6321.2677981853485, False, 2622000
+/tmp/omega.cl/V3/s349_3_2.cnf, , , 18020.442628622055, True, 83888000
+/tmp/omega.cl/Blasted_Real/blasted_case31.cnf, True, 0.8877128234567978, 3.2160840034484863, False, 12000
+/tmp/omega.cl/Blasted_Real/blasted_case52.cnf, True, 0.863384250180769, 6445.09832406044, False, 2622000
+/tmp/omega.cl/Blasted_Real/blasted_case206.cnf, True, 0.3916251762710877, 0.07071661949157715, False, 2000
+/tmp/omega.cl/V3/s382_3_2.cnf, , , 18045.831382989883, True, 36998000
+/tmp/omega.cl/Blasted_Real/blasted_case122.cnf, , , 18034.752248048782, True, 167774000
+/tmp/omega.cl/Blasted_Real/blasted_case_1_b14_2.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case22.cnf, True, 0.4206099154470229, 69.53225994110107, False, 82000
+/tmp/omega.cl/Blasted_Real/blasted_case204.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case54.cnf, , , 18009.399977445602, True, 10486000
+/tmp/omega.cl/Blasted_Real/blasted_case102.cnf, True, 0.6789054483314515, 0.5787200927734375, False, 4000
+/tmp/omega.cl/Blasted_Real/blasted_case_2_b14_1.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case116.cnf, , , 18292.559350013733, True, 335546000
+/tmp/omega.cl/Blasted_Real/blasted_case121.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case10.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case63.cnf, True, 0.4487283743425599, 250.91396856307983, False, 354000
+/tmp/omega.cl/Blasted_Real/blasted_case134.cnf, True, 0.4348109817709015, 1591.2675695419312, False, 2622000
+/tmp/omega.cl/Blasted_Real/blasted_case60.cnf, True, 0.4514172112257256, 0.07036662101745605, False, 2000
+/tmp/omega.cl/Blasted_Real/blasted_case136.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case_2_b14_2.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case100.cnf, , , 18004.364238023758, True, 20972000
+/tmp/omega.cl/Blasted_Real/blasted_squaring50.cnf, , , 18481.603808403015, True, 167774000
+/tmp/omega.cl/Blasted_Real/blasted_case56.cnf, , , 18011.276524543762, True, 10486000
+/tmp/omega.cl/Blasted_Real/blasted_case111.cnf, True, 0.8105113152059107, 803.4352853298187, False, 164000
+/tmp/omega.cl/Blasted_Real/blasted_case7.cnf, True, 0.3558826857445253, 1771.8730483055115, False, 1312000
+/tmp/omega.cl/Blasted_Real/blasted_case117.cnf, True, 0.7063347582726289, 1905.685664176941, False, 328000
+/tmp/omega.cl/Blasted_Real/blasted_case43.cnf, True, 0.27056187313101765, 215.5565149784088, False, 164000
+/tmp/omega.cl/Blasted_Real/blasted_case110.cnf, True, 0.5491199591613066, 678.4029824733734, False, 164000
+/tmp/omega.cl/Blasted_Real/blasted_case137.cnf, True, 0.48729352086263295, 1506.1603016853333, False, 2622000
+/tmp/omega.cl/Blasted_Real/blasted_case203.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case135.cnf, , , 18024.64801645279, True, 20972000
+/tmp/omega.cl/Blasted_Real/blasted_case36.cnf, True, 0.7961269725903931, 0.6915230751037598, False, 4000
+/tmp/omega.cl/Blasted_Real/blasted_case202.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case127.cnf, True, 0.626670483465836, 0.08859086036682129, False, 2000
+/tmp/omega.cl/Blasted_Real/blasted_case_2_b14_3.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case62.cnf, , , 18010.53768968582, True, 10737420000
+/tmp/omega.cl/Blasted_Real/blasted_case132.cnf, , , 18012.29019165039, True, 20972000
+/tmp/omega.cl/Blasted_Real/blasted_case_1_b12_1.cnf, , , 18200.46104502678, True, 10737420000
+/tmp/omega.cl/Blasted_Real/blasted_case145.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case17.cnf, True, 0.3527741569457117, 8.363629579544067, False, 22000
+/tmp/omega.cl/Blasted_Real/blasted_case58.cnf, True, 0.7301181174189233, 246.04293704032898, False, 354000
+/tmp/omega.cl/Blasted_Real/blasted_case39.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case34.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case_3_b14_2.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case68.cnf, True, 0.8639681324902075, 3131.084713459015, False, 1312000
+/tmp/omega.cl/Blasted_Real/blasted_case115.cnf, , , 18333.457082033157, True, 335546000
+/tmp/omega.cl/Blasted_Real/blasted_case201.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case109.cnf, , , 18004.88183784485, True, 10486000
+/tmp/omega.cl/Blasted_Real/blasted_case131.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case28.cnf, True, 0.5100028726476614, 3.1161792278289795, False, 12000
+/tmp/omega.cl/Blasted_Real/blasted_case27.cnf, True, 0.8859528943952708, 3.1378374099731445, False, 12000
+/tmp/omega.cl/Blasted_Real/blasted_case25.cnf, True, 0.27568831114895087, 2.0822086334228516, False, 6000
+/tmp/omega.cl/Blasted_Real/blasted_case9.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case59_1.cnf, True, 0.7240973390263845, 229.66480541229248, False, 354000
+/tmp/omega.cl/Blasted_Real/blasted_case40.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case200.cnf, True, 0.06018432387173479, 0.07082295417785645, False, 2000
+/tmp/omega.cl/Blasted_Real/blasted_case_1_b14_3.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case123.cnf, , , 18033.935036420822, True, 21474838000
+/tmp/omega.cl/Blasted_Real/blasted_case_3_b14_3.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case38.cnf, True, 0.16912949865369933, 55.42132878303528, False, 42000
+/tmp/omega.cl/Blasted_Real/blasted_case1.cnf, True, 0.4542393929542718, 4051.797327041626, False, 1312000
+/tmp/omega.cl/Blasted_Real/blasted_case113.cnf, True, 0.6849572424706708, 1898.0836954116821, False, 328000
+/tmp/omega.cl/Blasted_Real/blasted_case_1_b14_1.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case_3_b14_1.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case124.cnf, , , 18015.040192127228, True, 2684356000
+/tmp/omega.cl/Blasted_Real/blasted_case146.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case101.cnf, , , 18003.531263828278, True, 20972000
+/tmp/omega.cl/Blasted_Real/blasted_case133.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case3.cnf, , , 18016.15071129799, True, 41944000
+/tmp/omega.cl/Blasted_Real/blasted_case_2_b12_1.cnf, , , 18627.89757013321, True, 10737420000
+/tmp/omega.cl/Blasted_Real/blasted_case6.cnf, , , , , 
+/tmp/omega.cl/SetTest.sk_9_21.cnf, True, 0.09089889714788263, 37.76835513114929, False, 2000
+/tmp/omega.cl/63.sk_3_64.cnf, , , , , 
+/tmp/omega.cl/110.sk_3_88.cnf, , , , , 
+/tmp/omega.cl/10.sk_1_46.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_squaring20.cnf, , , 18694.232377290726, True, 83888000
+/tmp/omega.cl/80.sk_2_48.cnf, , , , , 
+/tmp/omega.cl/36.sk_3_77.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case112.cnf, True, 0.7749206954686113, 695.8615369796753, False, 328000
+/tmp/omega.cl/Blasted_Real/blasted_case_0_b12_1.cnf, , , 18190.823046684265, True, 10737420000
+/tmp/omega.cl/107.sk_3_90.cnf, , , , , 
+/tmp/omega.cl/polynomial.sk_7_25.cnf, True, 0.9759975022824077, 0.3265085220336914, False, 2000
+/tmp/omega.cl/57.sk_4_64.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case125.cnf, , , , , 42949674000
+/tmp/omega.cl/51.sk_4_38.cnf, , , , , 26172458000
+/tmp/omega.cl/79.sk_4_40.cnf, , , , , 
+/tmp/omega.cl/56.sk_6_38.cnf, , , , , 36909876000
+/tmp/omega.cl/29.sk_3_45.cnf, , , , , 
+/tmp/omega.cl/registerlesSwap.sk_3_10.cnf, True, 0.38265851947799107, 448.0173578262329, False, 118000
+/tmp/omega.cl/tutorial1.sk_1_1.cnf, True, 0.6547208460185768, 0.10333728790283203, False, 2000
+/tmp/omega.cl/Blasted_Real/blasted_case8.cnf, , , 18020.707968711853, True, 83888000
+/tmp/omega.cl/FeatureModels/FM-3.6.1-refined.cnf, True, 0.8433041928509191, 110.21472406387329, False, 264000
+/tmp/omega.cl/27.sk_3_32.cnf, , , , , 671090000
+/tmp/omega.cl/109.sk_4_36.cnf, , , , , 8891926000
+/tmp/omega.cl/53.sk_4_32.cnf, , , , , 671090000
+/tmp/omega.cl/Blasted_Real/blasted_squaring51.cnf, , , 18613.825348377228, True, 167774000
+/tmp/omega.cl/Blasted_Real/blasted_case114.cnf, , , 18112.940640687943, True, 335546000
+/tmp/omega.cl/V15/s1488_15_7.cnf, True, 0.3837611585344906, 1040.221459388733, False, 40000
+/tmp/omega.cl/Blasted_Real/blasted_case51.cnf, True, 0.7183869541289636, 6348.246800661087, False, 2622000
+/tmp/omega.cl/Blasted_Real/blasted_case108.cnf, True, 0.43935165052026875, 6139.228749513626, False, 656000
+/tmp/omega.cl/V15/s27_15_7.cnf, True, 0.4705909112572294, 0.08541584014892578, False, 2000
+/tmp/omega.cl/V15/s27_new_15_7.cnf, True, 0.2477925888179206, 0.07479715347290039, False, 2000
+/tmp/omega.cl/V15/s298_15_7.cnf, True, 0.32118614764856696, 3776.4973616600037, False, 656000
+/tmp/omega.cl/V15/s420_15_7.cnf, , , , , 85899346000
+/tmp/omega.cl/Blasted_Real/blasted_case5.cnf, , , 18025.130549430847, True, 671090000
+/tmp/omega.cl/V15/s420_new1_15_7.cnf, , , , , 
+/tmp/omega.cl/V15/s420_new_15_7.cnf, , , , , 
+/tmp/omega.cl/77.sk_3_44.cnf, , , , , 
+/tmp/omega.cl/tableBasedAddition.sk_240_1024.cnf, , , , , 
+/tmp/omega.cl/17.sk_3_45.cnf, , , , , 
+/tmp/omega.cl/111.sk_2_36.cnf, , , , , 5368710000
+/tmp/omega.cl/tutorial2.sk_3_4.cnf, True, 0.7055347312040912, 15.750625371932983, False, 2000
+/tmp/omega.cl/84.sk_4_77.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case55.cnf, , , 18005.305943965912, True, 10486000
+/tmp/omega.cl/32.sk_4_38.cnf, , , , , 21474838000
+/tmp/omega.cl/Blasted_Real/blasted_case57.cnf, , , 18026.128905057907, True, 5368710000
+/tmp/omega.cl/Blasted_Real/blasted_case2.cnf, , , 18033.63189649582, True, 41944000
+/tmp/omega.cl/Blasted_Real/blasted_case126.cnf, , , 18022.292259693146, True, 21474838000
+/tmp/omega.cl/V15/s382_15_7.cnf, , , 18038.25244474411, True, 125830000
+/tmp/omega.cl/V15/s444_15_7.cnf, , , 18040.318799972534, True, 41330000
+/tmp/omega.cl/V15/s526a_15_7.cnf, , , 18320.815978765488, True, 83888000
+/tmp/omega.cl/V15/s344_15_7.cnf, , , 18052.67028450966, True, 83888000
+/tmp/omega.cl/V15/s526_15_7.cnf, , , 18303.87933254242, True, 83888000
+/tmp/omega.cl/V15/s349_15_7.cnf, , , 18006.842214345932, True, 83888000
+/tmp/omega.cl/V15/s510_15_7.cnf, , , 18016.206072092056, True, 150734000
+/tmp/omega.cl/V15/s832a_15_7.cnf, , , 18103.765689134598, True, 37132000
+/tmp/omega.cl/V15/s820a_15_7.cnf, , , 18007.45811843872, True, 7230000

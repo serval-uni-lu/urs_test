@@ -1,0 +1,4 @@
+file, isUniform, pvalue, time, timeout, N
+/tmp/omega/36.sk_3_77.cnf, , , , , 
+/tmp/omega/polynomial.sk_7_25.cnf, False, 9.711090060244925e-05, 812.0578417778015, False, 1000
+/tmp/omega/V15/s27_15_7.cnf, True, 0.3214976950387984, 93.6313259601593, False, 1000

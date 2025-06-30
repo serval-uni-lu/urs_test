@@ -1,0 +1,4 @@
+file, isUniform, pvalue, time, timeout, N
+/tmp/omega.cl/36.sk_3_77.cnf, , , , , 
+/tmp/omega.cl/registerlesSwap.sk_3_10.cnf, True, 0.8674859749154267, 563.2077431678772, False, 120000
+/tmp/omega.cl/ProjectService3.sk_12_55.cnf, True, 0.7106523792408662, 1619.5184512138367, False, 4000

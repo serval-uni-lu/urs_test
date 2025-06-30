@@ -1,0 +1,5 @@
+file, isUniform, pvalue, time, timeout, N
+/tmp/omega.cl/V7/s298_7_4.cnf, True, 0.4348769183974006, 135.96096873283386, False, 328000
+/tmp/omega.cl/V7/s832a_7_4.cnf, True, 0.9916918933772861, 293.7663269042969, False, 294000
+/tmp/omega.cl/SetTest.sk_9_21.cnf, True, 0.270617039058332, 2560.2436876296997, False, 2000
+/tmp/omega.cl/V7/s27_new_7_4.cnf, True, 0.9148785505541257, 0.2540750503540039, False, 2000

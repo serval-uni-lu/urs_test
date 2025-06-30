@@ -1,0 +1,8 @@
+file, isUniform, pvalue, time, timeout, N
+/tmp/omega/36.sk_3_77.cnf, , , , , 
+/tmp/omega/V7/s27_7_4.cnf, True, 1.0, 47.5334358215332, False, 2000
+/tmp/omega/V7/s27_new_7_4.cnf, True, 1.0, 78.27639508247375, False, 2000
+/tmp/omega/V7/s298_7_4.cnf, False, 2.2250738585072014e-308, 741.4698624610901, False, 328000
+/tmp/omega/V7/s832a_7_4.cnf, False, 2.2250738585072014e-308, 838.2349472045898, False, 294000
+/tmp/omega/V7/s820a_7_4.cnf, False, 2.2250738585072014e-308, 4172.5979561805725, False, 1480000
+/tmp/omega/V7/s382_7_4.cnf, False, 2.2250738585072014e-308, 4211.642315864563, False, 3084000

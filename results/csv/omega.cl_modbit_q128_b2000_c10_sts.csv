@@ -1,0 +1,6 @@
+file, isUniform, pvalue, time, timeout, N
+/tmp/omega.cl/polynomial.sk_7_25.cnf, True, 1.0, 5.163363695144653, False, 2000
+/tmp/omega.cl/Blasted_Real/blasted_case53.cnf, False, 3.9705765116811e-05, 1110.231819152832, False, 2622000
+/tmp/omega.cl/Blasted_Real/blasted_case100.cnf, True, 0.041303217265471655, 3858.6656374931335, False, 20972000
+/tmp/omega.cl/Blasted_Real/blasted_case55.cnf, True, 0.6215666225810725, 4346.562686681747, False, 5244000
+/tmp/omega.cl/Blasted_Real/blasted_case47.cnf, False, 2.2250738585072014e-308, 1262.918298482895, False, 2622000

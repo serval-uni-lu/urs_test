@@ -1,0 +1,6 @@
+file, isUniform, pvalue, time, timeout, N
+/tmp/omega/36.sk_3_77.cnf, , , , , 
+/tmp/omega/tutorial1.sk_1_1.cnf, True, 1.0, 2.6883413791656494, False, 2000
+/tmp/omega/polynomial.sk_7_25.cnf, True, 1.0, 5.159955978393555, False, 2000
+/tmp/omega/FeatureModels/FM-3.6.1-refined.cnf, True, 0.6948987708327077, 6.418994903564453, False, 66000
+/tmp/omega/ProjectService3.sk_12_55.cnf, False, 0.005120630886386336, 797.1685209274292, False, 2000

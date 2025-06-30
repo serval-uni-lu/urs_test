@@ -1,0 +1,14 @@
+file, isUniform, pvalue, time, timeout, N
+/tmp/omega.cl/79.sk_4_40.cnf, , , , , 
+/tmp/omega.cl/V3/s27_3_2.cnf, True, 0.4195740989704199, 0.3301687240600586, False, 4000
+/tmp/omega.cl/V3/s298_3_2.cnf, True, 0.3708867806945527, 14.377538919448853, False, 44000
+/tmp/omega.cl/V3/s27_new_3_2.cnf, True, 0.9579065811466088, 0.295515775680542, False, 4000
+/tmp/omega.cl/V3/s820a_3_2.cnf, True, 0.04191153023173706, 450.00530529022217, False, 500000
+/tmp/omega.cl/V3/s1488_3_2.cnf, True, 0.2462532880888629, 48.41820955276489, False, 36000
+/tmp/omega.cl/V3/s526_3_2.cnf, True, 0.2836926698898756, 799.8417730331421, False, 1168000
+/tmp/omega.cl/V3/s382_3_2.cnf, True, 0.7154229834388897, 1295.1398780345917, False, 3084000
+/tmp/omega.cl/V3/s832a_3_2.cnf, True, 0.06557829548295227, 1351.0805132389069, False, 1476000
+/tmp/omega.cl/tutorial1.sk_1_1.cnf, True, 0.46702758387372245, 0.5433452129364014, False, 4000
+/tmp/omega.cl/ProjectService3.sk_12_55.cnf, False, 1.4226639588649541e-75, 193.25365376472473, False, 4000
+/tmp/omega.cl/V3/s444_3_2.cnf, True, 0.9241836188918526, 4135.35880613327, False, 9252000
+/tmp/omega.cl/V3/s526a_3_2.cnf, True, 0.43704231994443715, 5604.337521076202, False, 7868000

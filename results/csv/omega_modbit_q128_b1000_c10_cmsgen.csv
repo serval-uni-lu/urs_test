@@ -1,0 +1,24 @@
+file, isUniform, pvalue, time, timeout, N
+/tmp/omega/FeatureModels/FM-3.6.1-refined.cnf, False, 2.2250738585072014e-308, 1.779350996017456, False, 66000
+/tmp/omega/tutorial2.sk_3_4.cnf, False, 0.008313591840083885, 11.016247749328613, False, 1000
+/tmp/omega/ProjectService3.sk_12_55.cnf, False, 1.168172563429537e-05, 88.93181204795837, False, 2000
+/tmp/omega/79.sk_4_40.cnf, , , , , 
+/tmp/omega/registerlesSwap.sk_3_10.cnf, False, 2.2250738585072014e-308, 22.3729989528656, False, 118000
+/tmp/omega/FMEasy/fiasco.cnf, False, 2.2250738585072014e-308, 1832.6157624721527, False, 2388000
+/tmp/omega/V3/s349_3_2.cnf, , , , , 83887000
+/tmp/omega/V3/s444_3_2.cnf, , , , , 9250000
+/tmp/omega/V3/s344_3_2.cnf, , , , , 41944000
+/tmp/omega/V3/s27_new_3_2.cnf, , , , , 1000
+/tmp/omega/V3/s832a_3_2.cnf, , , , , 1475000
+/tmp/omega/V3/s1488_3_2.cnf, , , , , 33000
+/tmp/omega/V3/s298_3_2.cnf, , , , , 41000
+/tmp/omega/V3/s820a_3_2.cnf, , , , , 497000
+/tmp/omega/V3/s526_3_2.cnf, , , , , 1166000
+/tmp/omega/V3/s27_3_2.cnf, , , , , 1000
+/tmp/omega/V3/s953a_3_2.cnf, , , , , 3779571221000
+/tmp/omega/V3/s420_new_3_2.cnf, , , , , 335545000
+/tmp/omega/V3/s526a_3_2.cnf, , , , , 7865000
+/tmp/omega/V3/s420_new1_3_2.cnf, , , , , 335545000
+/tmp/omega/V3/s382_3_2.cnf, , , , , 3084000
+/tmp/omega/V3/s510_3_2.cnf, , , , , 25996000
+/tmp/omega/V3/s420_3_2.cnf, , , , , 335545000

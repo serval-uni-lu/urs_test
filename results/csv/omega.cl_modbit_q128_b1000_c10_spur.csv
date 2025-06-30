@@ -1,0 +1,15 @@
+file, isUniform, pvalue, time, timeout, N
+/tmp/omega.cl/Blasted_Real/blasted_case127.cnf, True, 0.8547499348778336, 0.07911849021911621, False, 1000
+/tmp/omega.cl/36.sk_3_77.cnf, , , , , 
+/tmp/omega.cl/Blasted_Real/blasted_case28.cnf, True, 0.49536780784528345, 0.3572540283203125, False, 6000
+/tmp/omega.cl/Blasted_Real/blasted_case21.cnf, False, 0.00752457137157362, 6.554576396942139, False, 41000
+/tmp/omega.cl/Blasted_Real/blasted_case58.cnf, True, 0.0593632463876662, 62.247390031814575, False, 354000
+/tmp/omega.cl/Blasted_Real/blasted_case101.cnf, False, 1.254984758069571e-15, 1785.9138841629028, False, 20972000
+/tmp/omega.cl/Blasted_Real/blasted_case100.cnf, False, 6.63709383524095e-18, 1834.4743621349335, False, 20972000
+/tmp/omega.cl/Blasted_Real/blasted_case22.cnf, True, 0.3416684388533319, 6.646228790283203, False, 41000
+/tmp/omega.cl/Blasted_Real/blasted_case_0_b12_1.cnf, False, 1.079321620149167e-05, 956.7756378650665, False, 383000
+/tmp/omega.cl/FMEasy/fiasco.cnf, False, 1.2057636676549868e-22, 2820.026636838913, False, 2388000
+/tmp/omega.cl/Blasted_Real/blasted_case109.cnf, False, 1.964012670192894e-17, 2845.4044020175934, False, 5243000
+/tmp/omega.cl/Blasted_Real/blasted_case36.cnf, True, 0.26954158118501925, 0.1846756935119629, False, 3000
+/tmp/omega.cl/Blasted_Real/blasted_case59_1.cnf, False, 6.948703518193127e-14, 61.17107915878296, False, 354000
+/tmp/omega.cl/Blasted_Real/blasted_case17.cnf, True, 0.5734669667724457, 1.9495849609375, False, 21000

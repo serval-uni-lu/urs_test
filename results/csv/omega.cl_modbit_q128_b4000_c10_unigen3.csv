@@ -1,0 +1,7 @@
+file, isUniform, pvalue, time, timeout, N
+/tmp/omega.cl/V7/s27_new_7_4.cnf, True, 0.9115004652184862, 0.09329819679260254, False, 4000
+/tmp/omega.cl/polynomial.sk_7_25.cnf, True, 0.9591675050708419, 0.6252937316894531, False, 4000
+/tmp/omega.cl/FeatureModels/FM-3.6.1-refined.cnf, True, 0.5675609456565633, 37.50366401672363, False, 68000
+/tmp/omega.cl/V7/s298_7_4.cnf, True, 0.4832588118410177, 1854.4822664260864, False, 328000
+/tmp/omega.cl/V7/s832a_7_4.cnf, True, 0.788938331144794, 4824.795941829681, False, 296000
+/tmp/omega.cl/V7/s27_7_4.cnf, True, 0.14736751288990335, 0.10642671585083008, False, 4000

@@ -1,0 +1,12 @@
+file, isUniform, pvalue, time, timeout, N
+/tmp/omega/36.sk_3_77.cnf, , , , , 
+/tmp/omega/tutorial1.sk_1_1.cnf, True, 0.7518296340458492, 0.5377194881439209, False, 4000
+/tmp/omega/Blasted_Real/blasted_case30.cnf, True, 0.9005864969197291, 1.0669543743133545, False, 8000
+/tmp/omega/Blasted_Real/blasted_case60.cnf, True, 0.06901434073455953, 0.28332996368408203, False, 4000
+/tmp/omega/registerlesSwap.sk_3_10.cnf, False, 2.2250738585072014e-308, 71.89990520477295, False, 120000
+/tmp/omega/Blasted_Real/blasted_case206.cnf, True, 0.7078804521174213, 0.2787282466888428, False, 4000
+/tmp/omega/Blasted_Real/blasted_case110.cnf, True, 0.05367253887620563, 76.57322096824646, False, 164000
+/tmp/omega/Blasted_Real/blasted_case56.cnf, True, 0.5961160055939435, 912.049066066742, False, 2624000
+/tmp/omega/Blasted_Real/blasted_case54.cnf, True, 0.9764075940264285, 1074.4989986419678, False, 2624000
+/tmp/omega/Blasted_Real/blasted_case68.cnf, False, 2.2250738585072014e-308, 845.7912278175354, False, 1312000
+/tmp/omega/Blasted_Real/blasted_case36.cnf, , , , , 4000

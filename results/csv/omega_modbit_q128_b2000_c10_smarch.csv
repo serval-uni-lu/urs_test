@@ -1,0 +1,3 @@
+file, isUniform, pvalue, time, timeout, N
+/tmp/omega/V7/s27_new_7_4.cnf, False, 0.0035368240204164984, 108.70094323158264, False, 2000
+/tmp/omega/V7/s27_7_4.cnf, True, 0.2069935569374041, 199.71273970603943, False, 2000
