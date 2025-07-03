@@ -3,9 +3,10 @@
 For each test (and for each
 formula), each sampler was called multiple times to generate samples of a specified
 batch size.
-The bold p-values are all greater than our significance level α = 0.01. #F indicates
-the number of formulae on which the test was successfully performed (i.e. without
-timeouts or out-of-memory errors).
+The
+indicated time (in hours) is the accumulated time across all the formulae for which
+the test was performed successfully. #F indicates the number of formulae on which
+the test was successfully performed (i.e. without timeouts or out-of-memory errors).
 
 ### Dataset: omega
 
