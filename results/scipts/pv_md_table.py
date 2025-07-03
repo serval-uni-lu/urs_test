@@ -12,8 +12,8 @@ sm = {"kus":"KUS", "quicksampler": "QuickSampler", "smarch":"Smarch"
       , "spur": "SPUR", "sts":"STS", "cmsgen": "CMSGen", "unigen3":"UniGen3"
       , "bddsampler": "BDDSampler" }
 tm = {"monobit":"Monobit", "birthday": "Birthday", "freq_var":"VF", "freq_nb_var":"SFpC", "chisquared":"GOF"
-        , "modbit_q2" : "Q = 2", "modbit_q4" : "Q = 4", "modbit_q8" : "Q = 8", "modbit_q16" : "Q = 16"
-        , "modbit_q32" : "Q = 32", "modbit_q64" : "Q = 64", "modbit_q128" : "Q = 128"}
+        , "modbit_q2" : "q = 2", "modbit_q4" : "q = 4", "modbit_q8" : "q = 8", "modbit_q16" : "q = 16"
+        , "modbit_q32" : "q = 32", "modbit_q64" : "q = 64", "modbit_q128" : "q = 128"}
 
 
 f = open("Uniformity Tables.md", "w")

@@ -4,7 +4,7 @@ import math
 
 significance_level = 0.01
 tests = ["freq_var", "birthday", "freq_nb_var", "chisquared"]
-modbit = ["modbit_q2", "modbit_q4", "modbit_q8", "modbit_q16", "modbit_q32", "modbit_q64"]
+modbit = ["modbit_q2", "modbit_q8", "modbit_q32", "modbit_q64"]
 # tests = ["birthday"]
 
 samplers = ["kus", "quicksampler", "smarch", "spur", "sts", "cmsgen", "unigen3", "bddsampler"]
@@ -12,8 +12,8 @@ sm = {"kus":"KUS", "quicksampler": "QuickSampler", "smarch":"Smarch"
       , "spur": "SPUR", "sts":"STS", "cmsgen": "CMSGen", "unigen3":"UniGen3"
       , "bddsampler": "BDDSampler" }
 tm = {"monobit":"Monobit", "birthday": "Birthday", "freq_var":"VF", "freq_nb_var":"SFpC", "chisquared":"GOF"
-        , "modbit_q2" : "Q = 2", "modbit_q4" : "Q = 4", "modbit_q8" : "Q = 8", "modbit_q16" : "Q = 16"
-        , "modbit_q32" : "Q = 32", "modbit_q64" : "Q = 64", "modbit_q128" : "Q = 128"}
+        , "modbit_q2" : "q = 2", "modbit_q4" : "q = 4", "modbit_q8" : "q = 8", "modbit_q16" : "q = 16"
+        , "modbit_q32" : "q = 32", "modbit_q64" : "q = 64", "modbit_q128" : "q = 128"}
 
 pad = max(map(lambda x : len(sm[x]), samplers))
 
@@ -59,6 +59,9 @@ for d in ["omega", "r30c90", "r30c114", "r30c150b1000"]:
     for batch_size in ["b1000", "b2000", "b4000"]:
         print(f"{d} {batch_size} table:\n")
         gen_table(d, batch_size, tests, samplers)
+        print("\n\n")
+        print("MODBIT")
+        gen_table(d, batch_size, modbit, samplers)
         print("\n\n")
 
 
