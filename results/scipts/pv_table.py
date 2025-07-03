@@ -3,9 +3,7 @@ import numpy as np
 import math
 
 significance_level = 0.01
-bench = "omega"
-batch_size = "b1000"
-tests = ["monobit", "freq_var", "birthday", "freq_nb_var", "chisquared"]
+tests = ["freq_var", "birthday", "freq_nb_var", "chisquared"]
 modbit = ["modbit_q2", "modbit_q4", "modbit_q8", "modbit_q16", "modbit_q32", "modbit_q64"]
 # tests = ["birthday"]
 
