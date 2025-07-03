@@ -3,7 +3,7 @@ import numpy as np
 import math
 
 tests = ["freq_var", "birthday", "freq_nb_var", "chisquared"]
-modbit = ["modbit_q2", "modbit_q4", "modbit_q8", "modbit_q16", "modbit_q32", "modbit_q64"]
+modbit = ["modbit_q2", "modbit_q8", "modbit_q32", "modbit_q64"]
 # tests = ["birthday"]
 
 samplers = ["kus", "quicksampler", "smarch", "spur", "sts", "cmsgen", "unigen3", "bddsampler"]
@@ -56,6 +56,9 @@ for d in ["omega", "r30c90", "r30c114", "r30c150b1000"]:
     for batch_size in ["b1000", "b2000", "b4000"]:
         print(f"{d} {batch_size} table:\n")
         gen_table(d, batch_size, tests, samplers)
+        print("\n\n")
+        print("MODBIT")
+        gen_table(d, batch_size, modbit, samplers)
         print("\n\n")
 
 

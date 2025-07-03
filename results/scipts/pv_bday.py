@@ -3,18 +3,19 @@ import numpy as np
 import math
 
 significance_level = 0.01
-bench = "unigen3_easy"
+bench = "omega"
 batch_size = "b1000"
 # tests = ["monobit", "freq_var", "freq_nb_var", "chisquared"]
 test = "birthday"
 
-samplers = ["kus", "quicksampler", "smarch", "spur", "sts", "cmsgen", "unigen3"]
+samplers = ["kus", "quicksampler", "smarch", "spur", "sts", "cmsgen", "unigen3", "bddsampler"]
 sm = {"kus":"KUS", "quicksampler": "QuickSampler", "smarch":"Smarch"
-      , "spur": "SPUR", "sts":"STS", "cmsgen": "CMSGen", "unigen3":"UniGen3"}
+      , "spur": "SPUR", "sts":"STS", "cmsgen": "CMSGen", "unigen3":"UniGen3"
+      , "bddsampler": "BDDSampler" }
 
 pad = max(map(lambda x : len(sm[x]), samplers))
 
-print("sampler", end = '')
+print("Sampler", end = '')
 
 print(" & \\#F & p-value & min & max & average & median", end = '')
 print("\\\\\n\\hline")
