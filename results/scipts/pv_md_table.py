@@ -4,7 +4,7 @@ import math
 
 significance_level = 0.01
 tests = ["freq_var", "birthday", "freq_nb_var", "chisquared"]
-modbit = ["modbit_q2", "modbit_q4", "modbit_q8", "modbit_q16", "modbit_q32", "modbit_q64"]
+modbit = ["modbit_q2", "modbit_q4", "modbit_q8", "modbit_q16", "modbit_q32", "modbit_q64", "modbit_q128"]
 # tests = ["birthday"]
 
 samplers = ["kus", "quicksampler", "smarch", "spur", "sts", "cmsgen", "unigen3", "bddsampler"]
