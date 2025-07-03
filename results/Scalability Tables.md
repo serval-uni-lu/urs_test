@@ -25,6 +25,7 @@ Batch size: 1000:
 |BDDSampler   |  118 |   3.2 |   92 |   4.5 |   68 |   9.6 |   66 |   8.6|
 
 
+Modbit test:
 ||Q = 2| |Q = 4| |Q = 8| |Q = 16| |Q = 32| |Q = 64| |
 |-|-|-|-|-|-|-|-|-|-|-|-|-|
 |Sampler | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h)|
@@ -53,6 +54,7 @@ Batch size: 2000:
 |BDDSampler   |  118 |   1.9 |   93 |   7.7 |   71 |  18.2 |   66 |   5.6|
 
 
+Modbit test:
 ||Q = 2| |Q = 4| |Q = 8| |Q = 16| |Q = 32| |Q = 64| |
 |-|-|-|-|-|-|-|-|-|-|-|-|-|
 |Sampler | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h)|
@@ -81,6 +83,7 @@ Batch size: 4000:
 |BDDSampler   |  118 |   1.5 |   92 |   4.3 |   71 |  11.3 |   67 |   8.4|
 
 
+Modbit test:
 ||Q = 2| |Q = 4| |Q = 8| |Q = 16| |Q = 32| |Q = 64| |
 |-|-|-|-|-|-|-|-|-|-|-|-|-|
 |Sampler | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h)|
@@ -111,6 +114,7 @@ Batch size: 1000:
 |BDDSampler   |  300 |   0.0 |  300 |   0.0 |  300 |   0.1 |  300 |   0.2|
 
 
+Modbit test:
 ||Q = 2| |Q = 4| |Q = 8| |Q = 16| |Q = 32| |Q = 64| |
 |-|-|-|-|-|-|-|-|-|-|-|-|-|
 |Sampler | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h)|
@@ -139,6 +143,7 @@ Batch size: 2000:
 |BDDSampler   |  300 |   0.0 |  300 |   0.0 |  300 |   0.1 |  300 |   0.2|
 
 
+Modbit test:
 ||Q = 2| |Q = 4| |Q = 8| |Q = 16| |Q = 32| |Q = 64| |
 |-|-|-|-|-|-|-|-|-|-|-|-|-|
 |Sampler | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h)|
@@ -167,6 +172,7 @@ Batch size: 4000:
 |BDDSampler   |  300 |   0.0 |  300 |   0.0 |  300 |   0.1 |  300 |   0.2|
 
 
+Modbit test:
 ||Q = 2| |Q = 4| |Q = 8| |Q = 16| |Q = 32| |Q = 64| |
 |-|-|-|-|-|-|-|-|-|-|-|-|-|
 |Sampler | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h)|
@@ -197,6 +203,7 @@ Batch size: 1000:
 |BDDSampler   |  300 |   0.0 |  300 |   0.0 |  300 |   0.0 |  300 |   0.0|
 
 
+Modbit test:
 ||Q = 2| |Q = 4| |Q = 8| |Q = 16| |Q = 32| |Q = 64| |
 |-|-|-|-|-|-|-|-|-|-|-|-|-|
 |Sampler | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h)|
@@ -225,6 +232,7 @@ Batch size: 2000:
 |BDDSampler   |  300 |   0.0 |  300 |   0.0 |  300 |   0.0 |  300 |   0.0|
 
 
+Modbit test:
 ||Q = 2| |Q = 4| |Q = 8| |Q = 16| |Q = 32| |Q = 64| |
 |-|-|-|-|-|-|-|-|-|-|-|-|-|
 |Sampler | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h)|
@@ -253,6 +261,7 @@ Batch size: 4000:
 |BDDSampler   |  300 |   0.0 |  300 |   0.0 |  300 |   0.0 |  300 |   0.0|
 
 
+Modbit test:
 ||Q = 2| |Q = 4| |Q = 8| |Q = 16| |Q = 32| |Q = 64| |
 |-|-|-|-|-|-|-|-|-|-|-|-|-|
 |Sampler | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h)|
@@ -283,6 +292,7 @@ Batch size: 1000:
 |BDDSampler   |  300 |   0.0 |  300 |   0.0 |  300 |   0.1 |  300 |   0.2|
 
 
+Modbit test:
 ||Q = 2| |Q = 4| |Q = 8| |Q = 16| |Q = 32| |Q = 64| |
 |-|-|-|-|-|-|-|-|-|-|-|-|-|
 |Sampler | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h)|
@@ -311,6 +321,7 @@ Batch size: 2000:
 |BDDSampler   |  300 |   0.0 |  300 |   0.0 |  300 |   0.1 |  300 |   0.1|
 
 
+Modbit test:
 ||Q = 2| |Q = 4| |Q = 8| |Q = 16| |Q = 32| |Q = 64| |
 |-|-|-|-|-|-|-|-|-|-|-|-|-|
 |Sampler | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h)|
@@ -339,6 +350,7 @@ Batch size: 4000:
 |BDDSampler   |  300 |   0.0 |  300 |   0.0 |  300 |   0.1 |  300 |   0.1|
 
 
+Modbit test:
 ||Q = 2| |Q = 4| |Q = 8| |Q = 16| |Q = 32| |Q = 64| |
 |-|-|-|-|-|-|-|-|-|-|-|-|-|
 |Sampler | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h) | #F | time (h)|
