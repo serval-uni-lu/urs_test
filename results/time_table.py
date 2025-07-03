@@ -22,7 +22,7 @@ for i in range(0, len(tests)):
     if i + 1 < len(tests):
         sep = '|'
     print("& \\multicolumn{2}{c" + sep + "}{" + tm[test] + "}", end = '')
-print(" \\\\\nsampler", end = '')
+print(" \\\\\nSampler", end = '')
 
 for test in tests:
     print(" & \\#F & time (h)", end = '')

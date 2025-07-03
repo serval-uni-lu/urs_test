@@ -3,9 +3,7 @@ import numpy as np
 import math
 
 significance_level = 0.01
-bench = "omega"
-batch_size = "b1000"
-tests = ["monobit", "freq_var", "birthday", "freq_nb_var", "chisquared"]
+tests = ["freq_var", "birthday", "freq_nb_var", "chisquared"]
 modbit = ["modbit_q2", "modbit_q4", "modbit_q8", "modbit_q16", "modbit_q32", "modbit_q64"]
 # tests = ["birthday"]
 
@@ -17,26 +15,39 @@ tm = {"monobit":"Monobit", "birthday": "Birthday", "freq_var":"VF", "freq_nb_var
         , "modbit_q2" : "Q = 2", "modbit_q4" : "Q = 4", "modbit_q8" : "Q = 8", "modbit_q16" : "Q = 16"
         , "modbit_q32" : "Q = 32", "modbit_q64" : "Q = 64", "modbit_q128" : "Q = 128"}
 
+
+f = open("Uniformity Tables.md", "w")
+
 pad = max(map(lambda x : len(sm[x]), samplers))
 
 def gen_table(bench, batch_size, tests, samplers):
+    f.write("|")
     for i in range(0, len(tests)):
         test = tests[i]
         sep = ''
         if i + 1 < len(tests):
             sep = '|'
-        print("& \\multicolumn{2}{c" + sep + "}{" + tm[test] + "}", end = '')
+        f.write("|" + tm[test] + "| ")
 
-    print(" \\\\\nSampler", end = '')
+    f.write("|\n|-|-")
+    for i in range(0, len(tests)):
+        test = tests[i]
+        sep = ''
+        if i + 1 < len(tests):
+            sep = '|-'
+        f.write("|-" + sep)
+
+    f.write("|\n|Sampler")
 
     for test in tests:
-        print(" & \\#F & p-value", end = '')
-    print("\\\\\n\\hline")
+        f.write(" | #F | p-value")
+    f.write("|\n")
+
 
     for s in samplers:
-        print(sm[s].ljust(pad, ' '), end = '')
+        f.write("|" + sm[s].ljust(pad, ' '))
         for test in tests:
-            fp = f"csv/{bench}_{test}_{batch_size}_c10_{s}.csv"
+            fp = f"csv/{bench}_{test}_b{batch_size}_c10_{s}.csv"
 
             data = pd.read_csv(fp, skipinitialspace = True, index_col = 'file')
             data.dropna(inplace = True)
@@ -49,19 +60,28 @@ def gen_table(bench, batch_size, tests, samplers):
             if nb != 0:
                 res = f"{pr:5.3f}"
                 if pr > significance_level:
-                    res = "\\textbf{" + res + "}"
+                    res = "**" + res + "**"
             elif nb == 0:
                 res = "-"
 
             tmp = '{:4}'.format(nb)
-            print(f" & {tmp} & {res}", end = '')
-        print(" \\\\")
+            f.write(f" | {tmp} | {res}")
+        f.write("|\n")
+
+f.write("## Experimental results\n\n")
+f.write("""For each test (and for each
+formula), each sampler was called multiple times to generate samples of a specified
+batch size.
+The bold p-values are all greater than our significance level α = 0.01. #F indicates
+the number of formulae on which the test was successfully performed (i.e. without
+timeouts or out-of-memory errors).\n\n""")
 
 for d in ["omega", "r30c90", "r30c114", "r30c150b1000"]:
-    for batch_size in ["b1000", "b2000", "b4000"]:
-        print(f"{d} {batch_size} table:\n")
+    f.write(f"### Dataset: {d}\n\n")
+    for batch_size in ["1000", "2000", "4000"]:
+        f.write(f"Batch size: {batch_size}:\n\n")
         gen_table(d, batch_size, tests, samplers)
-        print("\n\n")
+        f.write("\n\n")
 
 
 # for d in ["omega", "omega.cl", "r30c90", "r30c114", "r30c150b1000"]:
