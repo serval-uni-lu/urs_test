@@ -70,20 +70,24 @@ f.write("## Experimental results\n\n")
 f.write("""For each test (and for each
 formula), each sampler was called multiple times to generate samples of a specified
 batch size.
-The bold p-values are all greater than our significance level α = 0.01. #F indicates
-the number of formulae on which the test was successfully performed (i.e. without
-timeouts or out-of-memory errors).\n\n""")
+The
+indicated time (in hours) is the accumulated time across all the formulae for which
+the test was performed successfully. #F indicates the number of formulae on which
+the test was successfully performed (i.e. without timeouts or out-of-memory errors).\n\n""")
 
 for d in ["omega", "r30c90", "r30c114", "r30c150b1000"]:
     f.write(f"### Dataset: {d}\n\n")
     for batch_size in ["1000", "2000", "4000"]:
         f.write(f"Batch size: {batch_size}:\n\n")
         gen_table(d, batch_size, tests, samplers)
+        f.write("\n\nModbit test:\n")
+        gen_table(d, batch_size, modbit, samplers)
         f.write("\n\n")
 
 
 # for d in ["omega", "omega.cl", "r30c90", "r30c114", "r30c150b1000"]:
-#     for batch_size in ["b1000", "b2000", "b4000"]:
-#         print(f"{d} {batch_size} table:\n")
+#     f.write(f"### Dataset: {d}\n\n")
+#     for batch_size in ["1000", "2000", "4000"]:
+#         f.write(f"Batch size: {batch_size}:\n\n")
 #         gen_table(d, batch_size, modbit, samplers)
-#         print("\n\n")
+#         f.write("\n\n")

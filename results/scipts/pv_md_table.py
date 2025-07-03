@@ -81,6 +81,8 @@ for d in ["omega", "r30c90", "r30c114", "r30c150b1000"]:
     for batch_size in ["1000", "2000", "4000"]:
         f.write(f"Batch size: {batch_size}:\n\n")
         gen_table(d, batch_size, tests, samplers)
+        f.write("\n\nModbit test:\n")
+        gen_table(d, batch_size, modbit, samplers)
         f.write("\n\n")
 
 
