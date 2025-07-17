@@ -442,6 +442,11 @@ def getSolutionFromKSampler(inputFile, numSolutions, newSeed):
 
     os.unlink(str(tempOutputFile))
 
+    if len(lines) <= 0:
+        print(len(lines))
+        print("KSampler did not find solutions")
+        sys.exit(1)
+
     return list(map(util.solstr_to_frozenset, lines))
 
 def getSolutionFromRSampler(inputFile, numSolutions, newSeed):
@@ -461,6 +466,11 @@ def getSolutionFromRSampler(inputFile, numSolutions, newSeed):
         lines = f.readlines()
 
     os.unlink(str(tempOutputFile))
+
+    if len(lines) <= 0:
+        print(len(lines))
+        print("RSampler did not find solutions")
+        sys.exit(1)
 
     return list(map(util.solstr_to_frozenset, lines))
 
@@ -601,6 +611,11 @@ def getSolutionFromBDDSampler(inputFile, numSolutions, newSeed):
         solreturnList = random.sample(solList, numSolutions)
 
     os.unlink(str(tempOutputFile))
+
+    if len(solreturnList) <= 0:
+        print(len(lines))
+        print("BDDSampler did not find solutions")
+        sys.exit(1)
     return list(map(util.solstr_to_frozenset, solreturnList))
 
 def getSamplerFunction(sampler, cnf_file):
