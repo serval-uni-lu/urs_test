@@ -17,11 +17,23 @@ From: base.sif
     # ../../appNNF/cppddnnf/src /ksampler/src
     # ../../appNNF/cppddnnf/gem.cpp /ksampler/gem.cpp
 
+    # ../../../cpp/upNNF/rup/ /rup
+
 %post
     # cd /ksampler
     # g++ gem.cpp -o gem
     # ./gem
     # make -j8 rsampler.r sampler.r
+
+
+    # cd /rup
+    # cd ./dep/cadical-rel-2.1.3
+    # ./configure
+    # make -j
+    # cd ../../
+    # g++ gen.cpp -o gen
+    # ./gen
+    # ninja
 
 %runscript
     /usr/bin/python3 /chi2.py "$@"
