@@ -480,7 +480,7 @@ def getSolutionFromRUPSampler(inputFile, numSolutions, newSeed):
     # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
     tempOutputFile = util.make_temp_name()
     cwd = os.getcwd()
-    cmd = f'/rup/build/sampler --cnf {os.path.abspath(inputFile)} --nb {numSolutions} > {tempOutputFile}'
+    cmd = f'/rup/build/sampler --cnf {os.path.abspath(inputFile)} --r {numSolutions} --n 1 --k 50 > {tempOutputFile}'
     # if args.verbose:
     print("cmd: ", cmd)
     # os.chdir(str(os.getcwd()) + '/samplers')

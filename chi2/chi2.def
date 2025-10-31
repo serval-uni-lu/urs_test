@@ -18,6 +18,7 @@ From: base.sif
     # ../../appNNF/cppddnnf/gem.cpp /ksampler/gem.cpp
 
     # ../../../cpp/upNNF/rup/ /rup
+    # ../../../projects/upNNF/rup/ /rup
 
 %post
     # cd /ksampler
