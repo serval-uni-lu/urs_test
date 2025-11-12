@@ -522,7 +522,9 @@ def getSolutionFromMSTS(inputFile, numSolutions, newSeed):
         print("MSTS did not find solutions")
         sys.exit(1)
 
-    return list(map(util.solstr_to_frozenset, lines))
+    sollist = list(map(util.solstr_to_frozenset, lines))
+    random.shuffle(sollist)
+    return sollist
 
 def getSolutionFromDistAware(inputFile, numSolutions, newSeed):
 
