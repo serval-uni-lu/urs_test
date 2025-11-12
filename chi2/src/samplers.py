@@ -505,7 +505,7 @@ def getSolutionFromMSTS(inputFile, numSolutions, newSeed):
     # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
     tempOutputFile = util.make_temp_name()
     cwd = os.getcwd()
-    cmd = f'/xor/build/sampler --cnf {os.path.abspath(inputFile)} --nb {numSolutions} > {tempOutputFile}'
+    cmd = f'/xor/build/sampler --cnf {os.path.abspath(inputFile)} --n {numSolutions} > {tempOutputFile}'
     # if args.verbose:
     print("cmd: ", cmd)
     # os.chdir(str(os.getcwd()) + '/samplers')
