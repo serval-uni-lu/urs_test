@@ -19,6 +19,8 @@ From: base.sif
 
     # ../../../cpp/upNNF/rup/ /rup
 
+    ../../../cpp/upNNF/xor/ /xor
+
 %post
     # cd /ksampler
     # g++ gem.cpp -o gem
@@ -34,6 +36,14 @@ From: base.sif
     # g++ gen.cpp -o gen
     # ./gen
     # ninja
+
+    cd /xor/dep/cadical-rel-2.1.3
+    ./configure
+    make -j
+    cd /xor
+    g++ gen.cpp -o gen
+    ./gen -DCONTAINER
+    ninja
 
 %runscript
     /usr/bin/python3 /chi2.py "$@"

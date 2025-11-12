@@ -499,6 +499,31 @@ def getSolutionFromRUPSampler(inputFile, numSolutions, newSeed):
 
     return list(map(util.solstr_to_frozenset, lines))
 
+def getSolutionFromMSTS(inputFile, numSolutions, newSeed):
+
+    inputFileSuffix = inputFile.split('/')[-1][:-4]
+    # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
+    tempOutputFile = util.make_temp_name()
+    cwd = os.getcwd()
+    cmd = f'/xor/build/sampler --cnf {os.path.abspath(inputFile)} --nb {numSolutions} > {tempOutputFile}'
+    # if args.verbose:
+    print("cmd: ", cmd)
+    # os.chdir(str(os.getcwd()) + '/samplers')
+    os.system(cmd)
+    # os.chdir(str(cwd))
+
+    with open(tempOutputFile, 'r') as f:
+        lines = f.readlines()
+
+    os.unlink(str(tempOutputFile))
+
+    if len(lines) <= 0:
+        print(len(lines))
+        print("MSTS did not find solutions")
+        sys.exit(1)
+
+    return list(map(util.solstr_to_frozenset, lines))
+
 def getSolutionFromDistAware(inputFile, numSolutions, newSeed):
 
     inputFileSuffix = inputFile.split('/')[-1][:-4]
@@ -644,60 +669,25 @@ def getSolutionFromBDDSampler(inputFile, numSolutions, newSeed):
     return list(map(util.solstr_to_frozenset, solreturnList))
 
 def getSamplerFunction(sampler, cnf_file):
-    UNIGEN3 = "unigen3"
-    SPUR = "spur"
-    STS = "sts"
-    STSsingle = "sts1"
-    SMARCH = "smarch"
-    LOOKAHEAD = "lookahead"
-    QUICKSAMPLER = "quicksampler"
-    CMSGEN = "cmsgen"
-    KUS = "kus"
-    KUS2 = "kus2"
-    DISTAWARE = "distaware"
-    WALKSAT = "walksat"
-    JSAMPLER = "jsampler"
-    KSAMPLER = "ksampler"
-    RSAMPLER = "rsampler"
-    BDDSAMPLER = "bddsampler"
-    RUPSAMPLER = "rupsampler"
+    samplers = {
+            "unigen3" : getSolutionFromUniGen3
+            , "spur" : getSolutionFromSpur
+            , "sts" : getSolutionFromSTS
+            , "sts1" : getSolutionFromSTSsingle
+            , "smarch" : getSolutionFromSMARCH
+            , "lookahead" : getSolutionFromLookahead
+            , "quicksampler" : getSolutionFromQuickSampler
+            , "cmsgen" : getSolutionFromCMSsampler
+            , "kus" : getSolutionFromKUS
+            , "kus2" : getSolutionFromKUS2
+            , "distaware" : getSolutionFromDistAware
+            , "walksat" : getSolutionFromWalkSAT
+            , "jsampler" : getSolutionFromJSampler
+            , "ksampler" : getSolutionFromKSampler
+            , "rsampler" : getSolutionFromRSampler
+            , "bddsampler" : getSolutionFromBDDSampler
+            , "rupsampler" : getSolutionFromRUPSampler
+            , "msts" : getSolutionFromMSTS
+        }
 
-    sampler_fn = getSolutionFromUniGen3
-
-    if sampler == UNIGEN3:
-        sampler_fn = getSolutionFromUniGen3
-    elif sampler == SPUR:
-        sampler_fn = getSolutionFromSpur
-    elif sampler == STS:
-        sampler_fn = getSolutionFromSTS
-    elif sampler == STSsingle:
-        sampler_fn = getSolutionFromSTSsingle
-    elif sampler == SMARCH:
-        sampler_fn = getSolutionFromSMARCH
-    elif sampler == LOOKAHEAD:
-        sampler_fn = getSolutionFromLookahead
-    elif sampler == QUICKSAMPLER:
-        sampler_fn = getSolutionFromQuickSampler
-    elif sampler == CMSGEN:
-        sampler_fn = getSolutionFromCMSsampler
-    elif sampler == KUS:
-        sampler_fn = getSolutionFromKUS
-    elif sampler == KUS2:
-        sampler_fn = getSolutionFromKUS2
-    elif sampler == DISTAWARE:
-        sampler_fn = getSolutionFromDistAware
-        create_features_dict(cnf_file)
-    elif sampler == WALKSAT:
-        sampler_fn = getSolutionFromWalkSAT
-    elif sampler == JSAMPLER:
-        sampler_fn = getSolutionFromJSampler
-    elif sampler == KSAMPLER:
-        sampler_fn = getSolutionFromKSampler
-    elif sampler == RSAMPLER:
-        sampler_fn = getSolutionFromRSampler
-    elif sampler == BDDSAMPLER:
-        sampler_fn = getSolutionFromBDDSampler
-    elif sampler == RUPSAMPLER:
-        sampler_fn = getSolutionFromRUPSampler
-
-    return sampler_fn
+    return samplers[sampler]
