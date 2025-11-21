@@ -532,6 +532,7 @@ def getSolutionFromGIBBS(inputFile, numSolutions, newSeed):
     # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
     tempOutputFile = util.make_temp_name()
     cwd = os.getcwd()
+    numSolutions = max(numSolutions, 10_000)
     cmd = f'/xor/build/gibbs --cnf {os.path.abspath(inputFile)} --n {numSolutions} --k 1 > {tempOutputFile}'
     # if args.verbose:
     print("cmd: ", cmd)
