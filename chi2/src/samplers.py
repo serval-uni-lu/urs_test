@@ -526,6 +526,34 @@ def getSolutionFromMSTS(inputFile, numSolutions, newSeed):
     random.shuffle(sollist)
     return sollist
 
+def getSolutionFromGIBBS(inputFile, numSolutions, newSeed):
+
+    inputFileSuffix = inputFile.split('/')[-1][:-4]
+    # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
+    tempOutputFile = util.make_temp_name()
+    cwd = os.getcwd()
+    numSolutions = max(numSolutions, 10_000)
+    cmd = f'/xor/build/gibbs --cnf {os.path.abspath(inputFile)} --n {numSolutions} --k 1 > {tempOutputFile}'
+    # if args.verbose:
+    print("cmd: ", cmd)
+    # os.chdir(str(os.getcwd()) + '/samplers')
+    os.system(cmd)
+    # os.chdir(str(cwd))
+
+    with open(tempOutputFile, 'r') as f:
+        lines = f.readlines()
+
+    os.unlink(str(tempOutputFile))
+
+    if len(lines) <= 0:
+        print(len(lines))
+        print("GIBBS did not find solutions")
+        sys.exit(1)
+
+    sollist = list(map(util.solstr_to_frozenset, lines))
+    random.shuffle(sollist)
+    return sollist
+
 def getSolutionFromDFSRB(inputFile, numSolutions, newSeed):
 
     inputFileSuffix = inputFile.split('/')[-1][:-4]
@@ -718,6 +746,7 @@ def getSamplerFunction(sampler, cnf_file):
             , "rupsampler" : getSolutionFromRUPSampler
             , "msts" : getSolutionFromMSTS
             , "dfsrb" : getSolutionFromDFSRB
+            , "gibbs" : getSolutionFromGIBBS
         }
 
     return samplers[sampler]
