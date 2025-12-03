@@ -526,6 +526,33 @@ def getSolutionFromMSTS(inputFile, numSolutions, newSeed):
     random.shuffle(sollist)
     return sollist
 
+def getSolutionFromDFSRB(inputFile, numSolutions, newSeed):
+
+    inputFileSuffix = inputFile.split('/')[-1][:-4]
+    # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
+    tempOutputFile = util.make_temp_name()
+    cwd = os.getcwd()
+    cmd = f'/xor/build/dfs_sampler --cnf {os.path.abspath(inputFile)} --n {numSolutions} > {tempOutputFile}'
+    # if args.verbose:
+    print("cmd: ", cmd)
+    # os.chdir(str(os.getcwd()) + '/samplers')
+    os.system(cmd)
+    # os.chdir(str(cwd))
+
+    with open(tempOutputFile, 'r') as f:
+        lines = f.readlines()
+
+    os.unlink(str(tempOutputFile))
+
+    if len(lines) <= 0:
+        print(len(lines))
+        print("DFSRB did not find solutions")
+        sys.exit(1)
+
+    sollist = list(map(util.solstr_to_frozenset, lines))
+    random.shuffle(sollist)
+    return sollist
+
 def getSolutionFromDistAware(inputFile, numSolutions, newSeed):
 
     inputFileSuffix = inputFile.split('/')[-1][:-4]
@@ -690,6 +717,7 @@ def getSamplerFunction(sampler, cnf_file):
             , "bddsampler" : getSolutionFromBDDSampler
             , "rupsampler" : getSolutionFromRUPSampler
             , "msts" : getSolutionFromMSTS
+            , "dfsrb" : getSolutionFromDFSRB
         }
 
     return samplers[sampler]
