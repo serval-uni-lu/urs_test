@@ -20,14 +20,15 @@ From: base.sif
     # ../../../cpp/upNNF/rup/ /rup
     # ../../../projects/upNNF/rup/ /rup
 
-    ../../../cpp/upNNF/xor/ /xor
-    # ../../../projects/upNNF/xor/ /xor
+    # ../../../cpp/upNNF/xor/ /xor
+    ../../../projects/upNNF/xor/ /xor
+
+    ../../divkc/cppddnnf/ /ksampler
 
 %post
-    # cd /ksampler
-    # g++ gem.cpp -o gem
-    # ./gem
-    # make -j8 rsampler.r sampler.r
+    cd /ksampler
+    ninja generate
+    ninja
 
 
     # cd /rup

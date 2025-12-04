@@ -474,6 +474,31 @@ def getSolutionFromRSampler(inputFile, numSolutions, newSeed):
 
     return list(map(util.solstr_to_frozenset, lines))
 
+def getSolutionFromRHSampler(inputFile, numSolutions, newSeed):
+
+    inputFileSuffix = inputFile.split('/')[-1][:-4]
+    # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
+    tempOutputFile = util.make_temp_name()
+    cwd = os.getcwd()
+    cmd = f'/ksampler/build/rhsampler --cnf {os.path.abspath(inputFile)} --nb {numSolutions} > {tempOutputFile}'
+    # if args.verbose:
+    print("cmd: ", cmd)
+    # os.chdir(str(os.getcwd()) + '/samplers')
+    os.system(cmd)
+    # os.chdir(str(cwd))
+
+    with open(tempOutputFile, 'r') as f:
+        lines = f.readlines()
+
+    os.unlink(str(tempOutputFile))
+
+    if len(lines) <= 0:
+        print(len(lines))
+        print("RHSampler did not find solutions")
+        sys.exit(1)
+
+    return list(map(util.solstr_to_frozenset, lines))
+
 def getSolutionFromRUPSampler(inputFile, numSolutions, newSeed):
 
     inputFileSuffix = inputFile.split('/')[-1][:-4]
@@ -775,6 +800,7 @@ def getSamplerFunction(sampler, cnf_file):
             , "dfsrb" : getSolutionFromDFSRB
             , "dfsrh" : getSolutionFromDFSRH
             , "gibbs" : getSolutionFromGIBBS
+            , "rhsampler" : getSolutionFromRHSampler
         }
 
     return samplers[sampler]
