@@ -585,7 +585,8 @@ def getSolutionFromGIBBS(inputFile, numSolutions, newSeed):
     tempOutputFile = util.make_temp_name()
     cwd = os.getcwd()
     numSolutions = max(numSolutions, 10_000)
-    cmd = f'/xor/build/gibbs --cnf {os.path.abspath(inputFile)} --n {numSolutions} --k 1 > {tempOutputFile}'
+    unnf_path = inputFile + ".unnf"
+    cmd = f'/xor/build/gibbs --cnf {os.path.abspath(inputFile)} --n {numSolutions} --k 1 --up {os.path.abspath(unnf_path)} > {tempOutputFile}'
     # if args.verbose:
     print("cmd: ", cmd)
     # os.chdir(str(os.getcwd()) + '/samplers')
