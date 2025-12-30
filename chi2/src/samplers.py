@@ -430,7 +430,7 @@ def getSolutionFromKSampler(inputFile, numSolutions, newSeed):
     # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
     tempOutputFile = util.make_temp_name()
     cwd = os.getcwd()
-    cmd = f'/ksampler/sampler.r {os.path.abspath(inputFile)} {numSolutions} {50}  | grep -E -v "^c" > {tempOutputFile}'
+    cmd = f'/ksampler/build/sampler --cnf {os.path.abspath(inputFile)} --nb {numSolutions} --k {50}  | grep -E -v "^c" > {tempOutputFile}'
     # if args.verbose:
     print("cmd: ", cmd)
     # os.chdir(str(os.getcwd()) + '/samplers')
@@ -455,7 +455,7 @@ def getSolutionFromRSampler(inputFile, numSolutions, newSeed):
     # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
     tempOutputFile = util.make_temp_name()
     cwd = os.getcwd()
-    cmd = f'/ksampler/rsampler.r {os.path.abspath(inputFile)} {numSolutions} {50000}  | grep -E -v "^c" > {tempOutputFile}'
+    cmd = f'/ksampler/build/rsampler --cnf {os.path.abspath(inputFile)} --nb {numSolutions} --k {50000}  | grep -E -v "^c" > {tempOutputFile}'
     # if args.verbose:
     print("cmd: ", cmd)
     # os.chdir(str(os.getcwd()) + '/samplers')

@@ -21,14 +21,16 @@ From: base.sif
     # ../../../projects/upNNF/rup/ /rup
 
     # ../../../cpp/upNNF/xor/ /xor
-    ../../../projects/upNNF/xor/ /xor
+    # ../../../projects/upNNF/xor/ /xor
 
     ../../divkc/cppddnnf/ /ksampler
 
 %post
     cd /ksampler
-    ninja generate
-    ninja
+    g++ gen.cpp -o gen
+    ./gen
+    ninja clean
+    ninja build/sampler build/rsampler
 
 
     # cd /rup
@@ -40,13 +42,13 @@ From: base.sif
     # ./gen
     # ninja
 
-    cd /xor/dep/cadical-rel-2.1.3
-    ./configure
-    make -j
-    cd /xor
-    g++ gen.cpp -o gen
-    ./gen -DCONTAINER
-    ninja
+    # cd /xor/dep/cadical-rel-2.1.3
+    # ./configure
+    # make -j
+    # cd /xor
+    # g++ gen.cpp -o gen
+    # ./gen -DCONTAINER
+    # ninja
 
 %runscript
     /usr/bin/python3 /chi2.py "$@"
