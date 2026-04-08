@@ -153,39 +153,6 @@ def getSolutionFromSTS(inputFile, numSolutions, newSeed):
         solreturnList = random.sample(solList, numSolutions)
     return list(map(util.solstr_to_frozenset, solreturnList))
 
-def getSolutionFromSTSsingle(inputFile, numSolutions, newSeed):
-    kValue = 50
-    samplingRounds = numSolutions
-    inputFileSuffix = inputFile.split('/')[-1][:-4]
-    # outputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".out"
-    outputFile = util.make_temp_name()
-    cmd = '/deps/STS/core/STS -k=' + str(kValue) + ' -rnd-seed=' + str(newSeed) + ' -nsamples=' + str(samplingRounds) + ' ' + str(inputFile)
-    cmd += ' > ' + str(outputFile)
-    # if args.verbose:
-    print("cmd: ", cmd)
-    os.system(cmd)
-
-    tmpl = []
-    solList = []
-    with open(outputFile, 'r') as f:
-        for line in f:
-            if line.startswith('s '):
-                tmpl.append(line[1:].strip())
-            elif len(tmpl) > 0:
-                solList.append(random.choice(tmpl))
-                tmpl = []
-
-    if len(solList) <= 0:
-        print(len(solList))
-        print("STS single Did not find solutions")
-        sys.exit(1)
-
-    os.unlink(outputFile)
-
-    solreturnList = solList
-    if len(solList) > numSolutions:
-        solreturnList = random.sample(solList, numSolutions)
-    return list(map(util.solstr_to_frozenset, solreturnList))
 
 def getSolutionFromQuickSampler(inputFile, numSolutions, newSeed):
     cmd = "/deps/quicksampler/quicksampler -s " + str(newSeed) + " -n " + str(numSolutions * 5) + ' ' + str(inputFile) + ' > /dev/null 2>&1'
@@ -266,39 +233,6 @@ def getSolutionFromCMSsampler(inputFile, numSolutions, newSeed):
     os.unlink(outputFile)
     return list(map(util.solstr_to_frozenset, solreturnList))
 
-def getSolutionFromLookahead(inputFile, numSolutions, newSeed):
-    kValue = 50
-    # samplingRounds = numSolutions / kValue + 1
-    inputFileSuffix = inputFile.split('/')[-1][:-4]
-    # outputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".out"
-    outputFile = util.make_temp_name()
-    cmd = '/usr/bin/python3 /lookahead.py -k ' + str(kValue) + ' -nb ' + str(numSolutions) + ' -c ' + str(inputFile)
-    cmd += ' > ' + str(outputFile)
-    # if args.verbose:
-    print("cmd: ", cmd)
-    os.system(cmd)
-
-    with open(outputFile, 'r') as f:
-        lines = f.readlines()
-
-    solList = []
-    for j in range(len(lines)):
-        sol = lines[j].strip()
-        solList.append(sol)
-
-    if len(solList) <= 0:
-        print(len(solList))
-        print("Lookahead Did not find solutions")
-        sys.exit(1)
-
-    solreturnList = solList
-    if len(solList) > numSolutions:
-        solreturnList = random.sample(solList, numSolutions)
-
-
-
-    os.unlink(outputFile)
-    return list(map(util.solstr_to_frozenset, solreturnList))
 
 def getSolutionFromSMARCH(inputFile, numSolutions, newSeed):
     # multi process
@@ -404,33 +338,13 @@ def getSolutionFromKUS2(inputFile, numSolutions, newSeed):
 
     return list(map(util.solstr_to_frozenset, lines))
 
-def getSolutionFromJSampler(inputFile, numSolutions, newSeed):
-
-    inputFileSuffix = inputFile.split('/')[-1][:-4]
-    # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
-    tempOutputFile = util.make_temp_name()
-    cwd = os.getcwd()
-    cmd = f'/julia/bin/julia /jsampler/sampler.jl {os.path.abspath(inputFile)} {numSolutions} {50}  | grep -E -v "^c" > {tempOutputFile}'
-    # if args.verbose:
-    print("cmd: ", cmd)
-    # os.chdir(str(os.getcwd()) + '/samplers')
-    os.system(cmd)
-    # os.chdir(str(cwd))
-
-    with open(tempOutputFile, 'r') as f:
-        lines = f.readlines()
-
-    os.unlink(str(tempOutputFile))
-
-    return list(map(util.solstr_to_frozenset, lines))
-
 def getSolutionFromKSampler(inputFile, numSolutions, newSeed):
 
     inputFileSuffix = inputFile.split('/')[-1][:-4]
     # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
     tempOutputFile = util.make_temp_name()
     cwd = os.getcwd()
-    cmd = f'/ksampler/sampler.r {os.path.abspath(inputFile)} {numSolutions} {50}  | grep -E -v "^c" > {tempOutputFile}'
+    cmd = f'/deps/divkc/cppddnnf/build/sampler --cnf {os.path.abspath(inputFile)} --nb {numSolutions} --k {50}  | grep -E -v "^c" > {tempOutputFile}'
     # if args.verbose:
     print("cmd: ", cmd)
     # os.chdir(str(os.getcwd()) + '/samplers')
@@ -455,7 +369,7 @@ def getSolutionFromRSampler(inputFile, numSolutions, newSeed):
     # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
     tempOutputFile = util.make_temp_name()
     cwd = os.getcwd()
-    cmd = f'/ksampler/rsampler.r {os.path.abspath(inputFile)} {numSolutions} {50000}  | grep -E -v "^c" > {tempOutputFile}'
+    cmd = f'/deps/divkc/cppddnnf/build/rsampler --cnf {os.path.abspath(inputFile)} --nb {numSolutions} --k {50000}  | grep -E -v "^c" > {tempOutputFile}'
     # if args.verbose:
     print("cmd: ", cmd)
     # os.chdir(str(os.getcwd()) + '/samplers')
@@ -474,139 +388,6 @@ def getSolutionFromRSampler(inputFile, numSolutions, newSeed):
 
     return list(map(util.solstr_to_frozenset, lines))
 
-def getSolutionFromRUPSampler(inputFile, numSolutions, newSeed):
-
-    inputFileSuffix = inputFile.split('/')[-1][:-4]
-    # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
-    tempOutputFile = util.make_temp_name()
-    cwd = os.getcwd()
-    cmd = f'/rup/build/sampler --cnf {os.path.abspath(inputFile)} --r {numSolutions} --n 1 --k 50 > {tempOutputFile}'
-    # if args.verbose:
-    print("cmd: ", cmd)
-    # os.chdir(str(os.getcwd()) + '/samplers')
-    os.system(cmd)
-    # os.chdir(str(cwd))
-
-    with open(tempOutputFile, 'r') as f:
-        lines = f.readlines()
-
-    os.unlink(str(tempOutputFile))
-
-    if len(lines) <= 0:
-        print(len(lines))
-        print("RUPSampler did not find solutions")
-        sys.exit(1)
-
-    return list(map(util.solstr_to_frozenset, lines))
-
-def getSolutionFromMSTS(inputFile, numSolutions, newSeed):
-
-    inputFileSuffix = inputFile.split('/')[-1][:-4]
-    # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
-    tempOutputFile = util.make_temp_name()
-    cwd = os.getcwd()
-    cmd = f'/xor/build/sampler --cnf {os.path.abspath(inputFile)} --n {numSolutions} > {tempOutputFile}'
-    # if args.verbose:
-    print("cmd: ", cmd)
-    # os.chdir(str(os.getcwd()) + '/samplers')
-    os.system(cmd)
-    # os.chdir(str(cwd))
-
-    with open(tempOutputFile, 'r') as f:
-        lines = f.readlines()
-
-    os.unlink(str(tempOutputFile))
-
-    if len(lines) <= 0:
-        print(len(lines))
-        print("MSTS did not find solutions")
-        sys.exit(1)
-
-    sollist = list(map(util.solstr_to_frozenset, lines))
-    random.shuffle(sollist)
-    return sollist
-
-def getSolutionFromGIBBS(inputFile, numSolutions, newSeed):
-
-    inputFileSuffix = inputFile.split('/')[-1][:-4]
-    # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
-    tempOutputFile = util.make_temp_name()
-    cwd = os.getcwd()
-    numSolutions = max(numSolutions, 10_000)
-    cmd = f'/xor/build/gibbs --cnf {os.path.abspath(inputFile)} --n {numSolutions} --k 1 > {tempOutputFile}'
-    # if args.verbose:
-    print("cmd: ", cmd)
-    # os.chdir(str(os.getcwd()) + '/samplers')
-    os.system(cmd)
-    # os.chdir(str(cwd))
-
-    with open(tempOutputFile, 'r') as f:
-        lines = f.readlines()
-
-    os.unlink(str(tempOutputFile))
-
-    if len(lines) <= 0:
-        print(len(lines))
-        print("GIBBS did not find solutions")
-        sys.exit(1)
-
-    sollist = list(map(util.solstr_to_frozenset, lines))
-    random.shuffle(sollist)
-    return sollist
-
-def getSolutionFromDFSRB(inputFile, numSolutions, newSeed):
-
-    inputFileSuffix = inputFile.split('/')[-1][:-4]
-    # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
-    tempOutputFile = util.make_temp_name()
-    cwd = os.getcwd()
-    cmd = f'/xor/build/dfs_sampler --cnf {os.path.abspath(inputFile)} --n {numSolutions} > {tempOutputFile}'
-    # if args.verbose:
-    print("cmd: ", cmd)
-    # os.chdir(str(os.getcwd()) + '/samplers')
-    os.system(cmd)
-    # os.chdir(str(cwd))
-
-    with open(tempOutputFile, 'r') as f:
-        lines = f.readlines()
-
-    os.unlink(str(tempOutputFile))
-
-    if len(lines) <= 0:
-        print(len(lines))
-        print("DFSRB did not find solutions")
-        sys.exit(1)
-
-    sollist = list(map(util.solstr_to_frozenset, lines))
-    random.shuffle(sollist)
-    return sollist
-
-def getSolutionFromDFSRH(inputFile, numSolutions, newSeed):
-
-    inputFileSuffix = inputFile.split('/')[-1][:-4]
-    # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
-    tempOutputFile = util.make_temp_name()
-    cwd = os.getcwd()
-    cmd = f'/xor/build/dfs_hsampler --cnf {os.path.abspath(inputFile)} --n {numSolutions} > {tempOutputFile}'
-    # if args.verbose:
-    print("cmd: ", cmd)
-    # os.chdir(str(os.getcwd()) + '/samplers')
-    os.system(cmd)
-    # os.chdir(str(cwd))
-
-    with open(tempOutputFile, 'r') as f:
-        lines = f.readlines()
-
-    os.unlink(str(tempOutputFile))
-
-    if len(lines) <= 0:
-        print(len(lines))
-        print("DFSRH did not find solutions")
-        sys.exit(1)
-
-    sollist = list(map(util.solstr_to_frozenset, lines))
-    random.shuffle(sollist)
-    return sollist
 
 def getSolutionFromDistAware(inputFile, numSolutions, newSeed):
 
@@ -757,24 +538,16 @@ def getSamplerFunction(sampler, cnf_file):
             "unigen3" : getSolutionFromUniGen3
             , "spur" : getSolutionFromSpur
             , "sts" : getSolutionFromSTS
-            , "sts1" : getSolutionFromSTSsingle
             , "smarch" : getSolutionFromSMARCH
-            , "lookahead" : getSolutionFromLookahead
             , "quicksampler" : getSolutionFromQuickSampler
             , "cmsgen" : getSolutionFromCMSsampler
             , "kus" : getSolutionFromKUS
             , "kus2" : getSolutionFromKUS2
             , "distaware" : getSolutionFromDistAware
             , "walksat" : getSolutionFromWalkSAT
-            , "jsampler" : getSolutionFromJSampler
             , "ksampler" : getSolutionFromKSampler
             , "rsampler" : getSolutionFromRSampler
             , "bddsampler" : getSolutionFromBDDSampler
-            , "rupsampler" : getSolutionFromRUPSampler
-            , "msts" : getSolutionFromMSTS
-            , "dfsrb" : getSolutionFromDFSRB
-            , "dfsrh" : getSolutionFromDFSRH
-            , "gibbs" : getSolutionFromGIBBS
         }
 
     return samplers[sampler]

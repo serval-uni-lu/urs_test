@@ -1,0 +1,22 @@
+BootStrap: docker
+From: ubuntu:22.04
+
+%files
+    ./ /projection
+
+%post
+    echo "setup start"
+    apt-get -y update
+    apt-get -y install ninja-build libboost-program-options-dev g++
+
+    cd projection
+    g++ gen.cpp -o gen
+    ./gen
+    ninja clean
+    ninja
+
+    ls
+    echo "setup done"
+
+%runscript
+    /projection/build/projection "$@"

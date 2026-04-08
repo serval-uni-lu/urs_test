@@ -1,0 +1,47 @@
+cxx = g++
+cc = gcc
+cxxflags = -Wall -Wextra -Wpedantic -fopenmp -pthread
+ldflags = -lboost_program_options -fopenmp -pthread
+cxxflagsrel = -O3
+ldflagsrel =
+cxxflagsdebug = -g
+ldflagsdebug =
+
+rule compile
+    command = $cxx -fdiagnostics-color=always $cxxflags $cxxflagsrel -c $in -o $out
+    description = Compiling $in
+
+rule compile_debug
+    command = $cxx -fdiagnostics-color=always $cxxflags $cxxflagsdebug -c $in -o $out
+    description = Compiling (DEBUG) $in
+
+rule link
+    command = $cxx -fdiagnostics-color=always $in -o $out $ldflags $ldflagsrel
+    description = Linking $out
+
+rule link_debug
+    command = $cxx -fdiagnostics-color=always $in -o $out $ldflags $ldflagsdebug
+    description = Linking (DEBUG) $out
+
+rule clean
+    command = rm -rf build
+    description = Cleaning
+
+rule generate
+    command = $cxx -fdiagnostics-color=always gen.cpp -o gen && ./gen
+    description = Generating build.ninja
+
+build build/obj/src/projection.cpp.o: compile src/projection.cpp
+build build/obj/src/projection.cpp.od: compile_debug src/projection.cpp
+build build/projection: link build/obj/src/projection.cpp.o build/obj/src/CNF.cpp.o
+build build/projection_debug: link_debug build/obj/src/projection.cpp.od build/obj/src/CNF.cpp.od
+
+build build/obj/src/CNF.cpp.o: compile src/CNF.cpp
+build build/obj/src/CNF.cpp.od: compile_debug src/CNF.cpp
+
+build all_release: phony build/projection
+build all_debug: phony build/projection_debug
+build all: phony all_release all_debug
+build clean: clean
+build generate: generate
+default all_release

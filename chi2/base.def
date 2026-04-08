@@ -84,6 +84,12 @@ From: ubuntu:22.04
     cd ../sampler
     make -j8
 
+# DivKC
+    cd /deps/divkc/cppddnnf
+    g++ gen.cpp -o gen
+    ./gen
+    ninja build/rsampler build/sampler
+
 
 # %runscript
     # /wrap 64000 18000 /unigen/build/unigen "$@"

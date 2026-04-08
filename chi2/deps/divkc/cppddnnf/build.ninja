@@ -1,0 +1,78 @@
+cxx = g++
+cc = gcc
+cxxflags = -Wall -Wextra -Wpedantic -fopenmp
+ldflags = -lboost_random -lboost_program_options -lgmp -fopenmp
+cxxflagsrel = -O3
+ldflagsrel =
+cxxflagsdebug = -g
+ldflagsdebug =
+
+rule compile
+    command = $cxx -fdiagnostics-color=always $cxxflags $cxxflagsrel -c $in -o $out
+    description = Compiling $in
+
+rule compile_debug
+    command = $cxx -fdiagnostics-color=always $cxxflags $cxxflagsdebug -c $in -o $out
+    description = Compiling (DEBUG) $in
+
+rule link
+    command = $cxx -fdiagnostics-color=always $in -o $out $ldflags $ldflagsrel
+    description = Linking $out
+
+rule link_debug
+    command = $cxx -fdiagnostics-color=always $in -o $out $ldflags $ldflagsdebug
+    description = Linking (DEBUG) $out
+
+rule clean
+    command = rm -rf build
+    description = Cleaning
+
+rule generate
+    command = $cxx -fdiagnostics-color=always gen.cpp -o gen && ./gen
+    description = Generating build.ninja
+
+build build/obj/src/pdac.cpp.o: compile src/pdac.cpp
+build build/obj/src/pdac.cpp.od: compile_debug src/pdac.cpp
+
+build build/obj/src/sampler.cpp.o: compile src/sampler.cpp
+build build/obj/src/sampler.cpp.od: compile_debug src/sampler.cpp
+build build/sampler: link build/obj/src/sampler.cpp.o build/obj/src/pdac.cpp.o build/obj/src/var.cpp.o build/obj/src/nnf.cpp.o
+build build/sampler_debug: link_debug build/obj/src/sampler.cpp.od build/obj/src/pdac.cpp.od build/obj/src/var.cpp.od build/obj/src/nnf.cpp.od
+
+build build/obj/src/rhsampler.cpp.o: compile src/rhsampler.cpp
+build build/obj/src/rhsampler.cpp.od: compile_debug src/rhsampler.cpp
+build build/rhsampler: link build/obj/src/rhsampler.cpp.o build/obj/src/pdac.cpp.o build/obj/src/var.cpp.o build/obj/src/nnf.cpp.o
+build build/rhsampler_debug: link_debug build/obj/src/rhsampler.cpp.od build/obj/src/pdac.cpp.od build/obj/src/var.cpp.od build/obj/src/nnf.cpp.od
+
+build build/obj/src/var.cpp.o: compile src/var.cpp
+build build/obj/src/var.cpp.od: compile_debug src/var.cpp
+
+build build/obj/src/rsampler.cpp.o: compile src/rsampler.cpp
+build build/obj/src/rsampler.cpp.od: compile_debug src/rsampler.cpp
+build build/rsampler: link build/obj/src/rsampler.cpp.o build/obj/src/pdac.cpp.o build/obj/src/var.cpp.o build/obj/src/nnf.cpp.o
+build build/rsampler_debug: link_debug build/obj/src/rsampler.cpp.od build/obj/src/pdac.cpp.od build/obj/src/var.cpp.od build/obj/src/nnf.cpp.od
+
+build build/obj/src/nnf.cpp.o: compile src/nnf.cpp
+build build/obj/src/nnf.cpp.od: compile_debug src/nnf.cpp
+
+build build/obj/src/pc.cpp.o: compile src/pc.cpp
+build build/obj/src/pc.cpp.od: compile_debug src/pc.cpp
+build build/pc: link build/obj/src/pc.cpp.o build/obj/src/pdac.cpp.o build/obj/src/var.cpp.o build/obj/src/nnf.cpp.o
+build build/pc_debug: link_debug build/obj/src/pc.cpp.od build/obj/src/pdac.cpp.od build/obj/src/var.cpp.od build/obj/src/nnf.cpp.od
+
+build build/obj/src/appmc.cpp.o: compile src/appmc.cpp
+build build/obj/src/appmc.cpp.od: compile_debug src/appmc.cpp
+build build/appmc: link build/obj/src/appmc.cpp.o build/obj/src/pdac.cpp.o build/obj/src/var.cpp.o build/obj/src/nnf.cpp.o
+build build/appmc_debug: link_debug build/obj/src/appmc.cpp.od build/obj/src/pdac.cpp.od build/obj/src/var.cpp.od build/obj/src/nnf.cpp.od
+
+build build/obj/src/lmc.cpp.o: compile src/lmc.cpp
+build build/obj/src/lmc.cpp.od: compile_debug src/lmc.cpp
+build build/lmc: link build/obj/src/lmc.cpp.o build/obj/src/pdac.cpp.o build/obj/src/var.cpp.o build/obj/src/nnf.cpp.o
+build build/lmc_debug: link_debug build/obj/src/lmc.cpp.od build/obj/src/pdac.cpp.od build/obj/src/var.cpp.od build/obj/src/nnf.cpp.od
+
+build all_release: phony build/sampler build/rhsampler build/rsampler build/pc build/appmc build/lmc
+build all_debug: phony build/sampler_debug build/rhsampler_debug build/rsampler_debug build/pc_debug build/appmc_debug build/lmc_debug
+build all: phony all_release all_debug
+build clean: clean
+build generate: generate
+default all_release

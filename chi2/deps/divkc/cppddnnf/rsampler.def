@@ -1,0 +1,23 @@
+BootStrap: docker
+From: ubuntu:22.04
+
+%files
+    ./src /src
+    ./build.ninja /build.ninja
+    ../D4/wrapper /wrapper
+
+%post
+    echo "setup start"
+    apt-get -y update
+    apt-get -y install make ninja-build g++ libboost-program-options-dev libboost-dev libgmp-dev libboost-random-dev
+
+    cd /
+    ninja clean
+    ninja build/rsampler
+
+    cd /wrapper
+    make clean
+    make
+
+%runscript
+    /wrapper/wrap 64000 5400 /build/rsampler "$@"

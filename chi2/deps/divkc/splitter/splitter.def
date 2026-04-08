@@ -1,0 +1,22 @@
+BootStrap: docker
+From: ubuntu:22.04
+
+%files
+    ./ /splitter
+
+%post
+    echo "setup start"
+    apt-get -y update
+    apt-get -y install ninja-build libboost-program-options-dev g++
+
+    cd splitter
+    g++ gen.cpp -o gen
+    ./gen
+    ninja clean
+    ninja
+
+    ls
+    echo "setup done"
+
+%runscript
+    /splitter/build/splitter "$@"

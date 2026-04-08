@@ -23,7 +23,7 @@
 #define HAVE_GETRUSAGE 1
 
 /* Define to 1 if you have working floating-point infinities */
-#define HAVE_IEEE_754 1
+/* #undef HAVE_IEEE_754 */
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1

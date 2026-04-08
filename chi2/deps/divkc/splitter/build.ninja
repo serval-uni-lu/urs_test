@@ -1,0 +1,50 @@
+cxx = g++
+cc = gcc
+cxxflags = -Wall -Wextra -Wpedantic -std=c++14 -Ipatoh
+ldflags = -lboost_program_options -L./patoh -lpatoh -std=c++14
+cxxflagsrel = -O3
+ldflagsrel =
+cxxflagsdebug = -g
+ldflagsdebug =
+
+rule compile
+    command = $cxx -fdiagnostics-color=always $cxxflags $cxxflagsrel -c $in -o $out
+    description = Compiling $in
+
+rule compile_debug
+    command = $cxx -fdiagnostics-color=always $cxxflags $cxxflagsdebug -c $in -o $out
+    description = Compiling (DEBUG) $in
+
+rule link
+    command = $cxx -fdiagnostics-color=always $in -o $out $ldflags $ldflagsrel
+    description = Linking $out
+
+rule link_debug
+    command = $cxx -fdiagnostics-color=always $in -o $out $ldflags $ldflagsdebug
+    description = Linking (DEBUG) $out
+
+rule clean
+    command = rm -rf build
+    description = Cleaning
+
+rule generate
+    command = $cxx -fdiagnostics-color=always gen.cpp -o gen && ./gen
+    description = Generating build.ninja
+
+build build/obj/src/uf.cpp.o: compile src/uf.cpp
+build build/obj/src/uf.cpp.od: compile_debug src/uf.cpp
+
+build build/obj/src/CNF.cpp.o: compile src/CNF.cpp
+build build/obj/src/CNF.cpp.od: compile_debug src/CNF.cpp
+
+build build/obj/src/splitter.cpp.o: compile src/splitter.cpp
+build build/obj/src/splitter.cpp.od: compile_debug src/splitter.cpp
+build build/splitter: link build/obj/src/splitter.cpp.o build/obj/src/uf.cpp.o build/obj/src/CNF.cpp.o
+build build/splitter_debug: link_debug build/obj/src/splitter.cpp.od build/obj/src/uf.cpp.od build/obj/src/CNF.cpp.od
+
+build all_release: phony build/splitter
+build all_debug: phony build/splitter_debug
+build all: phony all_release all_debug
+build clean: clean
+build generate: generate
+default all_release
