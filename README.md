@@ -56,11 +56,42 @@ cmsgen
 kus
 distaware
 walksat
+ksampler
+rsampler
 bddsampler
 ```
 
 The current integration of `BDDSampler` expects that there exist a file
 `<cnf file>.bdd` which has been computed before running the test.
+
+The samplers `ksampler` and `rsampler` are based on
+[DivKC](https://github.com/serval-uni-lu/divkc). As such, similarily to `BDDSampler`,
+they expect a series of files to be generated before the test is executed.
+The simples way of compiling the formula with `DivKC` is with the following commands:
+
+```
+cd chi2/deps/divkc
+docker build -t divkc .
+```
+
+A `docker_compile_formula.sh` is then available at `chi2/deps/divkc/docker_compile_formula.sh`.
+
+```
+bash chi2/deps/divkc/docker_compile_formula.sh "formula to be compiled.cnf"
+```
+
+You may then call the test:
+```
+./chi2.sif -c "formula to be compiled.cnf"
+```
+
+The `DivKC` executables deduce the needed file from the base `.cnf` file names.
+It is therefore not necessary to give other paths to the testing container.
+
+More detailed instructions regarding `DivKC` are available in
+`chi2/deps/divkc/README.md`.
+`DivKC` is also available on [Zenodo](https://doi.org/10.5281/zenodo.18711011).
+
 
 ## Adding a Sampler
 
