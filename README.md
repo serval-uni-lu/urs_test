@@ -82,7 +82,8 @@ bash chi2/deps/divkc/docker_compile_formula.sh "formula to be compiled.cnf"
 
 You may then call the test:
 ```
-./chi2.sif -c "formula to be compiled.cnf"
+./chi2.sif -c "formula to be compiled.cnf \
+    ..."
 ```
 
 The `DivKC` executables deduce the needed file from the base `.cnf` file names.
