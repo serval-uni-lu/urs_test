@@ -1,0 +1,775 @@
+#include <iostream>
+#include <fstream>
+#include <set>
+#include <unordered_set>
+#include <unordered_map>
+#include <queue>
+
+#include <boost/program_options.hpp>
+// #include <boost/multiprecision/gmp.hpp>
+
+#include "../dep/cadical-rel-2.1.3/src/cadical.hpp"
+
+// #include "xoshiro.hpp"
+// #include "nnf.hpp"
+#include "cnf.hpp"
+
+namespace po = boost::program_options;
+//using boost::multiprecision::mpf_float;
+//using boost::multiprecision::mpz_int;
+
+po::options_description get_program_options() {
+    po::options_description desc("Allowed options");
+    desc.add_options()
+        ("help,h", "Display help message")
+        ("cnf", po::value<std::string>(), "path to CNF file");
+
+    return desc;
+}
+
+CaDiCaL::Solver * cnf_to_cadical(CNF const& cnf) {
+    CaDiCaL::Solver * solver = new CaDiCaL::Solver;
+
+    for(std::size_t i = 0; i < cnf.nb_clauses(); i++) {
+        if(cnf.is_active(i)) {
+            for(Literal const& l : cnf.clause(i)) {
+                solver->add(l.to_int());
+            }
+            solver->add(0);
+        }
+    }
+
+    return solver;
+}
+
+template<typename LC>
+int get_imp(CaDiCaL::Solver* solver, LC const& assume, std::vector<int> & imp) {
+    for(Literal const li : assume) {
+        solver->assume(li.to_int());
+    }
+    int sr = solver->propagate();
+
+    if(CaDiCaL::UNKNOWN == sr) {
+        solver->get_entrailed_literals(imp);
+    }
+    solver->reset_assumptions();
+
+    return sr;
+}
+
+struct Cube {
+    std::unordered_set<Literal> lits;
+    std::unordered_set<Variable> vars;
+    std::unordered_set<std::size_t> unknown;
+    std::size_t level;
+
+    Cube() : level(0) {
+    }
+
+    bool contains(Variable const v) const {
+        Literal const lp(v, 0);
+        Literal const ln = ~lp;
+
+        return (lits.find(lp) != lits.end()) || (lits.find(ln) != lits.end());
+    }
+
+    bool contains(Literal const l) const {
+        return lits.find(l) != lits.end();
+    }
+
+    bool unconstrained(Variable const v) const {
+        return (vars.find(v) != vars.end()) && !contains(v);
+    }
+};
+
+bool operator<(Cube const& a, Cube const& b) {
+    return a.unknown.size() < b.unknown.size();
+}
+
+Variable pick_var(CaDiCaL::Solver* solver, CNF const& cnf, Cube const& c) {
+    //std::vector<std::size_t> occ(cnf.nb_vars(), 0);
+    std::vector<std::size_t> smap;
+    std::size_t low = cnf.nb_vars() * 2;
+
+    for(std::size_t const cid : c.unknown) {
+        std::size_t s = cnf.clause(cid).size();
+        for(Literal const l : cnf.clause(cid)) {
+            Variable v(l);
+
+            if(c.contains(v)) {
+                s -= 1;
+            }
+        }
+        if(s == low) {
+            smap.push_back(cid);
+        }
+        else if(s < low) {
+            smap.clear();
+            smap.push_back(cid);
+            low = std::min(s, low);
+        }
+    }
+
+    Variable mv(1);
+    std::size_t score = 0;
+    for(Variable const v : c.vars) {
+        Literal const lp(v, 0);
+        Literal const ln = ~lp;
+
+        std::size_t vscore = 0;
+
+        for(std::size_t const cid : smap) {
+            if(cnf.clause(cid).contains(lp) || cnf.clause(cid).contains(ln)) {
+                vscore += 1;
+            }
+        }
+
+        if(vscore > score) {
+            mv = v;
+            score = vscore;
+        }
+    }
+
+    /*
+     * Lookahead:
+     * take top k vars (between 5 and 20)
+     * for each perform lookahead for +1 and -1 with cadical
+     * sum the number of implied lits (without assumptions)
+     *     int implied_count = cadical_number_of_assigned(solver) - current_assigned;
+     * add big bonus of one branch is unsat
+     * pick var with largest score
+     */
+
+    return mv;
+}
+
+class VarCountVarPicker {
+public:
+    Variable operator()(CaDiCaL::Solver* solver, CNF const& cnf, Cube const& c) {
+        std::unordered_map<Variable, std::size_t> vmap;
+        Variable res(0);
+        std::size_t nb_occ = 0;
+
+        for(std::size_t const cid : c.unknown) {
+            for(Literal const l : cnf.clause(cid)) {
+                Variable const v(l);
+
+                if(c.unconstrained(v)) {
+                    vmap[v] += 1;
+
+                    if(nb_occ < vmap[v]) {
+                        res = v;
+                        nb_occ = vmap[v];
+                    }
+                }
+            }
+        }
+
+        assert(res != Variable(0));
+        return res;
+    }
+};
+
+class LitCountVarPicker {
+public:
+    Variable operator()(CaDiCaL::Solver* solver, CNF const& cnf, Cube const& c) {
+        std::unordered_map<Literal, std::size_t> lmap;
+        Variable res(0);
+        std::size_t nb_occ = 0;
+
+        for(std::size_t const cid : c.unknown) {
+            for(Literal const l : cnf.clause(cid)) {
+                Variable const v(l);
+                Literal const ln = ~l;
+
+                if(c.unconstrained(v)) {
+                    lmap[l] += 1;
+
+                    std::size_t const vscore = std::max(lmap[l], lmap[ln]);
+                    if(nb_occ < vscore) {
+                        res = v;
+                        nb_occ = vscore;
+                    }
+                }
+            }
+        }
+
+        assert(res != Variable(0));
+        return res;
+    }
+};
+
+class MOMSVarPicker {
+public:
+    Variable operator()(CaDiCaL::Solver* solver, CNF const& cnf, Cube const& c) {
+        std::vector<std::size_t> smap;
+        std::size_t low = cnf.nb_vars() * 2;
+
+        for(std::size_t const cid : c.unknown) {
+            std::size_t s = cnf.clause(cid).size();
+            for(Literal const l : cnf.clause(cid)) {
+                Variable v(l);
+
+                if(c.contains(v)) {
+                    s -= 1;
+                }
+            }
+            if(s == low) {
+                smap.push_back(cid);
+            }
+            else if(s < low) {
+                smap.clear();
+                smap.push_back(cid);
+                low = std::min(s, low);
+            }
+        }
+
+        Variable mv(1);
+        std::size_t score = 0;
+        for(Variable const v : c.vars) {
+            Literal const lp(v, 0);
+            Literal const ln = ~lp;
+
+            std::size_t vscore = 0;
+
+            for(std::size_t const cid : smap) {
+                if(cnf.clause(cid).contains(lp) || cnf.clause(cid).contains(ln)) {
+                    vscore += 1;
+                }
+            }
+
+            if(vscore > score) {
+                mv = v;
+                score = vscore;
+            }
+        }
+
+        assert(mv != Variable(0));
+        return mv;
+    }
+};
+
+class MOMSLookaheadVarPicker {
+public:
+    struct Pair {
+        Variable v;
+        std::size_t priority;
+    };
+
+    Variable operator()(CaDiCaL::Solver* solver, CNF const& cnf, Cube const& c) {
+        std::vector<std::size_t> smap;
+        std::size_t low = cnf.nb_vars() * 2;
+
+        for(std::size_t const cid : c.unknown) {
+            std::size_t s = cnf.clause(cid).size();
+            for(Literal const l : cnf.clause(cid)) {
+                Variable v(l);
+
+                if(c.contains(v)) {
+                    s -= 1;
+                }
+            }
+            if(s == low) {
+                smap.push_back(cid);
+            }
+            else if(s < low) {
+                smap.clear();
+                smap.push_back(cid);
+                low = std::min(s, low);
+            }
+        }
+
+        std::priority_queue<Pair> vars;
+
+        for(Variable const v : c.vars) {
+            Literal const lp(v, 0);
+            Literal const ln = ~lp;
+
+            std::size_t vscore = 0;
+
+            for(std::size_t const cid : smap) {
+                if(cnf.clause(cid).contains(lp) || cnf.clause(cid).contains(ln)) {
+                    vscore += 1;
+                }
+            }
+
+            vars.push({v, vscore});
+        }
+
+        /*
+         * Lookahead:
+         * take top k vars (between 5 and 20)
+         * for each perform lookahead for +1 and -1 with cadical
+         * sum the number of implied lits (without assumptions)
+         *     int implied_count = cadical_number_of_assigned(solver) - current_assigned;
+         * add big bonus if one branch is unsat
+         * pick var with largest score
+         */
+
+        Pair top_pair {Variable(0), 0};
+
+        std::vector<int> imp;
+        for(std::size_t i = 0; i < 5 && vars.size() > 0; i++) {
+            Pair p = vars.top();
+            vars.pop();
+
+            Literal const lp(p.v);
+            Literal const ln = ~lp;
+
+            imp.clear();
+            solver->assume(lp.to_int());
+            int sr_lp = get_imp(solver, c.lits, imp);
+            std::size_t lp_score = imp.size() - c.lits.size() - 1;
+            if(CaDiCaL::UNKNOWN != sr_lp) {
+                lp_score = cnf.nb_vars() * 2;
+            }
+
+            imp.clear();
+            solver->assume(ln.to_int());
+            int sr_ln = get_imp(solver, c.lits, imp);
+            std::size_t ln_score = imp.size() - c.lits.size() - 1;
+            if(CaDiCaL::UNKNOWN != sr_ln) {
+                ln_score = cnf.nb_vars() * 2;
+            }
+
+            p.priority = lp_score + ln_score;
+
+            if(p.priority > top_pair.priority) {
+                top_pair = p;
+            }
+        }
+
+        assert(top_pair.v != Variable(0));
+        return top_pair.v;
+    }
+};
+
+bool operator<(MOMSLookaheadVarPicker::Pair const& a, MOMSLookaheadVarPicker::Pair const& b) {
+    return (a.priority < b.priority) || ((a.priority == b.priority) && (a.v < b.v));
+}
+
+class MOMSLookaheadVarPickerV2 {
+public:
+    struct Pair {
+        Variable v;
+        std::size_t priority;
+    };
+
+    Variable operator()(CaDiCaL::Solver* solver, CNF const& cnf, Cube const& c) {
+        std::vector<std::size_t> smap;
+        std::size_t low = cnf.nb_vars() * 2;
+
+        for(std::size_t const cid : c.unknown) {
+            std::size_t s = cnf.clause(cid).size();
+            for(Literal const l : cnf.clause(cid)) {
+                Variable v(l);
+
+                if(c.contains(v)) {
+                    s -= 1;
+                }
+            }
+            if(s == low) {
+                smap.push_back(cid);
+            }
+            else if(s < low) {
+                smap.clear();
+                smap.push_back(cid);
+                low = std::min(s, low);
+            }
+        }
+
+        std::priority_queue<Pair> vars;
+
+        for(Variable const v : c.vars) {
+            Literal const lp(v, 0);
+            Literal const ln = ~lp;
+
+            std::size_t vscore = 0;
+
+            for(std::size_t const cid : smap) {
+                if(cnf.clause(cid).contains(lp) || cnf.clause(cid).contains(ln)) {
+                    vscore += 1;
+                }
+            }
+
+            vars.push({v, vscore});
+        }
+
+        /*
+         * Lookahead:
+         * take top k vars (between 5 and 20)
+         * for each perform lookahead for +1 and -1 with cadical
+         * sum the number of implied lits (without assumptions)
+         *     int implied_count = cadical_number_of_assigned(solver) - current_assigned;
+         * add big bonus if one branch is unsat
+         * pick var with largest score
+         */
+
+        Pair top_pair {Variable(0), 0};
+
+        std::vector<int> imp;
+        for(std::size_t i = 0; i < 5 && vars.size() > 0; i++) {
+            Pair p = vars.top();
+            vars.pop();
+
+            Literal const lp(p.v);
+            Literal const ln = ~lp;
+
+            imp.clear();
+            solver->assume(lp.to_int());
+            int sr_lp = get_imp(solver, c.lits, imp);
+            std::size_t lp_score = imp.size() - c.lits.size() - 1;
+            if(CaDiCaL::UNKNOWN != sr_lp) {
+                lp_score += cnf.nb_vars() * 2;
+            }
+            std::unordered_set<std::size_t> lp_cids = c.unknown;
+            for(int const il : imp) {
+                Literal l(il);
+                for(std::size_t const cid : cnf.get_idx(l)) {
+                    lp_cids.erase(cid);
+                }
+            }
+            if(lp_cids.empty()) {
+                lp_score += cnf.nb_vars() * 2;
+            }
+            lp_score += (c.unknown.size() - lp_cids.size()) * 4;
+
+            imp.clear();
+            solver->assume(ln.to_int());
+            int sr_ln = get_imp(solver, c.lits, imp);
+            std::size_t ln_score = imp.size() - c.lits.size() - 1;
+            if(CaDiCaL::UNKNOWN != sr_ln) {
+                ln_score += cnf.nb_vars() * 2;
+            }
+            std::unordered_set<std::size_t> ln_cids = c.unknown;
+            for(int const il : imp) {
+                Literal l(il);
+                for(std::size_t const cid : cnf.get_idx(l)) {
+                    ln_cids.erase(cid);
+                }
+            }
+            if(ln_cids.empty()) {
+                ln_score += cnf.nb_vars() * 2;
+            }
+            ln_score += (c.unknown.size() - ln_cids.size()) * 4;
+
+            p.priority = lp_score + ln_score;
+
+            if(p.priority > top_pair.priority) {
+                top_pair = p;
+            }
+        }
+
+        assert(top_pair.v != Variable(0));
+        return top_pair.v;
+    }
+};
+
+bool operator<(MOMSLookaheadVarPickerV2::Pair const& a, MOMSLookaheadVarPickerV2::Pair const& b) {
+    return (a.priority < b.priority) || ((a.priority == b.priority) && (a.v < b.v));
+}
+
+int get_imp(CaDiCaL::Solver* solver, Cube const& c, Literal const l, std::vector<int> & imp) {
+    for(Literal const li : c.lits) {
+        solver->assume(li.to_int());
+    }
+    solver->assume(l.to_int());
+    int sr = solver->propagate();
+
+    if(CaDiCaL::UNSATISFIABLE != sr) {
+        if(CaDiCaL::SATISFIABLE != sr) {
+            solver->get_entrailed_literals(imp);
+        }
+        imp.push_back(l.to_int());
+
+        if(CaDiCaL::UNKNOWN == sr) {
+            sr = solver->solve();
+        }
+        solver->reset_assumptions();
+        return sr;
+    }
+    else {
+        solver->reset_assumptions();
+        return CaDiCaL::UNSATISFIABLE;
+    }
+    std::cerr << "ERROR: unreachable state\n";
+    exit(1);
+}
+
+void propagate(CNF const& cnf, Cube & c, std::vector<int> const& imp) {
+    for(int const il : imp) {
+        Literal l(il);
+        c.lits.insert(l);
+        c.vars.erase(Variable(l));
+        std::unordered_set<std::size_t> tmp = cnf.get_idx(l);
+        for(std::size_t const cid : tmp) {
+            c.unknown.erase(cid);
+        }
+        //c.unknown.erase(tmp.begin(), tmp.end());
+    }
+}
+
+Cube decide(CNF const& cnf, CaDiCaL::Solver* solver, Cube & c, Variable v, bool & sat) {
+    sat = true;
+    Cube res;
+    Literal const lp(v, 0);
+    Literal const ln = ~lp;
+
+    std::vector<int> imp;
+    int const sr = get_imp(solver, c, lp, imp);
+    c.level += 1;
+
+    if(CaDiCaL::SATISFIABLE == sr) {
+        res = c;
+        propagate(cnf, c, imp);
+
+        // same for ln and res:
+        imp.clear();
+        int const sr = get_imp(solver, res, ln, imp);
+
+        if(CaDiCaL::SATISFIABLE == sr) {
+            propagate(cnf, res, imp);
+        }
+        else {
+            sat = false;
+        }
+    }
+    else {
+        sat = false;
+
+        imp.clear();
+        int const sr = get_imp(solver, c, ln, imp);
+        if(CaDiCaL::SATISFIABLE != sr) {
+            std::cerr << "ERROR: unreachable state: should be SAT but isn't\n";
+            exit(1);
+        }
+
+        propagate(cnf, c, imp);
+    }
+
+    return res;
+}
+
+std::size_t nb_unsat(CNF const& cnf, Cube const& c) {
+    std::size_t res = cnf.nb_clauses();
+
+    for(std::size_t i = 0; i < cnf.nb_clauses(); i++) {
+        if(cnf.is_active(i)) {
+            for(Literal const& l : cnf.clause(i)) {
+                if(c.contains(l)) {
+                    res -= 1;
+                    break;
+                }
+            }
+        }
+        else {
+            res -= 1;
+        }
+    }
+
+    return res;
+}
+
+// class Compiler {
+// private:
+//     CNF const& cnf_ign;
+//     CNF const& cnf_smp;
+// 
+// 
+// public:
+// };
+
+int main(int argc, char** argv) {
+    try {
+        po::options_description desc = get_program_options();
+
+        po::variables_map vm;
+        po::store(po::parse_command_line(argc, argv, desc), vm);
+        po::notify(vm);
+
+        if(vm.count("help")) {
+            std::cout << desc << "\n";
+            return 0;
+        }
+
+        if(! vm.count("cnf")) {
+            std::cerr << "ERROR: cnf option not set\n";
+            return 1;
+        }
+
+        std::string const cnf_path = vm["cnf"].as<std::string>();
+        //std::size_t const D = vm["depth"].as<std::size_t>();
+
+        CNF cnf_ign(cnf_path + ".ign");
+        CNF cnf_smp(cnf_path + ".smp");
+
+        // std::set<Variable> ign_vars;
+        // std::set<Variable> smp_vars;
+
+        // for(std::size_t i = 0; i < cnf_ign.nb_clauses(); i++) {
+        //     if(cnf_ign.is_active(i)) {
+        //         for(Literal const& l : cnf_ign.clause(i)) {
+        //             ign_vars.emplace(l);
+        //         }
+        //     }
+        // }
+
+        // for(std::size_t i = 0; i < cnf_smp.nb_clauses(); i++) {
+        //     if(cnf_smp.is_active(i)) {
+        //         for(Literal const& l : cnf_smp.clause(i)) {
+        //             smp_vars.emplace(l);
+        //         }
+        //     }
+        // }
+
+        // std::cout << ign_vars.size() << "\n" << smp_vars.size() << "\n";
+        // return 0;
+
+        //CNF cnf(cnf_path);
+
+        CaDiCaL::Solver* solver = cnf_to_cadical(cnf_smp);
+
+
+        VarCountVarPicker varCountVarPicker;
+        LitCountVarPicker litCountVarPicker;
+        MOMSVarPicker momsVarPicker;
+        MOMSLookaheadVarPicker momsLookaheadVarPicker;
+        MOMSLookaheadVarPickerV2 momsLookaheadVarPickerV2;
+
+        // std::vector<Cube> cubes;
+        // cubes.emplace_back();
+        // for(std::size_t cid = 0; cid < cnf_ign.nb_clauses(); cid++) {
+        //     if(cnf_ign.is_active(cid)) {
+        //         cubes[0].unknown.insert(cid);
+        //     }
+        // }
+        // for(int i = 1; i <= cnf_ign.nb_vars(); i++) {
+        //     cubes[0].vars.insert(Variable(i));
+        // }
+
+        // std::size_t uk_low = cnf_smp.nb_clauses() * 2;
+        // std::size_t uk_high = 0;
+        // for(std::size_t i = 0; i < cubes.size(); i++) {
+        //     std::cout << (i + 1) << " / " << cubes.size() << "\n";
+        //     while(cubes[i].level < D && cubes[i].unknown.size() > 0 && cubes[i].vars.size() > 0) {
+
+        //         //Variable const dv = pick_var(solver, cnf_ign, cubes[i]);
+        //         //Variable const dv = varCountVarPicker(solver, cnf_ign, cubes[i]);
+        //         //Variable const dv = litCountVarPicker(solver, cnf_ign, cubes[i]);
+        //         Variable const dv = momsVarPicker(solver, cnf_ign, cubes[i]);
+        //         //Variable const dv = momsLookaheadVarPicker(solver, cnf_ign, cubes[i]);
+        //         //Variable const dv = momsLookaheadVarPickerV2(solver, cnf_ign, cubes[i]);
+        //         bool sat;
+        //         Cube tmp = decide(cnf_ign, solver, cubes[i], dv, sat);
+
+        //         assert(! cubes[i].unconstrained(dv));
+        //         assert(cubes[i].contains(dv));
+        //         assert(cubes[i].level <= cubes[i].lits.size());
+
+        //         if(sat) {
+        //             cubes.push_back(tmp);
+        //             //std::cout << "  " << tmp.level << ", " << tmp.unknown.size() << ", " << tmp.lits.size() << "\n";
+        //         }
+        //     }
+        //     std::cout << "  " << cubes[i].level << ", " << cubes[i].unknown.size() << ", " << cubes[i].lits.size() << "\n";
+        //     uk_low = std::min(uk_low, cubes[i].unknown.size());
+        //     uk_high = std::max(uk_high, cubes[i].unknown.size());
+        // }
+        std::priority_queue<Cube> cubes;
+        {
+            Cube cinit;
+
+            for(std::size_t cid = 0; cid < cnf_smp.nb_clauses(); cid++) {
+                if(cnf_smp.is_active(cid)) {
+                    cinit.unknown.insert(cid);
+                }
+            }
+            for(int i = 1; i <= cnf_smp.nb_vars(); i++) {
+                cinit.vars.insert(Variable(i));
+            }
+            cubes.push(cinit);
+        }
+        std::size_t uk_low = cnf_smp.nb_clauses() * 2;
+        std::size_t uk_high = 0;
+        while(cubes.size() < 50) {
+            Cube cube = cubes.top();
+            if(cubes.size() % 10 == 0) {
+                std::cerr << cube.unknown.size() << " | " << cubes.size() << "\n";
+            }
+            cubes.pop();
+
+            //Variable const dv = varCountVarPicker(solver, cnf_ign, cube);
+            //Variable const dv = litCountVarPicker(solver, cnf_ign, cube);
+            Variable const dv = momsVarPicker(solver, cnf_smp, cube);
+            //Variable const dv = momsLookaheadVarPicker(solver, cnf_ign, cube);
+            //Variable const dv = momsLookaheadVarPickerV2(solver, cnf_ign, cube);
+            bool sat;
+            Cube tmp = decide(cnf_smp, solver, cube, dv, sat);
+
+            assert(! cube.unconstrained(dv));
+            assert(cube.contains(dv));
+            assert(cube.level <= cube.lits.size());
+
+            if(sat) {
+                //uk_low = std::min(uk_low, tmp.unknown.size());
+                //uk_high = std::max(uk_high, tmp.unknown.size());
+                cubes.push(tmp);
+            }
+            cubes.push(cube);
+        }
+
+        //std::cout << "nc " << cnf_ign.nb_clauses() << "\n";
+        //std::cout << "c " << cubes.size() << "\n";
+
+        //std::cout << "\n####\n\n";
+
+        double uk_avg = 0;
+        //for(auto const& c  : cubes) {
+        //    uk_avg += static_cast<double>(c.unknown.size()) / cubes.size();
+        //}
+        double const nb_cubes = cubes.size();
+        std::size_t level_low = std::numeric_limits<std::size_t>::max();
+        std::size_t level_high = 0;
+        std::size_t lits_low = std::numeric_limits<std::size_t>::max();
+        std::size_t lits_high = 0;
+        while(cubes.size() > 0) {
+            Cube c = cubes.top();
+            cubes.pop();
+            uk_avg += static_cast<double>(c.unknown.size()) / nb_cubes;
+
+            uk_low = std::min(uk_low, c.unknown.size());
+            uk_high = std::max(uk_high, c.unknown.size());
+
+            level_low = std::min(level_low, c.level);
+            level_high = std::max(level_high, c.level);
+
+            lits_low = std::min(lits_low, c.lits.size());
+            lits_high = std::max(lits_high, c.lits.size());
+
+            std::cout << c.lits.size();
+            std::cout << ", " << c.unknown.size();
+            std::cout << ", " << nb_unsat(cnf_ign, c);
+            std::cout << ", " << nb_unsat(cnf_smp, c);
+
+            std::cout << "\n";
+        }
+
+        //std::cout << "l " << uk_low << "\n";
+        //std::cout << "h " << uk_high << "\n";
+        //std::cout << "a " << uk_avg << "\n";
+
+        //std::cout << "lvl l " << level_low << "\n";
+        //std::cout << "lvl h " << level_high << "\n";
+        //std::cout << "lit l " << lits_low << "\n";
+        //std::cout << "lit h " << lits_high << "\n";
+
+        delete solver;
+    }
+    catch(std::exception & e) {
+        std::cerr << "ERROR: " << e.what() << "\n";
+        return 1;
+    }
+
+    return 0;
+}
+

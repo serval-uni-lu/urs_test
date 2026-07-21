@@ -13,6 +13,16 @@ From: base.sif
     ../utils/dDNNF_parser/src/DIMACS.py /DIMACS.py
 
 %post
+# DivKC
+    cd /deps/upNNF/dnf/dep/cadical-rel-2.1.3
+    ./configure
+    make -j
+
+    cd /deps/upNNF/dnf
+    g++ gen.cpp -o gen
+    ./gen
+    ninja build/sampler
+
     echo "nothing to do"
 
 %runscript
