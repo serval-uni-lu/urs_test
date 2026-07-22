@@ -40,12 +40,12 @@ po::options_description get_program_options() {
         ("rwalk-descent-pure-random-walk-p", po::value<double>()->default_value(0.95), "Descent phase: Set the probability of doing a random walk move with no MH correction. (Either this step gets executed or an MH step).")
         ("rwalk-descent-random-walk-p", po::value<double>()->default_value(0.75), "Descent phase: Set the probability of doing a random walk subject to the MH correction.")
         ("rwalk-descent-beta", po::value<double>()->default_value(0.1), "Descent phase: Set the value for beta in the MH algorithm.")
-        ("rwalk-descent-max-nb-steps", po::value<double>()->default_value(0.9), "Descent phase: Set the maximum number of steps, if exceeded, a restart is triggered. If < 1.0 then N = #variables * value otherwise N = value.")
+        ("rwalk-descent-max-nb-steps", po::value<double>()->default_value(2.0), "Descent phase: Set the maximum number of steps, if exceeded, a restart is triggered. #steps = #variables * parameter")
 
         ("rwalk-burnin-pure-random-walk-p", po::value<double>()->default_value(0.6), "Burn-in phase: Set the probability of doing a random walk move with no MH correction. (Either this step gets executed or an MH step).")
         ("rwalk-burnin-random-walk-p", po::value<double>()->default_value(0.0), "Burn-in phase: Set the probability of doing a random walk subject to the MH correction.")
         ("rwalk-burnin-beta", po::value<double>()->default_value(2), "Burn-in phase: Set the value for beta in the MH algorithm.")
-        ("rwalk-burnin-nb-steps", po::value<double>()->default_value(0.9), "Burn-in phase: Set the maximum number of steps, if exceeded, a restart is triggered. If < 1.0 then N = #variables * value otherwise N = value.")
+        ("rwalk-burnin-nb-steps", po::value<double>()->default_value(2.0), "Burn-in phase: Set the maximum number of steps, if exceeded, a restart is triggered. #steps = #variables * parameter")
 
         ("rwalk-pure-random-walk-p", po::value<double>()->default_value(0.6), "Sampling phase: Set the probability of doing a random walk move with no MH correction. (Either this step gets executed or an MH step).")
         ("rwalk-random-walk-p", po::value<double>()->default_value(0.0), "Sampling phase: Set the probability of doing a random walk subject to the MH correction.")
@@ -120,27 +120,17 @@ int setup_runner(po::variables_map const& vm, RAG & rag) {
             runner.set_descent_random_walk_probability(rwalk_descent_random_walk_p);
             runner.set_descent_beta(rwalk_descent_beta);
 
-            std::size_t max_nb_descent_steps = 0;
-            if(rwalk_descent_max_nb_steps < 1.0) {
-                max_nb_descent_steps = (double)cnf.nb_vars() * rwalk_descent_max_nb_steps;
-            }
-            else {
-                max_nb_descent_steps = rwalk_descent_max_nb_steps;
-            }
+            std::size_t const max_nb_descent_steps = (double)cnf.nb_vars() * rwalk_descent_max_nb_steps;
             runner.set_descent_max_nb_steps(max_nb_descent_steps);
+            std::cout << "c rwalk-descent-max-nb-steps " << max_nb_descent_steps << "\n";
 
             runner.set_burnin_pure_random_walk_probability(rwalk_burnin_pure_random_walk_p);
             runner.set_burnin_random_walk_probability(rwalk_burnin_random_walk_p);
             runner.set_burnin_beta(rwalk_burnin_beta);
 
-            std::size_t nb_burnin_steps = 0;
-            if(rwalk_burnin_nb_steps < 1.0) {
-                nb_burnin_steps = cnf.nb_vars() * rwalk_burnin_nb_steps;
-            }
-            else {
-                nb_burnin_steps = rwalk_burnin_nb_steps;
-            }
+            std::size_t const nb_burnin_steps = cnf.nb_vars() * rwalk_burnin_nb_steps;
             runner.set_burnin_nb_steps(nb_burnin_steps);
+            std::cout << "c rwalk-burnin-nb-steps " << nb_burnin_steps << "\n";
 
             runner.set_pure_random_walk_probability(rwalk_pure_random_walk_p);
             runner.set_random_walk_probability(rwalk_random_walk_p);
@@ -183,7 +173,7 @@ int main(int argc, char** argv) {
         bool const CUBES = vm.count("cubes") != 0;
         bool const NO_NNF = vm.count("no-nnf") != 0;
 
-        std::cerr << "Initializing\n";
+        std::cout << "c Initializing\n";
 
         CNF cnf(cnf_path + ".smp");
         //CNF cnf_ign(cnf_path + ".ign");
@@ -193,20 +183,20 @@ int main(int argc, char** argv) {
         if(CUBES) {
             auto cubes = dnf::read_cubes_from_file(cnf_path + ".cubes");
             sampler::RandomCubeAssignmentGenerator rag(cnf, unnf, cubes);
-            std::cerr << "Using cubes\n";
+            std::cout << "c Using cubes\n";
 
             return setup_runner(vm, rag);
         }
         else if(NO_NNF) {
             sampler::RandomAssignmentGenerator rag(cnf);
-            std::cerr << "Not using a d-DNNF\n";
+            std::cout << "c Not using a d-DNNF\n";
             return setup_runner(vm, rag);
         }
         else {
             ANNF aunnf(unnf);
             aunnf.annotate_mc();
             sampler::RandomNNFAssignmentGenerator rag(cnf, aunnf);
-            std::cerr << "Using unnf\n";
+            std::cout << "c Using unnf\n";
             return setup_runner(vm, rag);
         }
     }

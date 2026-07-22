@@ -388,6 +388,81 @@ def getSolutionFromRSampler(inputFile, numSolutions, newSeed):
 
     return list(map(util.solstr_to_frozenset, lines))
 
+def getSolutionFromRWalkSampler(inputFile, numSolutions, newSeed):
+
+    inputFileSuffix = inputFile.split('/')[-1][:-4]
+    # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
+    tempOutputFile = util.make_temp_name()
+    cwd = os.getcwd()
+    cmd = f'/deps/upNNF/dnf/build/sampler --cnf {os.path.abspath(inputFile)} --rwalk --n {numSolutions} --print-samples  | grep -E -v "^c" > {tempOutputFile}'
+    # if args.verbose:
+    print("cmd: ", cmd)
+    # os.chdir(str(os.getcwd()) + '/samplers')
+    os.system(cmd)
+    # os.chdir(str(cwd))
+
+    with open(tempOutputFile, 'r') as f:
+        lines = f.readlines()
+
+    os.unlink(str(tempOutputFile))
+
+    if len(lines) <= 0:
+        print(len(lines))
+        print("RWalk did not find solutions")
+        sys.exit(1)
+
+    return list(map(util.solstr_to_frozenset, lines))
+
+def getSolutionFromRWalkNoNNFSampler(inputFile, numSolutions, newSeed):
+
+    inputFileSuffix = inputFile.split('/')[-1][:-4]
+    # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
+    tempOutputFile = util.make_temp_name()
+    cwd = os.getcwd()
+    cmd = f'/deps/upNNF/dnf/build/sampler --cnf {os.path.abspath(inputFile)} --rwalk --n {numSolutions} --print-samples --no-nnf  | grep -E -v "^c" > {tempOutputFile}'
+    # if args.verbose:
+    print("cmd: ", cmd)
+    # os.chdir(str(os.getcwd()) + '/samplers')
+    os.system(cmd)
+    # os.chdir(str(cwd))
+
+    with open(tempOutputFile, 'r') as f:
+        lines = f.readlines()
+
+    os.unlink(str(tempOutputFile))
+
+    if len(lines) <= 0:
+        print(len(lines))
+        print("RWalkNoNNF did not find solutions")
+        sys.exit(1)
+
+    return list(map(util.solstr_to_frozenset, lines))
+
+def getSolutionFromMCSampler(inputFile, numSolutions, newSeed):
+
+    inputFileSuffix = inputFile.split('/')[-1][:-4]
+    # tempOutputFile = tempfile.gettempdir() + '/' + inputFileSuffix + ".txt"
+    tempOutputFile = util.make_temp_name()
+    cwd = os.getcwd()
+    cmd = f'/deps/upNNF/dnf/build/sampler --cnf {os.path.abspath(inputFile)} --n {numSolutions} --print-samples | grep -E -v "^c" > {tempOutputFile}'
+    # if args.verbose:
+    print("cmd: ", cmd)
+    # os.chdir(str(os.getcwd()) + '/samplers')
+    os.system(cmd)
+    # os.chdir(str(cwd))
+
+    with open(tempOutputFile, 'r') as f:
+        lines = f.readlines()
+
+    os.unlink(str(tempOutputFile))
+
+    if len(lines) <= 0:
+        print(len(lines))
+        print("MCSampler did not find solutions")
+        sys.exit(1)
+
+    return list(map(util.solstr_to_frozenset, lines))
+
 
 def getSolutionFromDistAware(inputFile, numSolutions, newSeed):
 
@@ -548,6 +623,9 @@ def getSamplerFunction(sampler, cnf_file):
             , "ksampler" : getSolutionFromKSampler
             , "rsampler" : getSolutionFromRSampler
             , "bddsampler" : getSolutionFromBDDSampler
+            , "rwalk" : getSolutionFromRWalkSampler
+            , "rwalknonnf" : getSolutionFromRWalkNoNNFSampler
+            , "mc" : getSolutionFromMCSampler
         }
 
     return samplers[sampler]

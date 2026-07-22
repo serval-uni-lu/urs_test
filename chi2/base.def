@@ -90,6 +90,16 @@ From: ubuntu:22.04
     ./gen
     ninja build/rsampler build/sampler
 
+# upNNF
+    cd /deps/upNNF/dnf/dep/cadical-rel-2.1.3
+    ./configure
+    make -j
+
+    cd /deps/upNNF/dnf
+    g++ gen.cpp -o gen
+    ./gen
+    ninja build/sampler
+
 
 # %runscript
     # /wrap 64000 18000 /unigen/build/unigen "$@"

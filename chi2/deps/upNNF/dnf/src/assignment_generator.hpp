@@ -291,8 +291,8 @@ public:
 
     template<typename PRNG>
     std::vector<LitSet> run(std::size_t const N, PRNG & prng) {
-        std::cout << "Sampling\n";
-        std::cout << "UMC " << generator.get_mc() << "\n";
+        std::cout << "c Sampling\n";
+        std::cout << "c UMC " << generator.get_mc() << "\n";
 
         std::size_t nb_tries = 0;
         std::size_t nb_success = 0;
@@ -323,7 +323,7 @@ public:
                             result_count++;
 
                             if(print) {
-                                std::cout << "s " << tmp.m << "\n";
+                                std::cout << tmp.m << "\n";
                             }
 
                             nb_success++;
@@ -333,14 +333,14 @@ public:
             }
         }
 
-        std::cout << "nb_tries " << nb_tries << "\n";
-        std::cout << "nb_success " << nb_success << "\n";
+        std::cout << "c nb_tries " << nb_tries << "\n";
+        std::cout << "c nb_success " << nb_success << "\n";
 
         mpf_float amc = generator.get_mc();
         amc *= nb_success;
         amc /= nb_tries;
 
-        std::cout << "AMC " << amc << "\n";
+        std::cout << "c AMC " << amc << "\n";
 
         return result;
     }
@@ -378,12 +378,12 @@ public:
     inline void set_maximum_unsat_clauses(std::size_t const v) { maximum_unsat_clauses = v; }
 
     std::size_t filter(Cubes & cubes) {
-        std::cout << "Splitting filtering\n";
+        std::cout << "c Splitting filtering\n";
         std::sort(cubes.begin(), cubes.end(), [](auto const& a, auto const& b) {
                     return a.nb_unsat < b.nb_unsat;
                 });
 
-        std::cout << "  " << cubes[0].nb_unsat << " <= " << cubes[cubes.size() - 1].nb_unsat << "\n";
+        std::cout << "c   " << cubes[0].nb_unsat << " <= " << cubes[cubes.size() - 1].nb_unsat << "\n";
 
         std::size_t const thresh = cubes[ceil(cubes.size() * retention)].nb_unsat;
         while(cubes[cubes.size() - 1].nb_unsat > thresh) {
@@ -395,7 +395,7 @@ public:
 
     template<typename PRNG>
     void splitting_clone(Cubes & cubes, std::size_t const new_size, PRNG & prng) {
-        std::cout << "Splitting cloning\n";
+        std::cout << "c Splitting cloning\n";
         std::shuffle(cubes.begin(), cubes.end(), prng);
 
         std::size_t ms = cubes.size();
@@ -455,7 +455,7 @@ public:
             }
 
             if(valid.size() == 0) {
-                std::cout << cube.nb_unsat << " | " << thresh << "|" << best << "\n";
+                std::cout << "c " <<  cube.nb_unsat << " | " << thresh << "|" << best << "\n";
             }
             assert(valid.size() > 0);
         }
@@ -483,7 +483,7 @@ public:
 
     template<typename PRNG>
     void mutate(std::size_t const thresh, Cubes & cubes, PRNG & prng) {
-        std::cout << "Splitting mutation\n";
+        std::cout << "c Splitting mutation\n";
 
         #pragma omp parallel for
         for(std::size_t cid = 0; cid < cubes.size(); cid++) {
@@ -505,12 +505,12 @@ public:
                 }
             }
         }
-        std::cout << "End splitting mutation\n";
+        std::cout << "c End splitting mutation\n";
     }
 
     template<typename PRNG>
     std::vector<LitSet> run(std::size_t const N, PRNG & prng) {
-        std::cout << "Sampling\n";
+        std::cout << "c Sampling\n";
 
         std::vector<LitSet> result;
 
@@ -544,18 +544,18 @@ public:
                     }
                 }
             }
-            std::cout << "Population init nb tries: " << nb_tries << "\n";
+            std::cout << "c Population init nb tries: " << nb_tries << "\n";
             assert(population.size() == population_size);
 
             while(true) {
                 std::size_t const thresh = filter(population);
-                std::cout << thresh << " >> " << population.size() << "\n";
+                std::cout << "c " << thresh << " >> " << population.size() << "\n";
                 assert(population.size() > 0);
 
                 if(population[0].nb_unsat == 0) {
                     for(std::size_t j = 0; j < population.size() && result.size() < N && population[j].nb_unsat == 0; j++) {
                         if(print) {
-                            std::cout << "s " << population[j].m << "\n";
+                            std::cout << population[j].m << "\n";
                         }
                         result.push_back(population[j].m);
                     }
@@ -624,7 +624,7 @@ private:
             ++it;
         }
 
-        std::cout << "Should have found an element but didn't?: " << b.size() << "\n";
+        std::cout << "c Should have found an element but didn't?: " << b.size() << "\n";
         assert(false && "impossible state reached in MetropolisHastings::random_element");
     }
 
@@ -690,8 +690,8 @@ public:
 
     template<typename PRNG>
     std::vector<LitSet> run(std::size_t const N, PRNG & prng) {
-        std::cout << "Sampling\n";
-        std::cout << "UMC " << generator.get_mc() << "\n";
+        std::cout << "c Sampling\n";
+        std::cout << "c UMC " << generator.get_mc() << "\n";
 
         std::vector<LitSet> result;
 
@@ -716,7 +716,7 @@ public:
                 result.push_back(cube.lits);
                 continue;
             }
-            //std::cout << "init: " << cube.unsat_ids.size() << "\n";
+            //std::cout << "c init: " << cube.unsat_ids.size() << "\n";
 
             while(result.size() < N) {
 
@@ -765,13 +765,13 @@ public:
                 }
 
                 if(phase == Phase::Descent) {
-                    //std::cout << "descent " << descent_steps_left << " :: " << cube.unsat_ids.size() << "\n";
+                    //std::cout << "c descent " << descent_steps_left << " :: " << cube.unsat_ids.size() << "\n";
                 }
                 else if(phase == Phase::Burnin) {
-                    //std::cout << "burnin :: " << cube.unsat_ids.size() << "\n";
+                    //std::cout << "c burnin :: " << cube.unsat_ids.size() << "\n";
                 }
                 else if(phase == Phase::Sampling) {
-                    //std::cout << "sampling :: " << cube.unsat_ids.size() << "\n";
+                    //std::cout << "c sampling :: " << cube.unsat_ids.size() << "\n";
                 }
                 else {
                     //std::cout << "Impossible phase: " << static_cast<int>(phase) << "\n";
@@ -803,7 +803,7 @@ public:
                     }
                 }
                 else if(phase == Phase::Descent && descent_steps_left <= 0 && cube.unsat_ids.size() > 0) {
-                    //std::cout << "Descent failed, restarting\n";
+                    //std::cout << "c Descent failed, restarting\n";
                     break;
                 }
                 else if(phase == Phase::Burnin) {
@@ -822,24 +822,24 @@ public:
                     }
                 }
                 else if(phase == Phase::Sampling && cube.unsat_ids.size() == 0) {
-                    //std::cout << "found sample: " << cube.unsat_ids.size() << "\n";
+                    //std::cout << "c found sample: " << cube.unsat_ids.size() << "\n";
                     result.push_back(cube.lits);
 
                     if(print) {
-                        std::cout << "s " << cube.lits << "\n";
+                        std::cout << cube.lits << "\n";
                     }
 
                 }
 
                 if(phase == Phase::Sampling && restart_d(prng)) {
-                    //std::cout << "Triggered a restart\n";
+                    //std::cout << "c Triggered a restart\n";
                     break;
                 }
 
             }
         }
 
-        //std::cout << "nb samples generated: " << result.size() << "\n";
+        //std::cout << "c nb samples generated: " << result.size() << "\n";
 
         return result;
     }
