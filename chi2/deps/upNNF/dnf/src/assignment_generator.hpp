@@ -713,6 +713,7 @@ public:
             std::size_t descent_steps_left = descent_max_nb_steps;
 
             if(cube.unsat_ids.size() == 0) {
+                std::cout << "c MC found sample\n";
                 result.push_back(cube.lits);
                 continue;
             }
@@ -828,6 +829,7 @@ public:
                     if(print) {
                         std::cout << cube.lits << "\n";
                     }
+                    break;
 
                 }
 
@@ -839,7 +841,7 @@ public:
             }
         }
 
-        //std::cout << "c nb samples generated: " << result.size() << "\n";
+        std::cout << "c nb samples generated: " << result.size() << "\n";
 
         return result;
     }
