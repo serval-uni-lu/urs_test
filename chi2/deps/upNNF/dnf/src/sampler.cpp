@@ -37,20 +37,20 @@ po::options_description get_program_options() {
 
         ("rwalk", "Use the random walk method")
 
-        ("rwalk-descent-pure-random-walk-p", po::value<double>()->default_value(0.0), "Descent phase: Set the probability of doing a random walk move with no MH correction. (Either this step gets executed or an MH step).")
+        ("rwalk-descent-pure-random-walk-p", po::value<double>()->default_value(0.75), "Descent phase: Set the probability of doing a random walk move with no MH correction. (Either this step gets executed or an MH step).")
         ("rwalk-descent-random-walk-p", po::value<double>()->default_value(0.75), "Descent phase: Set the probability of doing a random walk subject to the MH correction.")
-        ("rwalk-descent-beta", po::value<double>()->default_value(0.1), "Descent phase: Set the value for beta in the MH algorithm.")
+        ("rwalk-descent-beta", po::value<double>()->default_value(1.0), "Descent phase: Set the value for beta in the MH algorithm.")
         ("rwalk-descent-max-nb-steps", po::value<double>()->default_value(2.0), "Descent phase: Set the maximum number of steps, if exceeded, a restart is triggered. #steps = #variables * parameter")
 
-        ("rwalk-burnin-pure-random-walk-p", po::value<double>()->default_value(0.0), "Burn-in phase: Set the probability of doing a random walk move with no MH correction. (Either this step gets executed or an MH step).")
-        ("rwalk-burnin-random-walk-p", po::value<double>()->default_value(0.5), "Burn-in phase: Set the probability of doing a random walk subject to the MH correction.")
+        ("rwalk-burnin-pure-random-walk-p", po::value<double>()->default_value(0.85), "Burn-in phase: Set the probability of doing a random walk move with no MH correction. (Either this step gets executed or an MH step).")
+        ("rwalk-burnin-random-walk-p", po::value<double>()->default_value(0.75), "Burn-in phase: Set the probability of doing a random walk subject to the MH correction.")
         ("rwalk-burnin-beta", po::value<double>()->default_value(2), "Burn-in phase: Set the value for beta in the MH algorithm.")
         ("rwalk-burnin-nb-steps", po::value<double>()->default_value(2.0), "Burn-in phase: Set the maximum number of steps, if exceeded, a restart is triggered. #steps = #variables * parameter")
 
-        ("rwalk-pure-random-walk-p", po::value<double>()->default_value(0.0), "Sampling phase: Set the probability of doing a random walk move with no MH correction. (Either this step gets executed or an MH step).")
-        ("rwalk-random-walk-p", po::value<double>()->default_value(0.5), "Sampling phase: Set the probability of doing a random walk subject to the MH correction.")
+        ("rwalk-pure-random-walk-p", po::value<double>()->default_value(0.95), "Sampling phase: Set the probability of doing a random walk move with no MH correction. (Either this step gets executed or an MH step).")
+        ("rwalk-random-walk-p", po::value<double>()->default_value(0.75), "Sampling phase: Set the probability of doing a random walk subject to the MH correction.")
         ("rwalk-beta", po::value<double>()->default_value(2), "Sampling phase: Set the value for beta in the MH algorithm.")
-        ("rwalk-restart-p", po::value<double>()->default_value(0.1), "Sampling phase: Set the probability of restarting from scratch.")
+        ("rwalk-restart-p", po::value<double>()->default_value(0.01), "Sampling phase: Set the probability of restarting from scratch.")
 
         ("cnf", po::value<std::string>(), "path to CNF file");
 
